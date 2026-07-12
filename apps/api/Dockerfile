@@ -7,6 +7,11 @@
 FROM node:22-bookworm-slim AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+# openssl нужен движку Prisma (slim-образ без libssl → иначе предупреждение и
+# риск отказа запросов на рантайме).
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl \
+  && rm -rf /var/lib/apt/lists/*
 RUN corepack enable
 WORKDIR /app
 
@@ -46,4 +51,5 @@ RUN mkdir -p /data/uploads
 EXPOSE 3000
 
 # На старте применяем миграции, затем поднимаем API.
-CMD ["sh", "-c", "pnpm exec prisma migrate deploy && node dist/main"]
+# nest build сохраняет структуру src/, поэтому точка входа — dist/src/main.js.
+CMD ["sh", "-c", "pnpm exec prisma migrate deploy && node dist/src/main"]
