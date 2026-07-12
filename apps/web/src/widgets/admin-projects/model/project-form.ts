@@ -66,6 +66,7 @@ export function createProjectSchema(t: TFunction, locale: AppLanguage) {
     runnable: z.boolean(),
     embedUrl: z.string(),
     runCommand: z.string(),
+    runHint: z.string(),
   });
 }
 
@@ -143,6 +144,7 @@ export function emptyForm(): ProjectFormValues {
     runnable: false,
     embedUrl: '',
     runCommand: '',
+    runHint: '',
   };
 }
 
@@ -159,7 +161,7 @@ export function projectToForm(project: ProjectAdmin, locale: AppLanguage): Proje
     period: project.period ?? '',
     bullets: pickList(project.bullets, locale).join('\n'),
     links: linksToText(project.links, locale),
-    tileColor: project.tileColor ?? TILE_COLORS[0] ?? '#1d6f74',
+    tileColor: project.tileColor ?? '',
     technologyIds: [...project.technologyIds],
     contributorIds: [...project.contributorIds],
     status: project.status,
@@ -168,6 +170,7 @@ export function projectToForm(project: ProjectAdmin, locale: AppLanguage): Proje
     runnable: project.runnable,
     embedUrl: project.embedUrl ?? '',
     runCommand: project.runCommand ?? '',
+    runHint: pickText(project.runHint, locale),
   };
 }
 
@@ -195,6 +198,10 @@ export function formToCreate(values: ProjectFormValues, locale: AppLanguage): Cr
     runnable: values.runnable,
     embedUrl: values.runnable ? values.embedUrl.trim() || undefined : undefined,
     runCommand: values.runnable ? values.runCommand.trim() || undefined : undefined,
+    runHint:
+      values.runnable && values.runHint.trim()
+        ? localeInput(locale, values.runHint.trim())
+        : undefined,
   };
 }
 
@@ -220,6 +227,7 @@ export function formToUpdate(values: ProjectFormValues, locale: AppLanguage): Up
     runnable: values.runnable,
     embedUrl: values.runnable ? values.embedUrl.trim() : '',
     runCommand: values.runnable ? values.runCommand.trim() : '',
+    runHint: localePatch(locale, values.runnable ? values.runHint.trim() : ''),
   };
 }
 

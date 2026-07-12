@@ -14,11 +14,21 @@ import type {
 } from '../model/types';
 
 const contributors = {
-  bogdan: { name: 'Богдан Сутужко', image: null, color: '#238636' },
-  alex: { name: 'Алексей Мартынов', image: null, color: '#8957e5' },
-  maria: { name: 'Мария Волкова', image: null, color: '#1f6feb' },
-  ivan: { name: 'Иван Петров', image: null, color: '#a371f7' },
-  gvozdenkov: { name: 'Гвозденков', image: null, color: '#db6d28' },
+  bogdan: {
+    name: 'Богдан Сутужко',
+    image: null,
+    color: '#238636',
+    link: 'https://github.com/sutuzhko',
+  },
+  alex: { name: 'Алексей Мартынов', image: null, color: '#8957e5', link: null },
+  maria: { name: 'Мария Волкова', image: null, color: '#1f6feb', link: null },
+  ivan: { name: 'Иван Петров', image: null, color: '#a371f7', link: null },
+  gvozdenkov: {
+    name: 'Гвозденков',
+    image: null,
+    color: '#db6d28',
+    link: 'https://github.com/gvozdenkov',
+  },
 };
 
 // Локализуется только описание — названия проектов и категории общие для локалей.
@@ -370,7 +380,7 @@ export const projectAdminHandlers = [
         role: body.role ? { ru: body.role.ru, en: body.role.en } : null,
         category: body.category ?? null,
         period: body.period ?? null,
-        tileColor: body.tileColor ?? null,
+        tileColor: body.tileColor || null,
         links: body.links ?? [],
         runnable: body.runnable ?? false,
         runCommand: body.runCommand ?? null,
@@ -410,11 +420,12 @@ export const projectAdminHandlers = [
       if (body.role !== undefined) record.role = mergeText(record.role, body.role);
       if (body.category !== undefined) record.category = body.category;
       if (body.period !== undefined) record.period = body.period;
-      if (body.tileColor !== undefined) record.tileColor = body.tileColor;
+      if (body.tileColor !== undefined) record.tileColor = body.tileColor || null;
       if (body.links !== undefined) record.links = body.links;
       if (body.runnable !== undefined) record.runnable = body.runnable;
       if (body.runCommand !== undefined) record.runCommand = body.runCommand;
       if (body.embedUrl !== undefined) record.embedUrl = body.embedUrl;
+      if (body.runHint !== undefined) record.runHint = mergeText(record.runHint, body.runHint);
       if (body.status !== undefined) record.status = body.status;
       if (body.hidden !== undefined) record.hidden = body.hidden;
       if (body.pinned !== undefined) record.pinned = body.pinned;
@@ -439,9 +450,13 @@ export const projectAdminHandlers = [
     if (record === undefined || !(file instanceof Blob)) {
       return new HttpResponse(null, { status: 400 });
     }
+    // Лимит 10 на проект — зеркалит бэкенд (`media.service`).
+    if (record.gallery.length >= 10) {
+      return new HttpResponse(null, { status: 400 });
+    }
     const altRu = form.get('altRu');
     const asset: ProjectMediaAdmin = {
-      id: `m-${Date.now()}`,
+      id: `m-${Date.now()}-${record.gallery.length}`,
       url: URL.createObjectURL(file),
       type: 'GALLERY',
       alt: typeof altRu === 'string' && altRu.length > 0 ? { ru: altRu, en: null } : null,

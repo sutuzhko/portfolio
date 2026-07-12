@@ -71,7 +71,7 @@ export const contributorHandlers = [
         id: `c-${Date.now()}`,
         name: { ru: body.name.ru, en: body.name.en ?? null },
         image: body.image ?? null,
-        color: body.color ?? null,
+        color: body.color || null,
         link: body.link ?? null,
         order: body.order ?? contributors.length,
       };
@@ -91,7 +91,8 @@ export const contributorHandlers = [
         ...current,
         name: patch.name ? { ru: patch.name.ru, en: patch.name.en ?? null } : current.name,
         image: patch.image ?? current.image,
-        color: patch.color ?? current.color,
+        // Пустая строка = сброс цвета → null (как на бэке); undefined = не менять.
+        color: patch.color !== undefined ? patch.color || null : current.color,
         link: patch.link ?? current.link,
         order: patch.order ?? current.order,
       };

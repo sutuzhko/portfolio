@@ -16,7 +16,7 @@
 
 .title {
   margin: 0;
-  font-size: var(--font-size-heading-3);
+  font-size: var(--font-size-h3);
   font-weight: var(--font-weight-bold);
   color: var(--color-fg);
 }
@@ -183,13 +183,6 @@
 
 /* --- форма --- */
 
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 22px;
-}
-
 .grid2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -218,6 +211,13 @@
   content: '*';
 }
 
+/* Рамка вокруг MarkdownEditor — чтобы поле читалось как единый блок редактора. */
+.mdFrame {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
 .error {
   margin: 6px 0 0;
   font-family: var(--font-mono), monospace;
@@ -228,16 +228,11 @@
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
-}
-
-/* Цвет плитки: палитра + превью-градиент. */
-.tileRow {
-  display: flex;
-  gap: 14px;
+  gap: 8px 10px;
   align-items: center;
 }
 
+/* Цвет плитки: палитра свотчей. */
 .palette {
   display: flex;
   flex-wrap: wrap;
@@ -257,19 +252,31 @@
   border-color: var(--color-fg);
 }
 
-/* Галерея скриншотов проекта. */
+/* «Без цвета»: нейтральная плитка с диагональной чертой-«запретом». */
+.swatchNone {
+  background: linear-gradient(
+      to top left,
+      transparent 0%,
+      transparent calc(50% - 1px),
+      var(--color-error) 50%,
+      transparent calc(50% + 1px),
+      transparent 100%
+    )
+    var(--color-raised);
+  border-color: var(--color-border-strong);
+}
+
+/* Галерея скриншотов: 2 колонки, плитки 4/3 + пунктирная плитка загрузки. */
 .galleryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--space-3);
-  margin: var(--space-2) 0;
-  list-style: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .galleryItem {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
 }
@@ -292,8 +299,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   color: #fff;
   cursor: pointer;
   background: color-mix(in srgb, #000 55%, transparent);
@@ -305,10 +312,31 @@
   background: color-mix(in srgb, #000 75%, transparent);
 }
 
-.galleryEmpty {
-  margin: var(--space-2) 0;
-  font-size: var(--font-size-small);
+.galleryUploadTile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.galleryUploadTile:hover:not(:disabled) {
+  color: var(--color-primary-bright);
+  border-color: var(--color-primary-bright);
+}
+
+.galleryUploadTile:disabled {
+  cursor: default;
+  opacity: 55%;
 }
 
 .visuallyHidden {
@@ -328,25 +356,64 @@
 /* Чип и кнопка правки — единый блок (карандаш примыкает к чипу). */
 .chipWrap {
   display: inline-flex;
-  gap: 2px;
+  gap: 3px;
   align-items: center;
+}
+
+/* Чип коллаборатора: заливка цветом аватара (или нейтральная), приглушён когда
+   не выбран для проекта. Тех-чипы используют общий UI-kit `Chip` (зелёный при выборе). */
+.collabChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition:
+    filter 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.collabChip:hover {
+  filter: brightness(1.12);
+}
+
+.collabChip:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Не выбран для проекта — приглушаем (но цвет аватара сохраняем). */
+.collabChipOff {
+  opacity: 45%;
 }
 
 .chipEdit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  width: 28px;
+  height: 28px;
   color: var(--color-fg-dim);
   cursor: pointer;
   background: transparent;
-  border: 0;
-  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  border-radius: 8px;
 }
 
 .chipEdit:hover:not(:disabled) {
-  color: var(--color-fg);
-  background: var(--color-raised);
+  color: var(--color-primary-bright);
+}
+
+/* Активный (открыта форма правки именно этого чипа) — зелёная рамка, как в макете. */
+.chipEditActive {
+  color: var(--color-primary-bright);
+  border-color: var(--color-primary-bright);
 }
 
 .chipEdit:disabled {
@@ -365,21 +432,78 @@
   color: var(--color-error);
 }
 
-/* Кнопка «+ создать участника» отбивается от ряда чипов сверху. */
-.contributorAdd {
-  margin-top: var(--space-3);
+/* «+ создать» — пунктирная кнопка последним элементом ряда чипов (как в макете). */
+.chipAdd {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-button);
 }
 
+.chipAdd:hover:not(:disabled) {
+  color: var(--color-primary-bright);
+  border-color: var(--color-primary-bright);
+}
+
+.chipAdd:disabled {
+  cursor: default;
+  opacity: 50%;
+}
+
+/* Чип выбранной технологии проекта (стиль вкладки «Стек»): имя + × (убрать из проекта). */
+.techChip {
+  display: inline-flex;
+  flex: none;
+  gap: 6px;
+  align-items: center;
+  padding: 5px 7px 5px 11px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  white-space: nowrap;
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+}
+
+.techChipRemove {
+  padding: 0 2px;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--color-fg-dim);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.techChipRemove:hover:not(:disabled) {
+  color: var(--color-danger);
+}
+
+.pickerEmpty {
+  font-size: var(--font-size-small);
+  color: var(--color-fg-muted);
+}
+
+/* Инлайн-форма создания/правки (участник/технология) — полноширинный вложенный
+   бокс на тёмном фоне (как в макете), а не узкая карточка. */
 .contributorCreate {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  max-width: 420px;
+  gap: var(--space-4);
   margin-top: var(--space-3);
-  padding: var(--space-4);
-  background: var(--color-surface);
+  padding: 18px;
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-panel);
 }
 
 .contributorCreateActions {
@@ -387,29 +511,256 @@
   gap: var(--space-2);
 }
 
-/* Живой предпросмотр: та же плитка, что в публичном списке, под подписью. */
-.tilePreview {
-  --preview-width: 380px;
+/* ---------- Редактор v2: двухколоночная раскладка из карточек ---------- */
 
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  max-width: var(--preview-width);
-  margin-top: var(--space-4);
+.form {
+  display: block;
 }
 
-.previewCaption {
+/* Шапка редактора: имя проекта + эндпоинт, справа — закрыть. */
+.editorBar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.editorBarText {
+  min-width: 0;
+}
+
+.editorTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.2px;
+  color: var(--color-fg);
+}
+
+.editorName {
+  color: var(--color-primary-bright);
+}
+
+.editorEndpoint {
+  margin-top: 3px;
   font-family: var(--font-mono), monospace;
   font-size: var(--font-size-mono-caption);
-  color: var(--color-fg-muted);
+  color: var(--color-fg-dim);
 }
 
-/* Флаги проекта — сетка карточек `ToggleField` во всю ширину контента. */
-.toggleGrid {
+/* Две колонки: контент + липкий сайдбар. */
+.formGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) 348px;
+  gap: 20px;
+  align-items: start;
+}
+
+.formCol,
+.formSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.formSidebar {
+  position: sticky;
+  top: 90px;
+}
+
+/* Карточка-секция: моно-зелёная шапка + тело. */
+.formCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+}
+
+.formCardHead {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.formCardTitle {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.formCardMeta {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-dim);
+}
+
+.formCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 22px;
+}
+
+/* Роль + Год в «Основном». */
+.roleYear {
+  display: grid;
+  grid-template-columns: 1fr 92px;
+  gap: 12px;
+}
+
+/* Структурные строки: «Ключевые пункты» и «Ссылки». */
+.rowsField {
+  display: flex;
+  flex-direction: column;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bulletRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.linkRow {
+  display: grid;
+  grid-template-columns: 150px 1fr 36px;
+  gap: 8px;
+  align-items: center;
+}
+
+.rowNum {
+  flex: none;
+  width: 26px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-dim);
+  text-align: center;
+}
+
+.rowInput {
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 0;
   width: 100%;
+  padding: 9px 12px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 13.5px;
+  color: var(--color-fg);
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  outline: none;
+}
+
+.rowInput:focus {
+  border-color: var(--color-primary-bright);
+}
+
+.rowInputMono {
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+}
+
+.rowRemove {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 36px;
+  color: var(--color-fg-dim);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+}
+
+.rowRemove:hover {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.rowAdd {
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 7px 14px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-button);
+}
+
+.rowAdd:hover {
+  color: var(--color-primary-bright);
+  border-color: var(--color-primary-bright);
+}
+
+/* Публикация: тумблеры + поля раннера + строка статуса. */
+.toggleStack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.runnableFields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.statusLine {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-dim);
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  background: var(--color-warning);
+  border-radius: var(--radius-pill);
+}
+
+.statusDotOn {
+  background: var(--color-primary-bright);
+}
+
+/* Плитка-превью в сайдбаре. */
+.tilePreviewBox {
+  overflow: hidden;
+  border-radius: var(--radius-card);
+}
+
+/* Сайдбар уходит под контент на узких экранах — липкость отключаем. */
+@media (width <= 900px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formSidebar {
+    position: static;
+  }
 }
 
 @media (width <= 768px) {
@@ -419,9 +770,5 @@
 
   .row {
     flex-wrap: wrap;
-  }
-
-  .toggleGrid {
-    grid-template-columns: 1fr;
   }
 }

@@ -39,7 +39,9 @@ describe('formToTile', () => {
     );
 
     expect(tile.technologies).toEqual(['NestJS', 'React']);
-    expect(tile.contributors).toEqual([{ name: 'Богдан Сутужко', image: null, color: '#238636' }]);
+    expect(tile.contributors).toEqual([
+      { name: 'Богдан Сутужко', image: null, color: '#238636', link: null },
+    ]);
   });
 
   it('берёт имя коллаборатора из активной локали', () => {

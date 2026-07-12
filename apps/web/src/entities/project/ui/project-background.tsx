@@ -19,7 +19,7 @@ export function ProjectBackground({ color, className }: ProjectBackgroundProps) 
   return (
     <span
       className={cn(styles.background, className)}
-      style={{ background: color ?? 'var(--color-raised)' }}
+      style={{ background: color || 'var(--color-raised)' }}
       aria-hidden="true"
     >
       <span className={styles.stripes} />

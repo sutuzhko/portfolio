@@ -10,6 +10,7 @@ import { mockProjectsAdmin } from '@/entities/project/mocks';
 import { mockTechnologiesAdmin } from '@/entities/technology/mocks';
 
 import { isTempContributorId, type StagedContributor } from '../model/contributor-staging';
+import { isTempTechnologyId, type StagedTechnology } from '../model/technology-staging';
 
 import { ProjectForm } from './project-form';
 
@@ -24,6 +25,7 @@ function renderForm(overrides: Partial<Parameters<typeof ProjectForm>[0]> = {}) 
       onCreate={vi.fn()}
       onUpdate={vi.fn()}
       onUploadGallery={vi.fn()}
+      onRejectGallery={vi.fn()}
       onDeleteGallery={vi.fn()}
       onCopyGalleryUrl={vi.fn()}
       onCancel={vi.fn()}
@@ -39,12 +41,19 @@ async function fillRequired(): Promise<void> {
   await userEvent.type(screen.getByLabelText('Полное описание', { exact: false }), 'Тело');
 }
 
+// Технологии выбираются из панели: «+ добавить» → клик по чипу → «Готово».
+async function selectTech(name: string): Promise<void> {
+  await userEvent.click(screen.getByRole('button', { name: '+ добавить' }));
+  await userEvent.click(screen.getByRole('button', { name }));
+  await userEvent.click(screen.getByRole('button', { name: 'Готово' }));
+}
+
 describe('ProjectForm', () => {
   it('создание отправляет тело с базовой локалью и связями', async () => {
     const onCreate = vi.fn();
     renderForm({ onCreate });
     await fillRequired();
-    await userEvent.click(screen.getByRole('button', { name: 'React' }));
+    await selectTech('React');
     await userEvent.click(screen.getByRole('button', { name: 'Богдан Сутужко' }));
     await userEvent.click(screen.getByRole('button', { name: /Сохранить/ }));
 
@@ -64,11 +73,15 @@ describe('ProjectForm', () => {
     const onCreate = vi.fn<(body: CreateProject, staged: readonly StagedContributor[]) => void>();
     renderForm({ onCreate });
     await fillRequired();
-    await userEvent.click(screen.getByRole('button', { name: 'React' }));
+    await selectTech('React');
 
     // Инлайн-создание участника — до «Сохранить» никакого запроса нет.
     await userEvent.click(screen.getByRole('button', { name: '+ создать участника' }));
     await userEvent.type(screen.getByRole('textbox', { name: 'Имя' }), 'Пётр');
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /URL аватара/ }),
+      'https://example.com/p.png',
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Добавить' }));
 
     await userEvent.click(screen.getByRole('button', { name: /Сохранить/ }));
@@ -76,8 +89,64 @@ describe('ProjectForm', () => {
     // Новый участник уходит во втором аргументе (черновик) и выбран в проекте
     // по временному id — реальный проставит контейнер после применения.
     const [body, staged] = onCreate.mock.calls[0] ?? [undefined, []];
-    expect(staged.some((entry) => entry.isNew && entry.name.ru === 'Пётр')).toBe(true);
+    const created = staged.find((entry) => entry.isNew && entry.name.ru === 'Пётр');
+    expect(created).toBeDefined();
+    // URL аватара доходит до черновика (раньше `image` был захардкожен в null).
+    expect(created?.image).toBe('https://example.com/p.png');
     expect(body?.contributorIds?.some(isTempContributorId)).toBe(true);
+  });
+
+  it('подсказка управления (runHint) сохраняется для запускаемого проекта', async () => {
+    const onCreate = vi.fn();
+    renderForm({ onCreate });
+    await fillRequired();
+    await selectTech('React');
+    // Включаем «Запускается» → появляются поля embed/команда/подсказка.
+    await userEvent.click(screen.getByRole('switch', { name: /Запускается/ }));
+    await userEvent.type(
+      screen.getByLabelText('Подсказка управления', { exact: false }),
+      'Стрелки двигают тайлы',
+    );
+    await userEvent.click(screen.getByRole('button', { name: /Сохранить/ }));
+
+    expect(onCreate.mock.calls[0]?.[0]).toMatchObject({
+      runnable: true,
+      runHint: { ru: 'Стрелки двигают тайлы' },
+    });
+  });
+
+  it('«Без цвета» очищает цвет плитки (тело шлёт пустую строку → null на бэке)', async () => {
+    const onCreate = vi.fn();
+    renderForm({ onCreate });
+    await fillRequired();
+    await selectTech('React');
+    await userEvent.click(screen.getByRole('radio', { name: 'Без цвета' }));
+    await userEvent.click(screen.getByRole('button', { name: /Сохранить/ }));
+
+    expect(onCreate.mock.calls[0]?.[0]).toMatchObject({ tileColor: '' });
+  });
+
+  it('инлайн-создание технологии стейджится и уходит с проектом', async () => {
+    const onCreate =
+      vi.fn<
+        (
+          body: CreateProject,
+          staged: readonly StagedContributor[],
+          techStaged: readonly StagedTechnology[],
+        ) => void
+      >();
+    renderForm({ onCreate });
+    await fillRequired();
+    // Панель добавления → создаём новую, она автоматически выбирается.
+    await userEvent.click(screen.getByRole('button', { name: '+ добавить' }));
+    await userEvent.click(screen.getByRole('button', { name: '+ создать технологию' }));
+    await userEvent.type(screen.getByRole('textbox', { name: 'Название технологии' }), 'Vite');
+    await userEvent.click(screen.getByRole('button', { name: 'Добавить' }));
+    await userEvent.click(screen.getByRole('button', { name: /Сохранить/ }));
+
+    const [body, , techStaged] = onCreate.mock.calls[0] ?? [undefined, [], []];
+    expect(body?.technologyIds?.some(isTempTechnologyId)).toBe(true);
+    expect(techStaged?.some((entry) => entry.isNew && entry.name === 'Vite')).toBe(true);
   });
 
   it('валидация: без технологий не сохраняет', async () => {

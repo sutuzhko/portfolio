@@ -37,6 +37,7 @@ export function formToTile(
       name: pickText(contributor.name, locale),
       image: contributor.image,
       color: contributor.color,
+      link: contributor.link,
     }));
 
   const trimmedTitle = values.title.trim();

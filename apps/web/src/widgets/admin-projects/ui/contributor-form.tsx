@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { cn } from '@/shared/lib';
 import { Button, Icon, Input } from '@sutuzhko/ui-kit';
 
 import { CONTRIBUTOR_COLORS } from '../model/project-form';
@@ -10,12 +11,15 @@ import styles from './admin-projects.module.css';
 export interface ContributorDraft {
   readonly name: string;
   readonly color: string;
+  /** URL аватара (необязателен) — при отсутствии показываем инициалы на `color`. */
+  readonly image: string;
+  /** Внешняя ссылка на профиль (необязательна) — делает участника кликабельным. */
   readonly link: string;
 }
 
 const DEFAULT_COLOR = CONTRIBUTOR_COLORS[0] ?? '#238636';
 
-const EMPTY_DRAFT: ContributorDraft = { name: '', color: DEFAULT_COLOR, link: '' };
+const EMPTY_DRAFT: ContributorDraft = { name: '', color: DEFAULT_COLOR, image: '', link: '' };
 
 interface ContributorFormProps {
   /** Начальные значения (правка); без них — создание с пустыми полями. */
@@ -46,13 +50,14 @@ export function ContributorForm({
   const { t } = useTranslation();
   const [name, setName] = useState(initial?.name ?? EMPTY_DRAFT.name);
   const [color, setColor] = useState(initial?.color ?? EMPTY_DRAFT.color);
+  const [image, setImage] = useState(initial?.image ?? EMPTY_DRAFT.image);
   const [link, setLink] = useState(initial?.link ?? EMPTY_DRAFT.link);
 
   const canSubmit = name.trim().length > 0 && !disabled;
 
   const submit = (): void => {
     if (!canSubmit) return;
-    onSubmit({ name: name.trim(), color, link: link.trim() });
+    onSubmit({ name: name.trim(), color, image: image.trim(), link: link.trim() });
   };
 
   return (
@@ -70,6 +75,16 @@ export function ContributorForm({
           role="radiogroup"
           aria-label={t('admin.projects.contributorColor')}
         >
+          {/* «Без цвета» — сброс к дефолтному аватару-градиенту (на сохранении → null). */}
+          <button
+            type="button"
+            role="radio"
+            aria-checked={!color}
+            aria-label={t('admin.projects.contributorColorNone')}
+            title={t('admin.projects.contributorColorNone')}
+            className={cn(styles.swatch, styles.swatchNone)}
+            onClick={() => setColor('')}
+          />
           {CONTRIBUTOR_COLORS.map((swatch) => (
             <button
               key={swatch}
@@ -84,6 +99,13 @@ export function ContributorForm({
           ))}
         </div>
       </div>
+      <Input
+        label={t('admin.projects.contributorImage')}
+        labelVariant="plain"
+        placeholder={t('admin.projects.contributorImagePlaceholder')}
+        value={image}
+        onChange={(event) => setImage(event.target.value)}
+      />
       <Input
         label={t('admin.projects.contributorLink')}
         labelVariant="plain"

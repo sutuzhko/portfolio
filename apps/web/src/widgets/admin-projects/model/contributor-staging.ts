@@ -67,8 +67,8 @@ export function stageCreate(
   const entry: StagedContributor = {
     id: makeTempId(list),
     name,
-    image: null,
-    color: draft.color,
+    image: draft.image || null,
+    color: draft.color || null,
     link: draft.link || null,
     order: list.length,
     isNew: true,
@@ -90,7 +90,8 @@ export function stageUpdate(
       ? {
           ...entry,
           name: applyName(entry.name, locale, draft.name),
-          color: draft.color,
+          color: draft.color || null,
+          image: draft.image || null,
           link: draft.link || null,
           isEdited: entry.isNew ? false : true,
         }
@@ -148,6 +149,7 @@ export function stagedToCreateBody(entry: StagedContributor): CreateContributor 
   return {
     name: toNameInput(entry.name),
     color: entry.color ?? undefined,
+    image: entry.image ?? undefined,
     link: entry.link ?? undefined,
   };
 }
@@ -156,7 +158,9 @@ export function stagedToCreateBody(entry: StagedContributor): CreateContributor 
 export function stagedToUpdateBody(entry: StagedContributor): UpdateContributor {
   return {
     name: toNameInput(entry.name),
-    color: entry.color ?? undefined,
+    // Сброшенный цвет шлём пустой строкой (бэк маппит в null) — undefined бы «не менять».
+    color: entry.color ?? '',
+    image: entry.image ?? undefined,
     link: entry.link ?? undefined,
   };
 }

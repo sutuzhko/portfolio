@@ -16,7 +16,12 @@ import {
   type CreateProject,
   type UpdateProject,
 } from '@/entities/project';
-import { useGetTechnologiesAdminQuery } from '@/entities/technology';
+import {
+  useCreateTechnologyMutation,
+  useDeleteTechnologyMutation,
+  useGetTechnologiesAdminQuery,
+  useUpdateTechnologyMutation,
+} from '@/entities/technology';
 import { useToaster } from '@/features/toaster';
 import type { AppLanguage } from '@/shared/config';
 import { ErrorState } from '@sutuzhko/ui-kit';
@@ -27,10 +32,18 @@ import {
   stagedToUpdateBody,
   type StagedContributor,
 } from '../model/contributor-staging';
+import { MAX_GALLERY_ITEMS } from '../model/gallery';
+import {
+  planTechnologyStaging,
+  stagedToTechCreateBody,
+  stagedToTechUpdateBody,
+  type StagedTechnology,
+} from '../model/technology-staging';
 
 import { AdminProjectsSkeleton } from './admin-projects-skeleton';
 import { AdminProjectsView } from './admin-projects-view';
 import { ProjectForm } from './project-form';
+import type { GalleryRejection } from './project-gallery';
 
 export interface AdminProjectsProps {
   /** Локаль редактирования из маршрута. */
@@ -56,6 +69,9 @@ export function AdminProjects({ locale, detail, onNavigateDetail }: AdminProject
   const [createContributor, createContributorState] = useCreateContributorMutation();
   const [updateContributor, updateContributorState] = useUpdateContributorMutation();
   const [deleteContributor, deleteContributorState] = useDeleteContributorMutation();
+  const [createTechnology, createTechnologyState] = useCreateTechnologyMutation();
+  const [updateTechnology, updateTechnologyState] = useUpdateTechnologyMutation();
+  const [deleteTechnology, deleteTechnologyState] = useDeleteTechnologyMutation();
   const [createProject, createState] = useCreateProjectMutation();
   const [updateProject, updateState] = useUpdateProjectMutation();
   const [deleteProject, deleteState] = useDeleteProjectMutation();
@@ -70,7 +86,10 @@ export function AdminProjects({ locale, detail, onNavigateDetail }: AdminProject
     deleteGalleryState.isLoading ||
     createContributorState.isLoading ||
     updateContributorState.isLoading ||
-    deleteContributorState.isLoading;
+    deleteContributorState.isLoading ||
+    createTechnologyState.isLoading ||
+    updateTechnologyState.isLoading ||
+    deleteTechnologyState.isLoading;
 
   const notifyDelete = async (id: string): Promise<void> => {
     try {
@@ -108,12 +127,65 @@ export function AdminProjects({ locale, detail, onNavigateDetail }: AdminProject
     }
   };
 
-  const addScreenshot = async (projectId: string, file: File): Promise<void> => {
+  // Тот же паттерн, что и для участников, но для каталога технологий: применяем
+  // накопленный CRUD до сохранения проекта и возвращаем карту временный→реальный id.
+  const applyTechnologyStaging = async (
+    techStaged: readonly StagedTechnology[],
+  ): Promise<Record<string, string> | null> => {
+    const plan = planTechnologyStaging(techStaged);
+    const idMap: Record<string, string> = {};
     try {
-      await uploadGallery({ projectId, file }).unwrap();
-      notify({ type: 'success', title: t('admin.projects.galleryUploaded') });
+      for (const entry of plan.creates) {
+        const created = await createTechnology(stagedToTechCreateBody(entry)).unwrap();
+        idMap[entry.id] = created.id;
+      }
+      for (const entry of plan.updates) {
+        await updateTechnology({ id: entry.id, body: stagedToTechUpdateBody(entry) }).unwrap();
+      }
+      for (const entry of plan.deletes) {
+        await deleteTechnology(entry.id).unwrap();
+      }
+      return idMap;
     } catch {
       notify({ type: 'error', title: t('admin.saveError') });
+      return null;
+    }
+  };
+
+  // Пачка скриншотов: грузим по одному (эндпоинт принимает один файл), считаем
+  // успехи/неудачи и показываем один итоговый тост. Бэк режет по лимиту 10 → часть
+  // может не пройти.
+  const addScreenshots = async (projectId: string, files: readonly File[]): Promise<void> => {
+    let ok = 0;
+    for (const file of files) {
+      try {
+        await uploadGallery({ projectId, file }).unwrap();
+        ok += 1;
+      } catch {
+        // продолжаем — считаем неуспехи по разнице
+      }
+    }
+    if (ok > 0) {
+      notify({ type: 'success', title: t('admin.projects.galleryUploadedCount', { n: ok }) });
+    }
+    if (ok < files.length) {
+      notify({
+        type: 'error',
+        title: t('admin.projects.galleryUploadFailed', { n: files.length - ok }),
+      });
+    }
+  };
+
+  // Файлы, отсеянные ещё до загрузки (размер / лимит) — предупреждаем.
+  const rejectScreenshots = ({ tooLarge, overflow }: GalleryRejection): void => {
+    if (tooLarge > 0) {
+      notify({ type: 'warning', title: t('admin.projects.galleryTooLarge', { n: tooLarge }) });
+    }
+    if (overflow > 0) {
+      notify({
+        type: 'warning',
+        title: t('admin.projects.galleryOverflow', { n: overflow, max: MAX_GALLERY_ITEMS }),
+      });
     }
   };
 
@@ -137,22 +209,24 @@ export function AdminProjects({ locale, detail, onNavigateDetail }: AdminProject
     }
   };
 
-  // Заменяет временные id участников на реальные (после применения черновика).
-  const remapContributors = (
-    ids: readonly string[] | undefined,
-    idMap: Record<string, string>,
-  ): string[] => (ids ?? []).map((id) => idMap[id] ?? id);
+  // Заменяет временные id на реальные (после применения черновика каталога).
+  const remapIds = (ids: readonly string[] | undefined, idMap: Record<string, string>): string[] =>
+    (ids ?? []).map((id) => idMap[id] ?? id);
 
   const submitCreate = async (
     body: CreateProject,
     staged: readonly StagedContributor[],
+    techStaged: readonly StagedTechnology[],
   ): Promise<void> => {
-    const idMap = await applyContributorStaging(staged);
-    if (idMap === null) return;
+    const contributorMap = await applyContributorStaging(staged);
+    if (contributorMap === null) return;
+    const technologyMap = await applyTechnologyStaging(techStaged);
+    if (technologyMap === null) return;
     try {
       await createProject({
         ...body,
-        contributorIds: remapContributors(body.contributorIds, idMap),
+        contributorIds: remapIds(body.contributorIds, contributorMap),
+        technologyIds: remapIds(body.technologyIds, technologyMap),
       }).unwrap();
       notify({ type: 'success', title: t('admin.projects.created') });
       onNavigateDetail(null);
@@ -165,13 +239,20 @@ export function AdminProjects({ locale, detail, onNavigateDetail }: AdminProject
     id: string,
     body: UpdateProject,
     staged: readonly StagedContributor[],
+    techStaged: readonly StagedTechnology[],
   ): Promise<void> => {
-    const idMap = await applyContributorStaging(staged);
-    if (idMap === null) return;
+    const contributorMap = await applyContributorStaging(staged);
+    if (contributorMap === null) return;
+    const technologyMap = await applyTechnologyStaging(techStaged);
+    if (technologyMap === null) return;
     try {
       await updateProject({
         id,
-        body: { ...body, contributorIds: remapContributors(body.contributorIds, idMap) },
+        body: {
+          ...body,
+          contributorIds: remapIds(body.contributorIds, contributorMap),
+          technologyIds: remapIds(body.technologyIds, technologyMap),
+        },
       }).unwrap();
       notify({ type: 'success', title: t('admin.saved') });
       onNavigateDetail(null);
@@ -203,9 +284,10 @@ export function AdminProjects({ locale, detail, onNavigateDetail }: AdminProject
         contributors={contributors ?? []}
         locale={locale}
         isBusy={isBusy}
-        onCreate={(body, staged) => void submitCreate(body, staged)}
-        onUpdate={(id, body, staged) => void submitUpdate(id, body, staged)}
-        onUploadGallery={(projectId, file) => void addScreenshot(projectId, file)}
+        onCreate={(body, staged, techStaged) => void submitCreate(body, staged, techStaged)}
+        onUpdate={(id, body, staged, techStaged) => void submitUpdate(id, body, staged, techStaged)}
+        onUploadGallery={(projectId, files) => void addScreenshots(projectId, files)}
+        onRejectGallery={rejectScreenshots}
         onDeleteGallery={(mediaId) => void removeScreenshot(mediaId)}
         onCopyGalleryUrl={(url) => void copyScreenshotUrl(url)}
         onCancel={() => onNavigateDetail(null)}

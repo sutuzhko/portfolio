@@ -28,7 +28,7 @@ export function ProjectTile({ project, onSelect }: ProjectTileProps) {
     <button
       type="button"
       className={styles.tile}
-      style={{ background: project.tileColor ?? 'var(--color-raised)' }}
+      style={{ background: project.tileColor || 'var(--color-raised)' }}
       onClick={() => onSelect(project.slug)}
     >
       <span className={styles.content}>

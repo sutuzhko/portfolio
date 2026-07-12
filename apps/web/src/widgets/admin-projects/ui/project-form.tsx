@@ -8,9 +8,9 @@ import type { CreateProject, ProjectAdmin, UpdateProject } from '@/entities/proj
 import type { TechnologyAdmin } from '@/entities/technology';
 import { cn, countDirtyFields } from '@/shared/lib';
 import type { AppLanguage } from '@/shared/config';
-import { SaveBar, ToggleField } from '@/shared/ui';
+import { Markdown, MarkdownEditor, SaveBar, ToggleField } from '@/shared/ui';
 import { ProjectTile } from '@/entities/project';
-import { Button, Chip, Icon, Input, Segmented, Textarea } from '@sutuzhko/ui-kit';
+import { Button, Icon, Input, Segmented, Textarea } from '@sutuzhko/ui-kit';
 
 import {
   createProjectSchema,
@@ -21,6 +21,7 @@ import {
   TILE_COLORS,
   type ProjectFormValues,
 } from '../model/project-form';
+import { MAX_GALLERY_ITEMS } from '../model/gallery';
 import { formToTile } from '../model/project-preview';
 import {
   countContributorChanges,
@@ -32,9 +33,21 @@ import {
   visibleStaged,
   type StagedContributor,
 } from '../model/contributor-staging';
+import {
+  countTechnologyChanges,
+  initTechStaged,
+  stageCreateTech,
+  stagedToTechCatalog,
+  visibleTechStaged,
+  type StagedTechnology,
+} from '../model/technology-staging';
 
+import { BulletsEditor } from './bullets-editor';
 import { ContributorManager } from './contributor-manager';
-import { ProjectGallery } from './project-gallery';
+import { FormCard } from './form-card';
+import { LinksEditor } from './links-editor';
+import { TechnologyManager } from './technology-manager';
+import { ProjectGallery, type GalleryRejection } from './project-gallery';
 import styles from './admin-projects.module.css';
 
 export interface ProjectFormProps {
@@ -44,15 +57,25 @@ export interface ProjectFormProps {
   readonly contributors: readonly ContributorAdmin[];
   readonly locale: AppLanguage;
   readonly isBusy: boolean;
-  /** Сохранение проекта. `staged` — накопленный CRUD участников, применяется до проекта. */
-  readonly onCreate: (body: CreateProject, staged: readonly StagedContributor[]) => void;
+  /**
+   * Сохранение проекта. `staged`/`techStaged` — накопленный CRUD участников и
+   * технологий, применяется до самого проекта (чтобы ремапнуть временные id).
+   */
+  readonly onCreate: (
+    body: CreateProject,
+    staged: readonly StagedContributor[],
+    techStaged: readonly StagedTechnology[],
+  ) => void;
   readonly onUpdate: (
     id: string,
     body: UpdateProject,
     staged: readonly StagedContributor[],
+    techStaged: readonly StagedTechnology[],
   ) => void;
-  /** Загрузить скриншот в галерею проекта (только у сохранённого проекта). */
-  readonly onUploadGallery: (projectId: string, file: File) => void;
+  /** Загрузить пачку скриншотов в галерею проекта (только у сохранённого проекта). */
+  readonly onUploadGallery: (projectId: string, files: readonly File[]) => void;
+  /** Часть выбранных файлов не прошла проверку размера/лимита. */
+  readonly onRejectGallery: (rejection: GalleryRejection) => void;
   /** Удалить скриншот из галереи. */
   readonly onDeleteGallery: (mediaId: string) => void;
   /** Скопировать URL скриншота (для вставки в Markdown-описание). */
@@ -76,6 +99,7 @@ export function ProjectForm({
   onCreate,
   onUpdate,
   onUploadGallery,
+  onRejectGallery,
   onDeleteGallery,
   onCopyGalleryUrl,
   onCancel,
@@ -93,308 +117,378 @@ export function ProjectForm({
     defaultValues: record ? projectToForm(record, locale) : emptyForm(),
   });
 
-  // Черновик каталога участников: инициализируется каталогом, дальше правится
-  // локально (create/edit/delete) и уходит на бэк только при «Сохранить».
+  // Черновики каталогов участников и технологий: инициализируются каталогом, дальше
+  // правятся локально (create/edit/delete) и уходят на бэк только при «Сохранить».
   const [staged, setStaged] = useState<readonly StagedContributor[]>(() =>
     initStaged(contributors),
   );
-  const stagedChanges = countContributorChanges(staged);
+  const [techStaged, setTechStaged] = useState<readonly StagedTechnology[]>(() =>
+    initTechStaged(technologies),
+  );
+  const stagedChanges = countContributorChanges(staged) + countTechnologyChanges(techStaged);
 
   const isRunnable = watch('runnable');
 
   // Плитка перерисовывается на каждый штрих в форме — `watch()` без аргументов
   // подписывает форму целиком, поэтому предпросмотр всегда отражает черновик.
-  // Участники берутся из черновика — новые/переименованные видны в предпросмотре.
+  // Участники и технологии берутся из черновиков — новые/переименованные видны сразу.
   const draft = watch();
-  const tile = formToTile(draft, technologies, stagedToCatalog(staged), locale, {
+  const tile = formToTile(draft, stagedToTechCatalog(techStaged), stagedToCatalog(staged), locale, {
     title: t('admin.projects.newTitle'),
     description: t('admin.projects.previewDescription'),
   });
 
   const submit = (values: ProjectFormValues): void => {
-    if (record) onUpdate(record.id, formToUpdate(values, locale), staged);
-    else onCreate(formToCreate(values, locale), staged);
+    if (record) onUpdate(record.id, formToUpdate(values, locale), staged, techStaged);
+    else onCreate(formToCreate(values, locale), staged, techStaged);
   };
 
+  const published = draft.status === 'PUBLISHED';
+  const endpoint = record ? `PATCH /api/projects/${draft.slug}` : 'POST /api/projects';
+
   return (
-    <form className={styles.card} onSubmit={(event) => void handleSubmit(submit)(event)} noValidate>
-      <header className={styles.head}>
-        <h2 className={styles.title}>
-          {record ? t('admin.projects.editTitle') : t('admin.projects.newTitle')}
-        </h2>
+    <form className={styles.form} onSubmit={(event) => void handleSubmit(submit)(event)} noValidate>
+      {/* Шапка редактора: имя проекта + эндпоинт (как в макете), справа — закрыть. */}
+      <header className={styles.editorBar}>
+        <div className={styles.editorBarText}>
+          <h2 className={styles.editorTitle}>
+            {record ? (
+              <>
+                {t('admin.projects.editingLabel')}{' '}
+                <span className={styles.editorName}>{draft.title}</span>
+              </>
+            ) : (
+              t('admin.projects.newTitle')
+            )}
+          </h2>
+          <div className={styles.editorEndpoint}>{endpoint}</div>
+        </div>
         <Button variant="icon" onClick={onCancel} aria-label={t('admin.close')}>
           <Icon name="close" size={16} />
         </Button>
       </header>
 
-      <div className={styles.body}>
-        <div className={styles.grid2}>
-          <Input
-            label={t('admin.projects.name')}
-            labelVariant="plain"
-            font="sans"
-            required={locale === 'ru'}
-            error={errors.title?.message}
-            {...register('title')}
-          />
-          <Input
-            label={t('admin.projects.slug')}
-            labelVariant="plain"
-            required
-            error={errors.slug?.message}
-            {...register('slug')}
-          />
-          <Input
-            label={t('admin.projects.role')}
-            labelVariant="plain"
-            font="sans"
-            {...register('role')}
-          />
-          <Input label={t('admin.projects.year')} labelVariant="plain" {...register('period')} />
-        </div>
-
-        <Input
-          label={t('admin.projects.subtitle')}
-          labelVariant="plain"
-          font="sans"
-          placeholder={t('admin.projects.subtitlePlaceholder')}
-          {...register('subtitle')}
-        />
-        <Textarea
-          label={t('admin.projects.summary')}
-          labelVariant="plain"
-          font="sans"
-          required={locale === 'ru'}
-          rows={2}
-          error={errors.description?.message}
-          {...register('description')}
-        />
-        <Input
-          label={t('admin.projects.category')}
-          labelVariant="plain"
-          font="sans"
-          placeholder={t('admin.projects.categoryPlaceholder')}
-          {...register('category')}
-        />
-        <Textarea
-          label={t('admin.projects.body')}
-          labelVariant="plain"
-          font="sans"
-          required={locale === 'ru'}
-          rows={4}
-          error={errors.bodyMarkdown?.message}
-          {...register('bodyMarkdown')}
-        />
-        <Textarea
-          label={t('admin.projects.bullets')}
-          labelVariant="plain"
-          font="sans"
-          hint={t('admin.projects.bulletsHint')}
-          rows={3}
-          {...register('bullets')}
-        />
-        <Textarea
-          label={t('admin.projects.links')}
-          labelVariant="plain"
-          hint={t('admin.projects.linksHint')}
-          rows={2}
-          {...register('links')}
-        />
-
-        <Controller
-          control={control}
-          name="technologyIds"
-          render={({ field }) => (
-            <fieldset className={styles.field}>
-              <legend className={cn(styles.inlineLabel, styles.required)}>
-                {t('admin.projects.technologies')}
-              </legend>
-              <div className={styles.chips}>
-                {technologies.map((tech) => {
-                  const selected = field.value.includes(tech.id);
-                  return (
-                    <Chip
-                      key={tech.id}
-                      selected={selected}
-                      onClick={() =>
-                        field.onChange(
-                          selected
-                            ? field.value.filter((id) => id !== tech.id)
-                            : [...field.value, tech.id],
-                        )
-                      }
-                    >
-                      {tech.name}
-                    </Chip>
-                  );
-                })}
-              </div>
-              {errors.technologyIds ? (
-                <p className={styles.error}>{errors.technologyIds.message}</p>
-              ) : null}
-            </fieldset>
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="contributorIds"
-          render={({ field }) => (
-            <ContributorManager
-              locale={locale}
-              disabled={isBusy}
-              staged={visibleStaged(staged)}
-              selectedIds={field.value}
-              onToggle={(id) =>
-                field.onChange(
-                  field.value.includes(id)
-                    ? field.value.filter((current) => current !== id)
-                    : [...field.value, id],
-                )
-              }
-              onStageCreate={(contributorDraft) => {
-                const next = stageCreate(staged, contributorDraft, locale);
-                setStaged(next);
-                // Автовыбор только что созданного (по временному id).
-                const added = next[next.length - 1];
-                if (added) field.onChange([...field.value, added.id]);
-              }}
-              onStageUpdate={(id, contributorDraft) =>
-                setStaged((current) => stageUpdate(current, id, contributorDraft, locale))
-              }
-              onStageDelete={(id) => {
-                setStaged((current) => stageDelete(current, id));
-                field.onChange(field.value.filter((current) => current !== id));
-              }}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="tileColor"
-          render={({ field }) => (
-            <div className={styles.field}>
-              <span className={styles.inlineLabel}>{t('admin.projects.tileColor')}</span>
-              <div className={styles.tileRow}>
-                <div
-                  className={styles.palette}
-                  role="radiogroup"
-                  aria-label={t('admin.projects.tileColor')}
-                >
-                  {TILE_COLORS.map((color) => (
-                    <button
-                      key={color}
-                      type="button"
-                      role="radio"
-                      aria-checked={field.value === color}
-                      aria-label={color}
-                      className={styles.swatch}
-                      style={{ background: color }}
-                      onClick={() => field.onChange(color)}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Живой предпросмотр: та же плитка, что и в публичном списке. */}
-              <div className={styles.tilePreview}>
-                <span className={styles.previewCaption}>{t('admin.projects.preview')}</span>
-                <ProjectTile project={tile} />
+      <div className={styles.formGrid}>
+        {/* ЛЕВАЯ КОЛОНКА — контент */}
+        <div className={styles.formCol}>
+          <FormCard title={t('admin.projects.cardMain')}>
+            <div className={styles.grid2}>
+              <Input
+                label={t('admin.projects.name')}
+                labelVariant="plain"
+                font="sans"
+                required={locale === 'ru'}
+                error={errors.title?.message}
+                {...register('title')}
+              />
+              <Input
+                label={t('admin.projects.slug')}
+                labelVariant="plain"
+                required
+                error={errors.slug?.message}
+                {...register('slug')}
+              />
+              <Input
+                label={t('admin.projects.subtitle')}
+                labelVariant="plain"
+                font="sans"
+                placeholder={t('admin.projects.subtitlePlaceholder')}
+                {...register('subtitle')}
+              />
+              <div className={styles.roleYear}>
+                <Input
+                  label={t('admin.projects.role')}
+                  labelVariant="plain"
+                  font="sans"
+                  {...register('role')}
+                />
+                <Input
+                  label={t('admin.projects.year')}
+                  labelVariant="plain"
+                  {...register('period')}
+                />
               </div>
             </div>
-          )}
-        />
+            <Textarea
+              label={t('admin.projects.summary')}
+              labelVariant="plain"
+              font="sans"
+              required={locale === 'ru'}
+              rows={2}
+              error={errors.description?.message}
+              {...register('description')}
+            />
+          </FormCard>
 
-        {/* Галерея — только у сохранённого проекта: загрузке нужен его id. */}
-        {record !== null ? (
-          <ProjectGallery
-            gallery={record.gallery}
-            locale={locale}
-            disabled={isBusy}
-            onUpload={(file) => onUploadGallery(record.id, file)}
-            onDelete={onDeleteGallery}
-            onCopyUrl={onCopyGalleryUrl}
-          />
-        ) : null}
+          <FormCard title={t('admin.projects.cardContent')}>
+            <div className={styles.field}>
+              <label
+                htmlFor="project-body"
+                className={cn(styles.inlineLabel, locale === 'ru' && styles.required)}
+              >
+                {t('admin.projects.body')}
+              </label>
+              <div className={styles.mdFrame}>
+                <Controller
+                  control={control}
+                  name="bodyMarkdown"
+                  render={({ field }) => (
+                    <MarkdownEditor
+                      id="project-body"
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      renderPreview={(source) => <Markdown>{source}</Markdown>}
+                      sourceLabel={t('admin.projects.bodyEditorLabel')}
+                      splitLabel={t('markdownEditor.split')}
+                      previewLabel={t('markdownEditor.preview')}
+                      error={errors.bodyMarkdown?.message}
+                    />
+                  )}
+                />
+              </div>
+            </div>
 
-        <div className={styles.field}>
-          <span className={styles.inlineLabel}>{t('admin.projects.status')}</span>
-          <Controller
-            control={control}
-            name="status"
-            render={({ field }) => (
-              <Segmented
-                value={field.value}
-                onChange={field.onChange}
-                aria-label={t('admin.projects.status')}
-                options={[
-                  { value: 'DRAFT', label: t('admin.projects.statusDraft') },
-                  { value: 'PUBLISHED', label: t('admin.projects.statusPublished') },
-                ]}
-              />
-            )}
-          />
+            <Controller
+              control={control}
+              name="bullets"
+              render={({ field }) => (
+                <BulletsEditor value={field.value} onChange={field.onChange} />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="links"
+              render={({ field }) => <LinksEditor value={field.value} onChange={field.onChange} />}
+            />
+          </FormCard>
+
+          <FormCard title={t('admin.projects.cardTechTeam')}>
+            <Controller
+              control={control}
+              name="technologyIds"
+              render={({ field }) => (
+                <TechnologyManager
+                  disabled={isBusy}
+                  staged={visibleTechStaged(techStaged)}
+                  selectedIds={field.value}
+                  error={errors.technologyIds?.message}
+                  onToggle={(id) =>
+                    field.onChange(
+                      field.value.includes(id)
+                        ? field.value.filter((current) => current !== id)
+                        : [...field.value, id],
+                    )
+                  }
+                  onStageCreate={(techDraft) => {
+                    const next = stageCreateTech(techStaged, techDraft);
+                    setTechStaged(next);
+                    // Автовыбор только что созданной (по временному id).
+                    const added = next[next.length - 1];
+                    if (added) field.onChange([...field.value, added.id]);
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="contributorIds"
+              render={({ field }) => (
+                <ContributorManager
+                  locale={locale}
+                  disabled={isBusy}
+                  staged={visibleStaged(staged)}
+                  selectedIds={field.value}
+                  onToggle={(id) =>
+                    field.onChange(
+                      field.value.includes(id)
+                        ? field.value.filter((current) => current !== id)
+                        : [...field.value, id],
+                    )
+                  }
+                  onStageCreate={(contributorDraft) => {
+                    const next = stageCreate(staged, contributorDraft, locale);
+                    setStaged(next);
+                    // Автовыбор только что созданного (по временному id).
+                    const added = next[next.length - 1];
+                    if (added) field.onChange([...field.value, added.id]);
+                  }}
+                  onStageUpdate={(id, contributorDraft) =>
+                    setStaged((current) => stageUpdate(current, id, contributorDraft, locale))
+                  }
+                  onStageDelete={(id) => {
+                    setStaged((current) => stageDelete(current, id));
+                    field.onChange(field.value.filter((current) => current !== id));
+                  }}
+                />
+              )}
+            />
+          </FormCard>
         </div>
 
-        <div className={styles.toggleGrid}>
-          <Controller
-            control={control}
-            name="hidden"
-            render={({ field }) => (
-              <ToggleField
-                icon="eye-off"
-                title={t('admin.projects.hidden')}
-                description={t('admin.projects.hiddenHint')}
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-            )}
-          />
+        {/* ПРАВАЯ КОЛОНКА — липкий сайдбар */}
+        <aside className={styles.formSidebar}>
+          <FormCard title={t('admin.projects.cardPublish')}>
+            <Controller
+              control={control}
+              name="status"
+              render={({ field }) => (
+                <Segmented
+                  value={field.value}
+                  onChange={field.onChange}
+                  aria-label={t('admin.projects.status')}
+                  options={[
+                    { value: 'DRAFT', label: t('admin.projects.statusDraft') },
+                    { value: 'PUBLISHED', label: t('admin.projects.statusPublished') },
+                  ]}
+                />
+              )}
+            />
 
-          <Controller
-            control={control}
-            name="pinned"
-            render={({ field }) => (
-              <ToggleField
-                icon="star"
-                title={t('admin.projects.pinned')}
-                description={t('admin.projects.pinnedHint')}
-                checked={field.value}
-                onCheckedChange={field.onChange}
+            <div className={styles.toggleStack}>
+              <Controller
+                control={control}
+                name="hidden"
+                render={({ field }) => (
+                  <ToggleField
+                    icon="eye-off"
+                    title={t('admin.projects.hidden')}
+                    description={t('admin.projects.hiddenHint')}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
               />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="runnable"
-            render={({ field }) => (
-              <ToggleField
-                icon="play"
-                title={t('admin.projects.runnable')}
-                description={t('admin.projects.runnableHint')}
-                checked={field.value}
-                onCheckedChange={field.onChange}
+              <Controller
+                control={control}
+                name="pinned"
+                render={({ field }) => (
+                  <ToggleField
+                    icon="star"
+                    title={t('admin.projects.pinned')}
+                    description={t('admin.projects.pinnedHint')}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
               />
-            )}
-          />
-        </div>
+              <Controller
+                control={control}
+                name="runnable"
+                render={({ field }) => (
+                  <ToggleField
+                    icon="play"
+                    title={t('admin.projects.runnable')}
+                    description={t('admin.projects.runnableHint')}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+            </div>
 
-        {isRunnable ? (
-          <div className={styles.grid2}>
-            <Input
-              label={t('admin.projects.embedUrl')}
-              labelVariant="plain"
-              {...register('embedUrl')}
+            {isRunnable ? (
+              <div className={styles.runnableFields}>
+                <Input
+                  label={t('admin.projects.embedUrl')}
+                  labelVariant="plain"
+                  {...register('embedUrl')}
+                />
+                <Input
+                  label={t('admin.projects.runCommand')}
+                  labelVariant="plain"
+                  {...register('runCommand')}
+                />
+                <Input
+                  label={t('admin.projects.runHint')}
+                  labelVariant="plain"
+                  font="sans"
+                  placeholder={t('admin.projects.runHintPlaceholder')}
+                  {...register('runHint')}
+                />
+              </div>
+            ) : null}
+
+            <div className={styles.statusLine}>
+              <span className={cn(styles.statusDot, published && styles.statusDotOn)} />
+              {published
+                ? t('admin.projects.statusPublishedLine')
+                : t('admin.projects.statusDraftLine')}
+            </div>
+          </FormCard>
+
+          <FormCard title={t('admin.projects.cardPreview')} meta={t('admin.projects.previewLive')}>
+            <Controller
+              control={control}
+              name="tileColor"
+              render={({ field }) => (
+                <>
+                  <div
+                    className={styles.palette}
+                    role="radiogroup"
+                    aria-label={t('admin.projects.tileColor')}
+                  >
+                    {/* «Без цвета» — сброс к нейтральной плитке (на сохранении → null). */}
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={!field.value}
+                      aria-label={t('admin.projects.tileColorNone')}
+                      title={t('admin.projects.tileColorNone')}
+                      className={cn(styles.swatch, styles.swatchNone)}
+                      onClick={() => field.onChange('')}
+                    />
+                    {TILE_COLORS.map((color) => (
+                      <button
+                        key={color}
+                        type="button"
+                        role="radio"
+                        aria-checked={field.value === color}
+                        aria-label={color}
+                        className={styles.swatch}
+                        style={{ background: color }}
+                        onClick={() => field.onChange(color)}
+                      />
+                    ))}
+                  </div>
+                  <div className={styles.tilePreviewBox}>
+                    <ProjectTile project={tile} />
+                  </div>
+                </>
+              )}
             />
             <Input
-              label={t('admin.projects.runCommand')}
+              label={t('admin.projects.category')}
               labelVariant="plain"
-              {...register('runCommand')}
+              font="sans"
+              placeholder={t('admin.projects.categoryPlaceholder')}
+              {...register('category')}
             />
-          </div>
-        ) : null}
+          </FormCard>
+
+          {/* Скриншоты — только у сохранённого проекта: загрузке нужен его id. */}
+          {record !== null ? (
+            <FormCard
+              title={t('admin.projects.gallery')}
+              meta={t('admin.projects.galleryCount', {
+                current: record.gallery.length,
+                max: MAX_GALLERY_ITEMS,
+              })}
+            >
+              <ProjectGallery
+                gallery={record.gallery}
+                locale={locale}
+                disabled={isBusy}
+                onUpload={(files) => onUploadGallery(record.id, files)}
+                onReject={onRejectGallery}
+                onDelete={onDeleteGallery}
+                onCopyUrl={onCopyGalleryUrl}
+              />
+            </FormCard>
+          ) : null}
+        </aside>
       </div>
 
       <SaveBar

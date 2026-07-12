@@ -1,14 +1,26 @@
-import { useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { AppLanguage } from '@/shared/config';
-import { Button, Chip, ConfirmDialog, Icon } from '@sutuzhko/ui-kit';
+import { ConfirmDialog, Icon } from '@sutuzhko/ui-kit';
+
+import { cn } from '@/shared/lib';
 
 import { pickText } from '../model/project-form';
 import type { StagedContributor } from '../model/contributor-staging';
 
 import { ContributorForm, type ContributorDraft } from './contributor-form';
 import styles from './admin-projects.module.css';
+
+/** Заливка чипа участника: градиент из его цвета аватара (иначе — нейтральная). */
+function chipFill(color: string | null): CSSProperties | undefined {
+  if (!color) return undefined;
+  return {
+    background: `linear-gradient(135deg, ${color}, color-mix(in srgb, ${color} 60%, #000))`,
+    color: '#ffffff',
+    borderColor: 'rgba(255, 255, 255, 0.18)',
+  };
+}
 
 export interface ContributorManagerProps {
   readonly locale: AppLanguage;
@@ -78,14 +90,22 @@ export function ContributorManager({
         {staged.map((contributor) => {
           const selected = selectedIds.includes(contributor.id);
           const label = pickText(contributor.name, locale);
+          const editing = editor.kind === 'edit' && editor.contributor.id === contributor.id;
           return (
             <span key={contributor.id} className={styles.chipWrap}>
-              <Chip selected={selected} onClick={() => onToggle(contributor.id)}>
-                {label}
-              </Chip>
               <button
                 type="button"
-                className={styles.chipEdit}
+                className={cn(styles.collabChip, !selected && styles.collabChipOff)}
+                style={selected ? chipFill(contributor.color) : undefined}
+                aria-pressed={selected}
+                onClick={() => onToggle(contributor.id)}
+                title={t('admin.projects.contributorToggle', { name: label })}
+              >
+                {label}
+              </button>
+              <button
+                type="button"
+                className={cn(styles.chipEdit, editing && styles.chipEditActive)}
                 disabled={disabled}
                 aria-label={t('admin.projects.contributorEditName', { name: label })}
                 onClick={() => setEditor({ kind: 'edit', contributor })}
@@ -95,19 +115,16 @@ export function ContributorManager({
             </span>
           );
         })}
-      </div>
-
-      {editor.kind === 'closed' ? (
-        <Button
-          variant="ghost"
-          size="sm"
-          className={styles.contributorAdd}
+        {/* «+ создать участника» — последним элементом ряда чипов (как в макете). */}
+        <button
+          type="button"
+          className={styles.chipAdd}
           disabled={disabled}
           onClick={() => setEditor({ kind: 'create' })}
         >
           {t('admin.projects.contributorAdd')}
-        </Button>
-      ) : null}
+        </button>
+      </div>
 
       {editor.kind === 'create' ? (
         <ContributorForm
@@ -122,7 +139,8 @@ export function ContributorManager({
         <ContributorForm
           initial={{
             name: pickText(editor.contributor.name, locale),
-            color: editor.contributor.color ?? '#238636',
+            color: editor.contributor.color ?? '',
+            image: editor.contributor.image ?? '',
             link: editor.contributor.link ?? '',
           }}
           disabled={disabled}
