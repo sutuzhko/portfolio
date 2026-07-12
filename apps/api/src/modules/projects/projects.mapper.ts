@@ -63,6 +63,7 @@ export function toProjectListItem(project: ProjectListPayload, locale: Locale): 
       name: localize(contributor.name, locale),
       image: contributor.image,
       color: contributor.color,
+      link: contributor.link,
     })),
   };
 }

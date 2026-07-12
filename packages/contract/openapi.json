@@ -3651,12 +3651,18 @@
           "color": {
             "type": "string",
             "nullable": true
+          },
+          "link": {
+            "type": "string",
+            "nullable": true,
+            "description": "Внешняя ссылка на профиль участника"
           }
         },
         "required": [
           "name",
           "image",
-          "color"
+          "color",
+          "link"
         ]
       },
       "ProjectListItemDto": {

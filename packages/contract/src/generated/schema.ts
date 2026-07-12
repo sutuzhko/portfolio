@@ -990,6 +990,8 @@ export interface components {
             name: string;
             image: string | null;
             color: string | null;
+            /** @description Внешняя ссылка на профиль участника */
+            link: string | null;
         };
         ProjectListItemDto: {
             slug: string;

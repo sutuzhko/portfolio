@@ -23,7 +23,7 @@ export class ContributorsService {
       data: {
         name: writeText(dto.name),
         image: dto.image ?? null,
-        color: dto.color ?? null,
+        color: dto.color || null,
         link: dto.link ?? null,
         order: dto.order ?? 0,
       },
@@ -36,7 +36,8 @@ export class ContributorsService {
     const data: Prisma.ContributorUpdateInput = {};
     if (dto.name !== undefined) data.name = writeText(dto.name);
     if (dto.image !== undefined) data.image = dto.image;
-    if (dto.color !== undefined) data.color = dto.color;
+    // Пустая строка = «убрать цвет» → null (аватар станет градиентом по имени).
+    if (dto.color !== undefined) data.color = dto.color || null;
     if (dto.link !== undefined) data.link = dto.link;
     if (dto.order !== undefined) data.order = dto.order;
 

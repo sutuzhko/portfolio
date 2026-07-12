@@ -106,7 +106,7 @@ export class ProjectsService {
         role: dto.role ? writeText(dto.role) : undefined,
         category: dto.category ?? null,
         period: dto.period ?? null,
-        tileColor: dto.tileColor ?? null,
+        tileColor: dto.tileColor || null,
         links: dto.links ? writeProjectLinks(dto.links) : undefined,
         runnable: dto.runnable ?? false,
         runCommand: dto.runCommand ?? null,
@@ -152,7 +152,8 @@ export class ProjectsService {
     if (dto.role !== undefined) data.role = mergeText(current.role, dto.role);
     if (dto.category !== undefined) data.category = dto.category;
     if (dto.period !== undefined) data.period = dto.period;
-    if (dto.tileColor !== undefined) data.tileColor = dto.tileColor;
+    // Пустая строка из формы = «убрать цвет» → null (плитка станет нейтральной).
+    if (dto.tileColor !== undefined) data.tileColor = dto.tileColor || null;
     if (dto.links !== undefined) data.links = writeProjectLinks(dto.links);
     if (dto.runnable !== undefined) data.runnable = dto.runnable;
     if (dto.runCommand !== undefined) data.runCommand = dto.runCommand;

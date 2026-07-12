@@ -9,4 +9,7 @@ export class ContributorDto {
 
   @ApiProperty({ type: String, nullable: true })
   color: string | null;
+
+  @ApiProperty({ type: String, nullable: true, description: 'Внешняя ссылка на профиль участника' })
+  link: string | null;
 }

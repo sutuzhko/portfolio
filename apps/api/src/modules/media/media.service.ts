@@ -16,6 +16,10 @@ import { StorageService } from './storage.service';
 
 const PROFILE_ID = 1;
 
+// Больше 10 скриншотов на проект не храним — держим галерею компактной и не даём
+// переполнить диск. Фронт тоже гейтит, но лимит должен жить и на бэке.
+const MAX_GALLERY_ITEMS = 10;
+
 // Спецификации responsive-форматов галереи (ширина в px). Апскейла нет — sharp
 // не увеличивает изображения меньше указанной ширины.
 const GALLERY_FORMATS: ReadonlyArray<{
@@ -52,11 +56,19 @@ export class MediaService {
       throw new BadRequestException(`Проект "${dto.projectId}" не найден`);
     }
 
+    const galleryCount = await this.prisma.mediaAsset.count({
+      where: { projectId: dto.projectId, type: 'GALLERY' },
+    });
+    if (galleryCount >= MAX_GALLERY_ITEMS) {
+      throw new BadRequestException(
+        `Достигнут лимит галереи: не больше ${MAX_GALLERY_ITEMS} изображений`,
+      );
+    }
+
     const meta = await this.image.metadata(file.buffer);
     const url = await this.storage.save(file.buffer, this.extFor(file.mimetype));
     const formats = await this.buildFormats(file.buffer);
-    const order =
-      dto.order ?? (await this.prisma.mediaAsset.count({ where: { projectId: dto.projectId } }));
+    const order = dto.order ?? galleryCount;
 
     const asset = await this.prisma.mediaAsset.create({
       data: {
