@@ -1,6 +1,9 @@
-# Прод-окружение: Postgres + собранный API.
-# Запуск:  docker compose -f docker-compose.prod.yml up -d --build
-# Секреты задаются через переменные окружения или .env рядом с этим файлом.
+# Прод-окружение: Postgres + API + Caddy. Образы api/web собираются в GitHub
+# Actions и публикуются в GHCR, сервер их только тянет:
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d
+# `build:` оставлен для локальной сборки при желании (`... build`).
+# Секреты задаются через .env рядом с этим файлом.
 
 services:
   db:
@@ -19,6 +22,7 @@ services:
       retries: 10
 
   api:
+    image: ghcr.io/sutuzhko/portfolio-api:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: apps/api/Dockerfile
@@ -49,6 +53,7 @@ services:
 
   # Caddy: авто-HTTPS, раздаёт собранный SPA и проксирует /api,/uploads на api.
   web:
+    image: ghcr.io/sutuzhko/portfolio-web:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: apps/web/Dockerfile
