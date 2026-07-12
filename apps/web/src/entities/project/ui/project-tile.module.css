@@ -1,0 +1,154 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--color-border-strong);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-primary-bright);
+  outline-offset: 2px;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--space-5);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.category {
+  padding: 4px 9px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: rgb(0 0 0 / 32%);
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: var(--radius-sm);
+}
+
+.year {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: rgb(255 255 255 / 70%);
+}
+
+.title {
+  margin-top: 14px;
+  font-size: 21px;
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+}
+
+.subtitle {
+  display: -webkit-box;
+  margin-top: 7px;
+  overflow: hidden;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 82%);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.run {
+  align-self: flex-start;
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  margin-top: 13px;
+  padding: 5px 10px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-primary-bright);
+  background: rgb(63 185 80 / 14%);
+  border: 1px solid rgb(63 185 80 / 35%);
+  border-radius: var(--radius-sm);
+}
+
+/* Аватары слева, теги — прижаты к правому краю; футер — к низу карточки
+   (карточки в ряду выравниваются по высоте самой высокой). */
+.footer {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  margin-top: auto;
+  padding-top: var(--space-4);
+}
+
+.avatars {
+  display: flex;
+  flex: none;
+  padding-left: 8px;
+}
+
+.avatar {
+  margin-left: -8px;
+  border: 2px solid rgb(0 0 0 / 35%);
+}
+
+.avatarExtra {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: #3b3b46;
+  border-radius: var(--radius-pill);
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tag {
+  flex: none;
+  padding: 3px 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  color: #ffffff;
+  background: rgb(0 0 0 / 32%);
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: var(--radius-sm);
+}
+
+.tagMore {
+  color: rgb(255 255 255 / 85%);
+  background: rgb(0 0 0 / 45%);
+}

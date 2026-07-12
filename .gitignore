@@ -1,0 +1,38 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build output
+dist/
+build/
+storybook-static/
+*.tsbuildinfo
+
+# env
+.env
+.env.*
+!.env.example
+!.env.prod.example
+
+# test / coverage
+coverage/
+playwright-report/
+test-results/
+
+# misc
+.DS_Store
+*.local
+
+# editor / tooling
+.idea/
+.vscode/
+.claude/
+
+# project docs & design kept local (not published)
+design/
+ARCHITECTURE.md
+BACKEND.md
+CLAUDE.md
+DEPLOY.md
+DESIGN_BRIEF.md
+ROADMAP.md

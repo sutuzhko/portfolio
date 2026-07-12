@@ -1,0 +1,102 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './textarea.stories';
+
+<Meta of={Stories} />
+
+# Textarea
+
+Многострочное поле ввода с подписью, подсказкой и состоянием ошибки. Разметку и
+a11y даёт общий [`FieldFrame`](?path=/docs/shared-primitives-fieldframe--docs) —
+поведение полностью совпадает с [`Input`](?path=/docs/shared-primitives-input--docs),
+но для длинного текста.
+
+---
+
+## Анатомия
+
+- Подпись `label[for]`, `<textarea rows>`, сообщение снизу.
+- Ошибка приоритетнее подсказки; при ошибке — `aria-invalid` + `aria-describedby`.
+- `forwardRef` (React Hook Form); пробрасывает нативные атрибуты (`rows`, `maxLength`…).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Все состояния сразу
+
+<Canvas of={Stories.States} />
+
+---
+
+## Состояния и края
+
+### С ошибкой
+
+<Canvas of={Stories.WithError} />
+
+### Длинный текст
+
+Высоту задаёт `rows`; содержимое сверх неё прокручивается (авто-роста нет).
+
+<Canvas of={Stories.LongContent} />
+
+---
+
+# Когда использовать
+
+- длинный текст: био, описание проекта, статья;
+- поле, где ожидаются переносы строк.
+
+# Когда **не** использовать
+
+Для однострочного значения — [`Input`](?path=/docs/shared-primitives-input--docs).
+
+---
+
+## Доступность
+
+- `label[for]` + сообщение через `aria-describedby`; ошибка — `aria-invalid`.
+- Поле изменяемо по высоте вручную (нативный resize) — клавиатурная доступность из коробки.
+
+## Токены
+
+Общие для полей: `--surface`/`--border`, `--ring` (фокус), `--color-danger` (ошибка),
+`--radius-button` (см. `field/control.module.css`).
+
+## Связанные компоненты
+
+- [`FieldFrame`](?path=/docs/shared-primitives-fieldframe--docs) — обвязка поля.
+- [`Input`](?path=/docs/shared-primitives-input--docs) — однострочный аналог.
+
+---
+
+# Ответственность
+
+Textarea отвечает за связку подпись ↔ поле ↔ сообщение и a11y, проброс `ref`/нативных
+атрибутов и визуальное состояние ошибки. **Не отвечает** за валидацию/текст ошибки
+(снаружи), авто-рост высоты и Markdown-разметку содержимого.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Textarea
+  label={t('project.description')}
+  rows={6}
+  error={errors.description?.message}
+  {...register('description')}
+/>
+`}
+/>

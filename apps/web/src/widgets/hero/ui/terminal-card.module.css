@@ -1,0 +1,121 @@
+.terminal {
+  overflow: hidden;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+.head {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headTitle {
+  margin-left: var(--space-2);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+}
+
+.body {
+  padding: var(--space-4);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  line-height: 1.85;
+}
+
+.block {
+  margin-bottom: var(--space-2);
+}
+
+.user {
+  color: var(--color-primary-bright);
+}
+
+.path {
+  color: var(--color-fg-dim);
+}
+
+.cmd {
+  color: var(--color-fg);
+}
+
+.output {
+  color: var(--color-fg-muted);
+}
+
+/* Живое время в строке location — цветом основного текста */
+.clock {
+  color: var(--color-fg);
+}
+
+/* Мигающий курсор — размер относительно шрифта, без «магических» px */
+.caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1.1em;
+  vertical-align: -0.15em;
+  background-color: var(--color-fg);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0%;
+  }
+}
+
+.pill {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  cursor: pointer;
+  background-color: color-mix(in srgb, var(--color-primary-bright) 7%, transparent);
+  border: 0;
+  border-top: 1px dashed var(--color-border-strong);
+  transition: border-color 0.15s ease;
+}
+
+.pill:hover {
+  border-top-color: var(--color-primary-bright);
+}
+
+.pillGlyph {
+  flex: none;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-bright);
+}
+
+.pillBody {
+  flex: 1;
+  min-width: 0;
+  line-height: var(--line-height-tight);
+}
+
+.pillTitle {
+  display: block;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+}
+
+.pillText {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-muted);
+}
+
+.pillKbd {
+  flex: none;
+}

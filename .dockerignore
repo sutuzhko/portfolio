@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/.turbo
+**/coverage
+.git
+.github
+**/.env
+**/.env.*
+!**/.env.example
+apps/api/uploads
+**/*.log
+.DS_Store
+design

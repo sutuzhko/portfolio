@@ -1,0 +1,52 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './experience-form.stories';
+
+<Meta of={Stories} />
+
+# Widgets / AdminExperience / Form
+
+Форма места работы (создание/правка) — на отдельном детальном маршруте
+(`/admin/experience/:locale/new` или `/:id`). Локализованные поля (роль, локация,
+достижения) правятся в **активной локали** маршрута; вторую бэкенд домёрживает.
+
+- Период — месяцами (`type="month"`, `YYYY-MM ↔ ISO`); «текущее место» — тумблер
+  (при нём окончание не задаётся).
+- Достижения — textarea, по строке на пункт.
+- Технологии — мультиселект чипами по существующему стеку (хранятся id).
+- База `ru` при создании заполняется всегда (публичный фолбэк).
+
+---
+
+## Playground
+
+<Canvas of={Stories.New} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Правка существующей записи
+
+<Canvas of={Stories.Edit} />
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<ExperienceForm
+  record={record}            // null — создание
+  technologies={technologies}
+  locale={locale}
+  isBusy={isBusy}
+  onCreate={(body) => create(body)}
+  onUpdate={(id, body) => update({ id, body })}
+  onCancel={() => navigateDetail(null)}
+/>
+`}
+/>

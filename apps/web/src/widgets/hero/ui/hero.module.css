@@ -1,0 +1,146 @@
+.band {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: var(--space-8);
+  align-items: center;
+  overflow: hidden;
+  padding: var(--space-8);
+  background:
+    radial-gradient(
+      560px 280px at 90% -20%,
+      color-mix(in srgb, var(--color-primary) 24%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-fg-dim) 10%, transparent) 1px,
+      transparent 1.6px
+    ),
+    var(--color-surface);
+  background-size:
+    auto,
+    var(--space-5) var(--space-5),
+    auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-band);
+  box-shadow: var(--shadow);
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  /* Ширина питча — локальной переменной (правило: без «магии») */
+  --hero-pitch-width: 440px;
+}
+
+.terminal {
+  min-width: 0;
+}
+
+.identity {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.titles {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.sep {
+  color: var(--color-fg-dim);
+}
+
+/* Печатающая строка */
+.typing {
+  margin-top: var(--space-5);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-h3);
+  line-height: 1.4;
+  color: var(--color-fg);
+}
+
+/* На узких экранах слово может перенестись целиком на вторую строку —
+   резервируем две строки, чтобы питч ниже не подпрыгивал при смене слова. */
+@media (width <= 480px) {
+  .typing {
+    min-height: calc(1.4em * 2);
+  }
+}
+
+.typingPrefix {
+  color: var(--color-fg-muted);
+}
+
+.typingValue {
+  white-space: nowrap;
+}
+
+.typingWord {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-bright);
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.53em;
+  height: 1.12em;
+  margin-left: 1px;
+  vertical-align: -0.18em;
+  background-color: var(--color-primary-bright);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0%;
+  }
+}
+
+.pitch {
+  max-width: var(--hero-pitch-width);
+  margin-top: var(--space-4);
+}
+
+/* Скелетон питча — три строки-плейсхолдера */
+.pitchSkeleton {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin-top: var(--space-5);
+}
+
+/* Все CTA героя — моноширинные, как в макете (перебивает шрифт варианта кнопки) */
+.actions .cta {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Планшет: колонки в стопку (макет ~760 → --bp-md 768) */
+@media (width <= 768px) {
+  .band {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Мобильный: аватар и текст в столбик, отступы тела ужимаются */
+@media (width <= 480px) {
+  .band {
+    padding: var(--space-6);
+  }
+
+  .identity {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

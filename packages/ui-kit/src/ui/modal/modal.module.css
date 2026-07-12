@@ -1,0 +1,94 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+/* Фон-кнопка: клик закрывает окно; лежит под панелью. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  cursor: default;
+  background: color-mix(in srgb, var(--color-bg) 72%, transparent);
+  backdrop-filter: blur(var(--blur-glass));
+  border: 0;
+}
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  max-height: calc(100vh - var(--space-6));
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+.head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 22px 0;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-heading-3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.description {
+  margin: 6px 0 0;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+}
+
+.close {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.close:hover,
+.close:focus-visible {
+  color: var(--color-fg);
+  background: var(--color-raised);
+}
+
+.body {
+  padding: 20px 22px;
+  overflow-y: auto;
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  padding: 0 22px 20px;
+}

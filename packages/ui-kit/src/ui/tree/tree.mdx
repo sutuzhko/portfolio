@@ -1,0 +1,115 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './tree.stories';
+
+<Meta of={Stories} />
+
+# Tree
+
+Дерево папок и статей (база знаний, кабинет). Семантика `role="tree"` с полной
+клавиатурной навигацией. Выбор управляется снаружи, раскрытие папок — внутреннее
+состояние компонента.
+
+---
+
+## Анатомия
+
+- `role="tree"` → `role="treeitem"` (+ `aria-level`/`aria-selected`/`aria-expanded`) →
+  вложенные `role="group"`.
+- Два типа узлов: `folder` (со счётчиком, раскрывается) и `article` (выбирается).
+- Roving tabindex: в табуляцию входит выбранный (или первый) узел.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Всё свёрнуто
+
+<Canvas of={Stories.AllCollapsed} />
+
+### Глубокая вложенность
+
+<Canvas of={Stories.DeepNesting} />
+
+### Пустая папка
+
+<Canvas of={Stories.EmptyFolder} />
+
+---
+
+## Живые демонстрации
+
+### Навигация ↑↓
+
+<Canvas of={Stories.KeyboardNavigation} />
+
+### Раскрытие ← →
+
+`→` раскрывает свёрнутую папку и уходит вглубь, `←` сворачивает / поднимается к родителю.
+
+<Canvas of={Stories.ExpandCollapse} />
+
+---
+
+# Когда использовать
+
+- иерархия папок и статей базы знаний;
+- боковое дерево навигации в кабинете.
+
+# Когда **не** использовать
+
+- плоский список без иерархии — обычный список/ссылки;
+- переключение панелей одной области — [`Tabs`](?path=/docs/shared-components-tabs--docs).
+
+---
+
+## Доступность
+
+- Полная семантика дерева: `tree`/`treeitem`/`group`, `aria-level`, `aria-selected`,
+  `aria-expanded`.
+- Клавиатура: `↑`/`↓` по видимым узлам; `→`/`←` раскрывают/сворачивают и переходят к
+  ребёнку/родителю; `Home`/`End`; `Enter`/`Пробел` (папка — раскрыть, статья — выбрать).
+- **Обязателен `aria-label`** для дерева.
+
+## Токены
+
+`--raised` (выбранный/hover узел), `--primary` (акцент выбора), `--fg`/`--fg-muted`,
+`--font-*`; отступ уровня — `depth * 18px`.
+
+## Связанные компоненты
+
+- [`Icon`](?path=/docs/shared-primitives-icon--docs) — каретка/папка/файл.
+- [`Tabs`](?path=/docs/shared-components-tabs--docs) — для не-иерархического переключения.
+
+---
+
+# Ответственность
+
+Tree отвечает за отрисовку иерархии и семантику `tree`, клавиатурную навигацию и
+раскрытие папок, вызов `onSelect` при выборе статьи. **Не отвечает** за загрузку данных
+дерева, хранение выбранного узла (снаружи) и рендер содержимого выбранной статьи.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Tree
+  aria-label={t('kb.tree')}
+  nodes={tree}
+  selectedId={activeSlug}
+  onSelect={openArticle}
+  defaultExpandedIds={expandedFolders}
+/>
+`}
+/>

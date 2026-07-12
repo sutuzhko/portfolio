@@ -1,0 +1,69 @@
+# Прод-окружение: Postgres + собранный API.
+# Запуск:  docker compose -f docker-compose.prod.yml up -d --build
+# Секреты задаются через переменные окружения или .env рядом с этим файлом.
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+    volumes:
+      - portfolio-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-portfolio}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-portfolio}?schema=public
+      NODE_ENV: production
+      PORT: 3000
+      UPLOAD_DIR: /data/uploads
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?need JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?need JWT_REFRESH_SECRET}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-30d}
+      GITHUB_USERNAME: ${GITHUB_USERNAME:-sutuzhko}
+      CODEWARS_USERNAME: ${CODEWARS_USERNAME:-sutuzhko}
+      # Учётка админа CRM — читается сидом (`prisma:seed`). Пароль обязательно смени.
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?need ADMIN_PASSWORD}
+    volumes:
+      - portfolio-uploads:/data/uploads
+    # Публичного порта нет — API доступен только внутри compose-сети, снаружи его
+    # проксирует Caddy (сервис web). Так API не торчит в интернет напрямую.
+    expose:
+      - '3000'
+
+  # Caddy: авто-HTTPS, раздаёт собранный SPA и проксирует /api,/uploads на api.
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  portfolio-db-data:
+  portfolio-uploads:
+  caddy-data:
+  caddy-config:

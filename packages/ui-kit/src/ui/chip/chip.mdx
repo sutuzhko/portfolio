@@ -1,0 +1,126 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './chip.stories';
+
+<Meta of={Stories} />
+
+# Chip
+
+Переключаемый чип-фильтр (технология, контрибьютор). Это кнопка-тоггл с
+семантикой `aria-pressed` — состояние выбора доступно скринридеру. Для
+**неизменяемой** метки используйте [`Tag`](?path=/docs/shared-primitives-tag--docs).
+
+---
+
+## Анатомия
+
+- Корень — `<button type="button" aria-pressed>`.
+- Управляется снаружи: `selected` (визуал + `aria-pressed`) и `onClick` (запрос на
+  переключение). Своего состояния чип не хранит — это делает потребитель.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Все состояния сразу
+
+<Canvas of={Stories.States} />
+
+### В контексте: группа фильтров
+
+<Canvas of={Stories.FilterGroup} />
+
+---
+
+## Живые демонстрации
+
+### Переключение
+
+Клик реально переключает `aria-pressed` (состояние поднято в родителя).
+
+<Canvas of={Stories.Toggling} />
+
+### Клавиатура
+
+Фокус по `Tab`, переключение по `Enter`/`Пробел` — нативное поведение кнопки.
+
+<Canvas of={Stories.KeyboardActivation} />
+
+### Недоступен
+
+`disabled` глушит клик (`play` проверяет, что `onClick` не вызывается).
+
+<Canvas of={Stories.Disabled} />
+
+---
+
+# Когда использовать
+
+- фильтр с состоянием вкл/выкл;
+- множественный выбор технологий/контрибьюторов;
+- быстрый переключатель в панели фильтров.
+
+# Когда **не** использовать
+
+- для неизменяемой метки — `Tag`;
+- для взаимоисключающего «один из нескольких» — `Segmented`.
+
+```tsx
+// ❌ Плохо — одиночный выбор набором чипов
+// ✅ Хорошо — Segmented для «один из»
+<Segmented options={sortOptions} value={sort} onChange={setSort} />
+```
+
+---
+
+## Доступность
+
+- Роль `button` + `aria-pressed` — скринридер сообщает состояние «нажат/не нажат».
+- Полноценный фокус и клавиатура (`Enter`/`Пробел`) из коробки — потому это `<button>`,
+  а не `div`.
+- `disabled` убирает чип из tab-порядка.
+
+## Токены
+
+`--primary` (заливка выбранного), `--raised`/`--border` (невыбранный), `--fg`/`--fg-muted`,
+`--radius-button`, `--ring` (кольцо фокуса), `--font-mono`.
+
+## Связанные компоненты
+
+- [`Tag`](?path=/docs/shared-primitives-tag--docs) — неинтерактивный аналог.
+- [`Segmented`](?path=/docs/shared-components-segmented--docs) — взаимоисключающий выбор.
+
+---
+
+# Ответственность
+
+Chip отвечает за семантику тоггла (`aria-pressed`) и визуал выбранного состояния.
+**Не отвечает** за хранение состояния выбора (снаружи), логику фильтрации данных и
+локализацию подписи.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+{technologies.map((tech) => (
+  <Chip
+    key={tech.id}
+    selected={selected.has(tech.id)}
+    onClick={() => toggle(tech.id)}
+  >
+    {tech.name}
+  </Chip>
+))}
+`}
+/>

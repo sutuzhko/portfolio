@@ -1,0 +1,109 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './segmented.stories';
+
+<Meta of={Stories} />
+
+# Segmented
+
+Сегментированный контрол для выбора **одного из нескольких** взаимоисключающих
+вариантов (RU/EN, Dark/Light, edit/preview). Семантика `radiogroup`: стрелки
+переключают сегменты, в табуляцию попадает только активный.
+
+---
+
+## Анатомия
+
+- `role="radiogroup"` с кнопками `role="radio"` + `aria-checked`.
+- Управляется снаружи (`value` + `onChange`); дженерик по типу значения.
+- Roving tabindex: активный сегмент — `tabIndex=0`, остальные — `-1`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Примеры применения
+
+<Canvas of={Stories.Examples} />
+
+### Длинные подписи
+
+<Canvas of={Stories.LongLabels} />
+
+---
+
+## Живые демонстрации
+
+### Клавиатурная навигация
+
+Фокус на активном сегменте; `←→↑↓` перемещают выбор по кругу.
+
+<Canvas of={Stories.KeyboardNavigation} />
+
+---
+
+# Когда использовать
+
+- выбор одного из 2–4 равнозначных вариантов, все на виду;
+- переключатели режимов (тема, язык, edit/preview).
+
+# Когда **не** использовать
+
+- бинарное «вкл/выкл» с мгновенным эффектом — [`Toggle`](?path=/docs/shared-primitives-toggle--docs);
+- переключение **контента** страницы (панелей) — [`Tabs`](?path=/docs/shared-components-tabs--docs);
+- множественный выбор фильтров — набор [`Chip`](?path=/docs/shared-primitives-chip--docs);
+- длинный список вариантов — [`Select`](?path=/docs/shared-primitives-select--docs).
+
+---
+
+## Доступность
+
+- `radiogroup`/`radio` + `aria-checked` — группа озвучивается как набор радиокнопок.
+- `←→↑↓` циклически переключают, Tab входит в группу один раз (roving tabindex).
+- **Обязателен `aria-label`** — иначе у группы нет имени.
+
+## Токены
+
+`--raised`/`--border` (трек), `--surface`/`--fg` (активный сегмент), `--radius-button`,
+`--ring` (фокус).
+
+## Связанные компоненты
+
+- [`Tabs`](?path=/docs/shared-components-tabs--docs) — переключение панелей контента.
+- [`Toggle`](?path=/docs/shared-primitives-toggle--docs) — бинарный переключатель.
+
+---
+
+# Ответственность
+
+Segmented отвечает за семантику radiogroup/`aria-checked`, клавиатурную навигацию
+(roving tabindex) и вызов `onChange` с выбранным значением. **Не отвечает** за
+хранение состояния (снаружи), локализацию подписей и переключение контента (это
+делает потребитель по `value`).
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Segmented
+  aria-label={t('settings.theme')}
+  value={theme}
+  onChange={setTheme}
+  options={[
+    { label: 'Dark', value: 'dark' },
+    { label: 'Light', value: 'light' },
+  ]}
+/>
+`}
+/>

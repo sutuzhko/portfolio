@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="description"
+      content="Портфолио фуллстек-разработчика Богдана Сутужко: проекты, опыт, стек технологий (React, Vue, Node, NestJS, TypeScript) и интерактивный терминал."
+    />
+    <!-- Цвет UI браузера/сплэша PWA — под тёмную тему по умолчанию. -->
+    <meta name="theme-color" content="#0d1117" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Шрифты грузим НЕблокирующе (media=print→all по onload): первый кадр
+         рисуется системным фолбэком сразу, затем Geist/JetBrains подменяются
+         (`display=swap`) — ускоряет FCP на мобильном троттлинге. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+
+    <title>Bogdan Sutuzhko — Full Stack Developer</title>
+
+    <!-- Тема до первого кадра (без вспышки). Приоритет: явный выбор в localStorage →
+         системная prefers-color-scheme → (для нового гостя без системной темы —
+         settings.defaultTheme применит React после загрузки настроек). -->
+    <script>
+      (() => {
+        try {
+          const chosen = localStorage.getItem('portfolio.theme');
+          if (chosen === 'light' || chosen === 'dark') {
+            document.documentElement.dataset.theme = chosen;
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.theme = 'dark';
+          } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.dataset.theme = 'light';
+          }
+          /* иначе data-theme не ставим — нет системного предпочтения, ждём settings.defaultTheme */
+        } catch {
+          /* localStorage/matchMedia недоступны — остаётся тема по умолчанию */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

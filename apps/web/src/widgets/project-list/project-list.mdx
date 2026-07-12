@@ -1,0 +1,65 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './project-list.stories';
+
+<Meta of={Stories} />
+
+# ProjectList
+
+Сетка карточек проектов (макет: PROJECTS grid). Презентационна: получает уже
+отфильтрованный список (`projects`) — фильтрацию делает `useProjectFilter`, а
+запросы — контейнер страницы. Собрана из [`ProjectTile`](?path=/docs/entities-project-tile--docs).
+
+---
+
+## Анатомия
+
+Три состояния:
+
+- **загрузка** (`isLoading`) — сетка скелетон-карточек той же раскладки, без скачка;
+- **пусто** (нет результатов) — приглашение сбросить фильтры (`onClearFilters`);
+- **данные** — сетка карточек, клик по карточке → `onOpen(slug)`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все состояния
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Пусто
+
+<Canvas of={Stories.Empty} />
+
+### Мобильная раскладка
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Карточки — настоящие кнопки (см. [`ProjectTile`](?path=/docs/entities-project-tile--docs)).
+- Пустое состояние — понятный текст + действие «сбросить фильтры».
+
+## Связанные компоненты
+
+- [`ProjectTile`](?path=/docs/entities-project-tile--docs) — элемент сетки.
+- `Features/ProjectFilter` — источник отфильтрованного списка.
+
+---
+
+# Ответственность
+
+ProjectList отвечает за раскладку сетки и переключение состояний (скелетон / пусто /
+данные). **Не отвечает** за фильтрацию, сортировку и загрузку — список приходит
+готовым.

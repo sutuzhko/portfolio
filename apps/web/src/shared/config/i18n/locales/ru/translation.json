@@ -1,0 +1,717 @@
+{
+  "common": {
+    "languageName": "Русский",
+    "switchToLight": "Переключить на светлую тему",
+    "switchToDark": "Переключить на тёмную тему",
+    "switchLanguage": "Сменить язык",
+    "skipToContent": "Перейти к содержимому"
+  },
+  "nav": {
+    "openConsole": "Открыть консоль",
+    "home": "На главную",
+    "profileMenu": "Меню профиля"
+  },
+  "auth": {
+    "signIn": "Войти",
+    "signOut": "Выйти",
+    "openSection": "Открыть раздел →",
+    "adminPanel": "Личный кабинет",
+    "loggedInAs": "Вы вошли как",
+    "toast": {
+      "welcome": {
+        "title": "С возвращением",
+        "desc": "Вы вошли как @{{username}}"
+      },
+      "loggedOut": {
+        "title": "Вы вышли",
+        "desc": "Сессия завершена"
+      },
+      "error": {
+        "title": "Не удалось войти",
+        "desc": "Проверьте логин и пароль"
+      }
+    }
+  },
+  "login": {
+    "breadcrumb": "~/login",
+    "badge": "// доступ",
+    "title": "Войти",
+    "subtitle": "private",
+    "hint": "Доступ к закрытому разделу сайта.",
+    "username": "логин",
+    "password": "пароль",
+    "submit": "Войти",
+    "invalid": "Неверный логин или пароль",
+    "noAccess": "нет доступа? напишите в Telegram",
+    "required": {
+      "username": "Введите логин",
+      "password": "Введите пароль"
+    },
+    "terminal": {
+      "title": "auth — secure",
+      "ssh": "ssh login@sutuzhko.dev",
+      "connecting": "→ устанавливаю соединение…",
+      "secured": "✓ канал защищён",
+      "login": "login",
+      "prompt": "требуется логин и пароль"
+    }
+  },
+  "footer": {
+    "consoleHint": "нажмите <accent>{{shortcut}}</accent> для консоли"
+  },
+  "console": {
+    "a11y": {
+      "dialog": "Консоль",
+      "input": "Ввод команды консоли",
+      "close": "Закрыть консоль",
+      "minimize": "Свернуть консоль",
+      "maximize": "Развернуть на всю ширину",
+      "restore": "Восстановить размер"
+    },
+    "welcome": {
+      "hint": "наберите help — список команд"
+    },
+    "help": {
+      "title": "Доступные команды",
+      "rows": {
+        "help": "показать список команд",
+        "man": "справка по команде",
+        "ls": "список файлов и разделов",
+        "cd": "перейти в раздел",
+        "pwd": "текущий путь",
+        "cat": "вывести файл",
+        "whoami": "кто я",
+        "location": "где я и который час",
+        "date": "дата и время (МСК)",
+        "echo": "вывести текст",
+        "history": "история команд",
+        "uname": "система (-a — подробно)",
+        "neofetch": "система и арт",
+        "theme": "тема: dark, light или переключить",
+        "open": "открыть контакт (telegram, github…)",
+        "resume": "скачать резюме (PDF)",
+        "sudo": "ну попробуй 😉",
+        "clear": "очистить консоль",
+        "exit": "закрыть консоль",
+        "run": "запустить проект (напр. run 2048)",
+        "notify": "тост: info · success · warning · error"
+      }
+    },
+    "msg": {
+      "themeSet": "✓ тема: {{mode}}",
+      "themeToggle": "✓ тема переключена",
+      "themeUsage": "✗ theme [dark|light]",
+      "navigating": "→ {{route}}",
+      "cdNotFound": "cd: нет такого раздела: {{path}}",
+      "catMissing": "cat: не указан файл",
+      "catNotFound": "cat: {{file}}: нет такого файла",
+      "catBinary": "cat: {{file}}: бинарный файл — наберите resume, чтобы скачать",
+      "manUsage": "man: укажите команду",
+      "manNotFound": "man: нет справки по «{{command}}»",
+      "openMissing": "open: укажите канал (telegram, github, email, codewars)",
+      "openUnknown": "open: неизвестный канал: {{channel}}",
+      "openDone": "→ открываю {{channel}}",
+      "exit": "logout",
+      "resume": "→ скачиваю резюме (PDF)…",
+      "sudo": "🔒 permission denied: ты не в группе sudoers.\n(это портфолио, а не настоящий shell — но попытка засчитана 😄)",
+      "notFound": "command not found: {{command}}\nнаберите help — список команд",
+      "loading": "профиль ещё загружается…",
+      "runUsage": "run: укажите проект (напр. run 2048)",
+      "runLaunching": "▶ запускаю «{{project}}»…",
+      "runNotFound": "✗ проект «{{command}}» не найден или не запускается",
+      "notifyUsage": "notify [info|success|warning|error] <текст>",
+      "notifyDone": "→ уведомление отправлено"
+    }
+  },
+  "home": {
+    "section": "// whoami",
+    "availability": {
+      "ACTIVE": "Доступен для работы",
+      "OPEN": "Открыт к предложениям",
+      "NOTLOOKING": "Сейчас не в поиске"
+    },
+    "loading": "Загрузка профиля",
+    "error": "Не удалось загрузить профиль",
+    "retry": "Повторить",
+    "hero": {
+      "greeting": "// привет, я",
+      "typing": "Сейчас пишу на",
+      "actions": {
+        "cv": "Скачать резюме",
+        "projects": "Проекты",
+        "contact": "Связаться"
+      },
+      "console": {
+        "title": "Консоль",
+        "text": "нажмите {{shortcut}} или кликните >_ в шапке",
+        "textTouch": "нажмите, чтобы открыть"
+      }
+    },
+    "sections": {
+      "about": "// обо мне",
+      "stack": "// стек",
+      "activity": "// активность",
+      "featured": "// избранные проекты"
+    },
+    "featured": {
+      "all": "Все проекты →",
+      "extra": "+{{count}}",
+      "categories": {
+        "commercial": "Коммерческий",
+        "side-project": "Side-проект"
+      }
+    },
+    "activity": {
+      "profile": "Профиль ↗",
+      "unavailable": "Статистика временно недоступна",
+      "github": {
+        "repos": "Репозитории",
+        "followers": "Подписчики",
+        "following": "Подписки",
+        "stackLabel": "Стек на GitHub"
+      },
+      "codewars": {
+        "honor": "Honor",
+        "katas": "Ката",
+        "leaderboard": "Leaderboard",
+        "next": "до {{kyu}} kyu"
+      }
+    },
+    "now": {
+      "label": "Доступность к работе",
+      "active": {
+        "title": "В активном поиске",
+        "desc": "Готов выйти быстро — рассматриваю fullstack / frontend роли."
+      },
+      "open": {
+        "title": "Открыт к предложениям",
+        "desc": "Сейчас Frontend в Go Mobile. Рассмотрю интересные fullstack / frontend задачи."
+      },
+      "notLooking": {
+        "title": "Сейчас не ищу",
+        "desc": "Не в активном поиске, но всегда рад интересному знакомству."
+      },
+      "btn": "Смотреть опыт →"
+    }
+  },
+  "projects": {
+    "back": "cd ~",
+    "breadcrumb": "~/projects",
+    "title": "Проекты",
+    "error": "Не удалось загрузить проекты",
+    "retry": "Повторить",
+    "filter": {
+      "searchPlaceholder": "Поиск по названию или описанию…",
+      "reset": "сбросить",
+      "tech": "Технологии",
+      "contributors": "Контрибьюторы"
+    },
+    "results": {
+      "found": "Найдено"
+    },
+    "card": {
+      "extra": "+{{count}}"
+    },
+    "empty": {
+      "marker": "// 0 results",
+      "title": "Ничего не найдено",
+      "description": "Попробуйте изменить запрос или сбросить фильтры.",
+      "button": "Сбросить фильтры"
+    },
+    "categories": {
+      "commercial": "Коммерческий",
+      "side-project": "Side-проект"
+    }
+  },
+  "project": {
+    "back": "cd ../projects",
+    "whatsInside": "Что внутри",
+    "role": "Роль",
+    "period": "Период",
+    "stack": "Стек",
+    "team": "Команда",
+    "error": "Не удалось загрузить проект",
+    "retry": "Повторить",
+    "run": "Запустить"
+  },
+  "experience": {
+    "back": "cd ~",
+    "breadcrumb": "~/experience",
+    "title": "Опыт работы",
+    "present": "наст. время",
+    "education": "Образование",
+    "additional": "Доп. образование",
+    "languages": "Языки",
+    "skills": "Навыки",
+    "error": "Не удалось загрузить опыт",
+    "retry": "Повторить"
+  },
+  "contact": {
+    "back": "cd ~",
+    "breadcrumb": "~/contact",
+    "title": "Свяжитесь со мной",
+    "resume": {
+      "title": "Резюме (PDF)",
+      "desc": "Полный опыт, стек и проекты — одним файлом.",
+      "download": "Скачать резюме"
+    },
+    "error": "Не удалось загрузить контакты",
+    "retry": "Повторить"
+  },
+  "notFound": {
+    "title": "Страница не найдена",
+    "description": "Такой страницы нет или она была перемещена.",
+    "back": "На главную"
+  },
+  "forbidden": {
+    "code": "403",
+    "title": "Доступ запрещён",
+    "description": "У вас нет прав для просмотра этой страницы.",
+    "back": "На главную"
+  },
+  "serverError": {
+    "code": "500",
+    "title": "Что-то пошло не так",
+    "description": "Произошла ошибка. Попробуйте обновить страницу или вернуться на главную.",
+    "back": "На главную"
+  },
+  "admin": {
+    "back": "cd ~",
+    "breadcrumb": "~/admin",
+    "title": "Личный кабинет",
+    "description": "Управление контентом сайта без правок кода — профиль, проекты и база знаний. Все изменения отправляются на ваш API (NestJS) с серверной валидацией.",
+    "save": "Сохранить",
+    "saveCount": "Сохранить {{count}}",
+    "cancel": "Отменить",
+    "close": "Закрыть",
+    "saved": "Сохранено",
+    "saveError": "Не удалось сохранить",
+    "loadError": "Не удалось загрузить данные",
+    "unsaved": "Несохранённые изменения",
+    "diffCount": "{{count}} в диффе",
+    "tabs": {
+      "profile": "Профиль и статус",
+      "projects": "Проекты",
+      "experience": "Опыт работы",
+      "stack": "Стек и языки",
+      "education": "Образование",
+      "kb": "База знаний",
+      "locale": "Локализация",
+      "settings": "Настройки"
+    },
+    "kb": {
+      "library": "Библиотека",
+      "libraryCount": "{{folders}} папок · {{articles}} статей",
+      "newFolder": "Новая папка",
+      "newArticle": "Новая статья",
+      "folderNamePlaceholder": "Название папки",
+      "parentRoot": "— корень —",
+      "create": "Создать",
+      "cancel": "Отмена",
+      "rename": "Переименовать",
+      "articleHere": "Статья сюда",
+      "subfolder": "Подпапка",
+      "moveTo": "Переместить в",
+      "delete": "Удалить",
+      "actions": "Действия",
+      "empty": "Статья не выбрана",
+      "emptyHint": "Выберите статью в библиотеке слева или создайте новую кнопкой «+» в её шапке.",
+      "updatedAt": "обновлено {{date}}",
+      "edit": "Редактировать",
+      "backlinks": "Ссылаются сюда",
+      "save": "Сохранить",
+      "editorNew": "Новая статья",
+      "editorEdit": "Редактировать статью",
+      "split": "split",
+      "preview": "preview",
+      "titleLabel": "Заголовок",
+      "slugLabel": "Slug",
+      "folderLabel": "Папка (вложенность)",
+      "bodyLabel": "MARKDOWN · [[slug]] для ссылок",
+      "titleRequired": "Укажите заголовок",
+      "slugRequired": "Укажите slug",
+      "slugTaken": "Такой slug уже занят",
+      "bodyRequired": "Добавьте текст статьи",
+      "deleteArticleText": "«{{name}}» будет удалена безвозвратно.",
+      "deleteFolderText": "Папка «{{name}}» будет удалена. В ней не должно быть статей и подпапок.",
+      "notEmpty": "Сначала очистите папку от статей и подпапок",
+      "endpoint": "GET · POST · PUT · DELETE /api/database"
+    },
+    "stack": {
+      "title": "Стек и языки",
+      "tech": "Технологии",
+      "techName": "Технология",
+      "techPlaceholder": "Добавить технологию…",
+      "removeTech": "Убрать «{{name}}»",
+      "lang": "Языки",
+      "langAdd": "язык",
+      "langEmpty": "Языки ещё не добавлены",
+      "langName": "Язык",
+      "level": "Уровень",
+      "pct": "Владение, %",
+      "removeLang": "Удалить язык",
+      "skills": "Навыки",
+      "skillHint": "Плоские теги-компетенции — показываются на экране «Опыт».",
+      "skillName": "Навык",
+      "skillPlaceholder": "Добавить навык…",
+      "removeSkill": "Убрать «{{name}}»",
+      "addCategory": "+ блок",
+      "categoryName": "Название блока",
+      "categoryPlaceholder": "Название блока…",
+      "renameCategory": "Переименовать «{{name}}»",
+      "addTechTo": "Добавить в «{{category}}»",
+      "addSkill": "Добавить навык",
+      "removeBlock": "Удалить блок «{{name}}»",
+      "reorder": "Переместить «{{name}}»",
+      "reorderBlock": "Переместить блок «{{name}}»"
+    },
+    "education": {
+      "mainTitle": "Высшее образование",
+      "extraTitle": "Курсы и сертификаты",
+      "addMain": "запись",
+      "addExtra": "курс",
+      "degree": "Степень / специальность",
+      "degreePlaceholder": "Степень / специальность",
+      "place": "Учебное заведение",
+      "placePlaceholder": "Учебное заведение",
+      "period": "Период",
+      "periodPlaceholder": "2018 — 2022",
+      "coursePlaceholder": "Название курса / сертификата",
+      "coursePeriodPlaceholder": "09/2022 — 07/2024",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "save": "Сохранить",
+      "cancel": "Отмена",
+      "confirmDelete": "Удалить?",
+      "yes": "Да",
+      "no": "Нет",
+      "empty": "Пока нет записей",
+      "created": "Запись добавлена",
+      "deleted": "Запись удалена"
+    },
+    "experience": {
+      "add": "Добавить",
+      "present": "наст. время",
+      "now": "сейчас",
+      "empty": "Пока нет мест работы",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "confirmTitle": "Удалить место работы?",
+      "confirmDelete": "«{{name}}» будет удалено без возможности восстановления.",
+      "created": "Место работы добавлено",
+      "deleted": "Место работы удалено",
+      "newTitle": "Новое место работы",
+      "editTitle": "Редактирование места работы",
+      "cancel": "Отмена",
+      "company": "Компания",
+      "role": "Должность",
+      "location": "Локация",
+      "startDate": "Начало",
+      "endDate": "Окончание",
+      "endDateCurrent": "текущее место — окончание не задаётся",
+      "bullets": "Достижения",
+      "bulletsHint": "по одному на строку",
+      "technologies": "Технологии",
+      "current": "Текущее место работы",
+      "currentHint": "Работаю здесь по настоящее время",
+      "errors": {
+        "company": "Укажите компанию",
+        "role": "Укажите должность",
+        "startDate": "Укажите начало"
+      }
+    },
+    "projects": {
+      "add": "Новый проект",
+      "empty": "Пока нет проектов",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "confirmTitle": "Удалить проект?",
+      "confirmDelete": "«{{name}}» будет удалён без возможности восстановления.",
+      "created": "Проект создан",
+      "deleted": "Проект удалён",
+      "newTitle": "Новый проект",
+      "editTitle": "Редактирование проекта",
+      "cancel": "Отмена",
+      "name": "Название",
+      "slug": "Slug (URL)",
+      "role": "Роль",
+      "year": "Год",
+      "subtitle": "Подзаголовок",
+      "subtitlePlaceholder": "Короткая строка под названием",
+      "summary": "Краткое описание",
+      "category": "Категория",
+      "categoryPlaceholder": "Коммерческий · Pet-проект · Side-проект",
+      "body": "Полное описание",
+      "bullets": "Ключевые пункты",
+      "bulletsHint": "по одному на строку",
+      "links": "Ссылки",
+      "linksHint": "формат: Название | https://…",
+      "technologies": "Технологии",
+      "contributors": "Коллабораторы",
+      "tileColor": "Цвет плитки",
+      "status": "Статус",
+      "statusDraft": "Черновик",
+      "statusPublished": "Опубликован",
+      "hidden": "Скрыт на сайте",
+      "hiddenHint": "Не показывать проект в публичном списке",
+      "hiddenShort": "скрыт",
+      "pinned": "В избранном (на главной)",
+      "pinnedHint": "Показывать плитку проекта в блоке «Избранное»",
+      "runnable": "Запускается в браузере",
+      "runnableHint": "Кнопка «Запустить» и встраивание проекта",
+      "embedUrl": "URL для iframe",
+      "runCommand": "Команда запуска",
+      "errors": {
+        "slug": "Укажите slug",
+        "slugFormat": "Только строчные латинские буквы, цифры и дефис",
+        "title": "Укажите название",
+        "description": "Укажите краткое описание",
+        "body": "Заполните полное описание",
+        "technologies": "Выберите хотя бы одну технологию"
+      },
+      "preview": "Предпросмотр",
+      "previewDescription": "Краткое описание проекта",
+      "contributorAdd": "+ создать участника",
+      "contributorName": "Имя",
+      "contributorColor": "Цвет аватара",
+      "contributorLink": "Ссылка (необязательно)",
+      "contributorSave": "Добавить",
+      "contributorCreated": "Участник добавлен",
+      "contributorUpdate": "Сохранить",
+      "contributorUpdated": "Участник обновлён",
+      "contributorDelete": "Удалить",
+      "contributorDeleted": "Участник удалён",
+      "contributorEditName": "Редактировать «{{name}}»",
+      "contributorConfirmTitle": "Удалить участника?",
+      "contributorConfirmText": "Участник «{{name}}» будет удалён из каталога и всех проектов. Действие необратимо.",
+      "gallery": "Скриншоты",
+      "galleryUpload": "Загрузить скриншот",
+      "galleryRemove": "Удалить скриншот",
+      "galleryEmpty": "Пока нет скриншотов. Видео и GIF — позже.",
+      "galleryUploaded": "Скриншот загружен",
+      "galleryDeleted": "Скриншот удалён",
+      "galleryCopy": "Скопировать ссылку",
+      "galleryCopied": "Ссылка скопирована",
+      "galleryCopyFailed": "Не удалось скопировать"
+    },
+    "locale": {
+      "title": "Локализация",
+      "subtitle": "ru ↔ en · сверка обеих локалей",
+      "coverage": "покрытие EN",
+      "searchPlaceholder": "поиск по ключу или тексту…",
+      "empty": "Ничего не найдено по текущему фильтру.",
+      "stat": {
+        "ok": "переведено",
+        "missing": "нет EN",
+        "same": "совпадает с RU",
+        "total": "{{count}} всего строк"
+      },
+      "filters": {
+        "all": "Все",
+        "problems": "Проблемы",
+        "missing": "Нет EN",
+        "same": "= RU",
+        "changed": "Изменённые"
+      },
+      "col": {
+        "key": "ключ",
+        "ru": "русский",
+        "en": "english"
+      },
+      "sections": {
+        "profile": "Профиль",
+        "project": "Проект",
+        "experience": "Опыт",
+        "education": "Образование"
+      },
+      "flags": {
+        "missing": "нет EN",
+        "same": "= RU",
+        "changed": "изменено"
+      },
+      "cell": {
+        "edit": "Редактировать {{locale}}",
+        "done": "Готово",
+        "cancel": "Отмена",
+        "hint": "⌘↵ / Esc",
+        "missing": "— нет перевода · на сайте покажется RU",
+        "pending": "не сохранено"
+      },
+      "note": {
+        "title": "Статьи не участвуют в локализации",
+        "text": "База знаний ведётся на одном языке по задумке — двуязычная сверка к ней не применяется."
+      },
+      "save": {
+        "title": "Несохранённые изменения",
+        "diff": "{{count}} в диффе",
+        "submit": "Сохранить {{count}}",
+        "discard": "Отменить"
+      }
+    },
+    "settings": {
+      "title": "Настройки приложения",
+      "siteTitle": "Логотип",
+      "siteTitleHint": "Текст логотипа в шапке — <bogdan.sutuzhko />",
+      "required": "Обязательное поле",
+      "defaultsTitle": "По умолчанию",
+      "accent": "Акцент",
+      "accentHint": "Фирменный цвет акцентов сайта",
+      "accents": {
+        "green": "Зелёный",
+        "blue": "Синий",
+        "bright": "Яркий"
+      },
+      "theme": "Тема по умолчанию",
+      "themeHint": "Тема оформления для новых посетителей",
+      "themeDark": "Dark",
+      "themeLight": "Light",
+      "lang": "Язык по умолчанию",
+      "langHint": "Язык, который видит гость при первом заходе",
+      "langRu": "RU",
+      "langEn": "EN",
+      "languages": {
+        "title": "Языки сайта",
+        "hint": "Какие языки доступны посетителям. Выключенный язык скрыт из переключателя; переводы не удаляются.",
+        "ru": "Русский",
+        "ruDesc": "Русская локаль сайта",
+        "en": "English",
+        "enDesc": "Английская локаль сайта"
+      },
+      "glowTitle": "Свечение за курсором в консоли",
+      "behaviorTitle": "Поведение",
+      "glowDesc": "Динамический зелёный градиент на подложке терминала",
+      "activityTitle": "Активность",
+      "activityDesc": "Карточки GitHub и Codewars",
+      "sections": {
+        "title": "Видимость секций",
+        "hint": "Выключите блоки, которые не нужны на главной. Hero скрыть нельзя.",
+        "highlightsTitle": "Показатели",
+        "highlightsDesc": "Блок с ключевыми цифрами под Hero",
+        "aboutTitle": "Обо мне",
+        "aboutDesc": "Текстовый блок биографии",
+        "stackTitle": "Стек",
+        "stackDesc": "Технологии по категориям",
+        "nowTitle": "Доступность",
+        "nowDesc": "Баннер open-to-work",
+        "featuredTitle": "Избранное",
+        "featuredDesc": "Плитки закреплённых проектов"
+      },
+      "pages": {
+        "title": "Видимость страниц",
+        "hint": "Выключенная страница недоступна по ссылке и скрыта из навигации (консоль, кнопки главной).",
+        "projectsTitle": "Проекты",
+        "projectsDesc": "Страница /projects и деталь проекта",
+        "experienceTitle": "Опыт",
+        "experienceDesc": "Страница /experience",
+        "contactTitle": "Контакты",
+        "contactDesc": "Страница /contact"
+      }
+    },
+    "profile": {
+      "title": "Профиль",
+      "name": "Имя",
+      "email": "Email",
+      "telegram": "Telegram",
+      "github": "GitHub",
+      "role": "Роль",
+      "location": "Локация",
+      "avatar": "Аватар",
+      "avatarHint": "фото или инициалы + цвет",
+      "avatarUpload": "Загрузить фото",
+      "avatarRemove": "убрать фото",
+      "avatarColor": "Цвет аватара",
+      "avatarCrop": {
+        "title": "Кадрирование аватара",
+        "subtitle": "перетащите фото · ползунок ниже — масштаб",
+        "zoom": "Масштаб",
+        "apply": "Применить",
+        "cancel": "Отмена"
+      },
+      "cv": "Резюме (PDF)",
+      "cvHint": "загрузка по локали ({{lang}})",
+      "cvUpload": "Загрузить PDF",
+      "cvCurrent": "текущий файл",
+      "cvRemove": "убрать",
+      "cvEmpty": "не загружено",
+      "headline": "Питч героя",
+      "heroStack": "Стек в приветствии",
+      "heroStackHint": "через запятую: React, Vue 3, …",
+      "bio": "О себе",
+      "bioHidden": "Скрыть блок «Обо мне» на главной",
+      "bioHiddenHint": "Не показывать биографию посетителям",
+      "projectsIntro": "Интро экрана «Проекты»",
+      "experienceIntro": "Интро экрана «Опыт»",
+      "contactIntro": "Интро экрана «Контакты»",
+      "highlights": {
+        "label": "Показатели (над «Обо мне»)",
+        "hint": "Крупные цифры на главной: значение + короткая подпись.",
+        "value": "Значение",
+        "caption": "Подпись",
+        "add": "+ показатель",
+        "remove": "Удалить показатель"
+      },
+      "availabilityLabel": "Статус для работодателей",
+      "availabilityHint": "Как на LinkedIn «Open to work» — отображается на главной баннером со статусом.",
+      "availability": {
+        "ACTIVE": "В активном поиске",
+        "OPEN": "Открыт к предложениям",
+        "NOTLOOKING": "Сейчас не ищу"
+      },
+      "errors": {
+        "name": "Укажите имя",
+        "email": "Укажите корректный email",
+        "telegram": "Укажите Telegram",
+        "role": "Укажите роль",
+        "bio": "Заполните «О себе»"
+      }
+    },
+    "account": {
+      "title": "Пароль администратора",
+      "hint": "Смена пароля отзовёт активные сессии на других устройствах.",
+      "current": "Текущий пароль",
+      "new": "Новый пароль",
+      "confirm": "Повторите новый пароль",
+      "submit": "Сменить пароль",
+      "changed": "Пароль изменён",
+      "errors": {
+        "current": "Введите текущий пароль",
+        "short": "Минимум 8 символов",
+        "mismatch": "Пароли не совпадают",
+        "wrong": "Неверный текущий пароль"
+      }
+    }
+  },
+  "database": {
+    "back": "cd ~",
+    "breadcrumb": "~/database",
+    "title": "База знаний",
+    "intro": "Конспекты, разборы и заметки — со связями между статьями. Кликайте по дереву слева или по ссылкам-связям внутри текста.",
+    "treeLabel": "Дерево базы знаний",
+    "backlinks": "↩ Ссылаются сюда",
+    "empty": "Выберите статью в дереве слева",
+    "error": "Не удалось загрузить базу знаний",
+    "retry": "Повторить"
+  },
+  "runner": {
+    "loading": "загрузка проекта…",
+    "error": {
+      "bash": "bash: не удалось запустить «{{title}}»: проект недоступен",
+      "hint": "Похоже, проект переехал или временно офлайн. Попробуйте позже.",
+      "toastTitle": "Не удалось запустить проект",
+      "toastDescription": "«{{title}}» недоступен — возможно, переехал или временно офлайн."
+    },
+    "a11y": {
+      "dialog": "Запущенный проект: {{project}}",
+      "close": "Закрыть проект",
+      "minimize": "Свернуть проект",
+      "maximize": "Развернуть на всю ширину",
+      "restore": "Восстановить размер"
+    }
+  },
+  "toaster": {
+    "a11y": {
+      "region": "Уведомления",
+      "close": "Закрыть уведомление"
+    }
+  }
+}

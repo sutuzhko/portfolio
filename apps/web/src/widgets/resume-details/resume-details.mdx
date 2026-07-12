@@ -1,0 +1,64 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './resume-details.stories';
+
+<Meta of={Stories} />
+
+# ResumeDetails
+
+Нижний блок экрана опыта (макет: EDU + LANG + SKILLS) — две колонки: образование
+слева, языки и навыки справа. Собран из независимых карточек `EducationCard`,
+`LanguagesCard`, `SkillsCard`.
+
+---
+
+## Анатомия
+
+- Две колонки; образование делится на основное (MAIN) и дополнительное (ADDITIONAL).
+- Языки — полосы по `pct`; навыки — теги.
+- **Каждая карточка скелетонит свой раздел независимо** — блоки не ждут друг друга.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Состояния и края
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Частичная загрузка
+
+Образование пришло, языки/навыки ещё грузятся — каждая карточка скелетонит своё.
+
+<Canvas of={Stories.PartialLoading} />
+
+### Мобильная раскладка
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовки разделов — семантические; полосы языков дублируются числовым `pct`
+  (не только длина полосы).
+
+## Связанные компоненты
+
+- `Widgets/ExperienceTimeline` — верхний блок того же экрана.
+- [`Tag`](?path=/docs/shared-primitives-tag--docs) — навыки; [`Skeleton`](?path=/docs/shared-primitives-skeleton--docs) — загрузка.
+
+---
+
+# Ответственность
+
+ResumeDetails отвечает за раскладку двух колонок. Загрузку данных и скелетон каждого
+раздела берут на себя вложенные карточки; сам виджет данных не запрашивает.

@@ -1,0 +1,24 @@
+.tree {
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--space-4));
+  max-height: calc(100vh - var(--navbar-height) - 2 * var(--space-4));
+  padding: var(--space-2);
+  overflow: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: var(--space-3) var(--space-2);
+}
+
+@media (width <= 768px) {
+  .tree {
+    position: static;
+    max-height: none;
+  }
+}

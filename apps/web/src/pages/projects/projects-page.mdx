@@ -1,0 +1,70 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './projects-page.stories';
+
+<Meta of={Stories} />
+
+# Projects
+
+Экран списка проектов (макет `design/redesign` → PROJECTS) — шапка-«крошка»,
+серверное интро (`shared/ui/PageIntro`), панель поиска и фильтров, сетка карточек.
+
+---
+
+## Анатомия
+
+- **Контейнер** `ProjectsPage` — запрашивает проекты и профиль для интро, навигация;
+  **вид** `ProjectsPageView` — раскладка и состояния (данные + `isLoading` пропсами).
+- Фильтрация (поиск + фасеты) — на клиенте (`useProjectFilter`): набор мал, отклик мгновенный.
+- Клик по карточке → страница проекта (`onOpenProject`).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Все состояния
+
+### Ожидание данных
+
+Сетка заполняется скелетонами карточек, счётчик результатов скрыт.
+
+<Canvas of={Stories.Loading} />
+
+### Нет проектов и ошибка
+
+Пустой ответ — дружелюбное пустое состояние со сбросом фильтров; ошибка запроса —
+сообщение с повтором.
+
+<Canvas of={Stories.Empty} />
+<Canvas of={Stories.Failed} />
+
+### Мобильная раскладка
+
+Сетка `auto-fill` сжимается до одного столбца на `--bp-md` (768).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовок — `h1`; карточки — кнопки; ошибка — `role="alert"`; пусто — понятный текст + действие.
+- На время загрузки сетка — `aria-busy`/`aria-live`.
+
+## Связанные компоненты
+
+- `Widgets/ProjectList` / `Features/ProjectFilter` — сетка и фильтры.
+- [`PageIntro`](?path=/docs/shared-components-pageintro--docs) — серверное интро.
+
+---
+
+# Ответственность
+
+`ProjectsPageView` отвечает за раскладку экрана, фильтрацию и состояния списка. **Не
+отвечает** за запрос проектов и навигацию — это контейнер `ProjectsPage`.

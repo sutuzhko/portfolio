@@ -1,0 +1,113 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './input.stories';
+
+<Meta of={Stories} />
+
+# Input
+
+Текстовое поле ввода с подписью, подсказкой и состоянием ошибки. Разметку и a11y
+поля даёт общий [`FieldFrame`](?path=/docs/shared-primitives-fieldframe--docs).
+
+---
+
+## Анатомия
+
+- Подпись `label[for]` (id генерируется через `useId`), сам `<input>`, сообщение снизу.
+- Ошибка приоритетнее подсказки; при ошибке — `aria-invalid` + `aria-describedby`.
+- `forwardRef` — работает с React Hook Form; нативные атрибуты `<input>` пробрасываются.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Все состояния сразу
+
+<Canvas of={Stories.States} />
+
+### Пароль
+
+<Canvas of={Stories.Password} />
+
+### Без видимой подписи
+
+Если подписи нет — задайте `aria-label`, иначе поле останется без доступного имени.
+
+<Canvas of={Stories.WithoutLabel} />
+
+---
+
+## Состояния и края
+
+### С ошибкой
+
+Текст ошибки заменяет подсказку и озвучивается как описание поля.
+
+<Canvas of={Stories.WithError} />
+
+### Длинная ошибка
+
+<Canvas of={Stories.LongError} />
+
+---
+
+# Когда использовать
+
+- любое однострочное поле формы (логин, поиск, ссылка);
+- поле под управлением React Hook Form + Zod.
+
+# Когда **не** использовать
+
+- многострочный ввод — [`Textarea`](?path=/docs/shared-primitives-textarea--docs);
+- выбор из фиксированного списка — [`Select`](?path=/docs/shared-primitives-select--docs).
+
+---
+
+## Доступность
+
+- `label[for]` связывает подпись с полем; без видимой подписи обязателен `aria-label`.
+- Ошибка: `aria-invalid="true"` + `aria-describedby` на сообщение — скринридер читает
+  причину невалидности.
+- Красная рамка ошибки дублируется текстом (цвет не единственный сигнал).
+
+## Токены
+
+Общие для полей: `--surface`/`--border` (рамка), `--ring` (фокус), `--color-danger`
+(ошибка), радиус `--radius-button` (см. `field/control.module.css`).
+
+## Связанные компоненты
+
+- [`FieldFrame`](?path=/docs/shared-primitives-fieldframe--docs) — обвязка (label/сообщение).
+- [`Textarea`](?path=/docs/shared-primitives-textarea--docs) / [`Select`](?path=/docs/shared-primitives-select--docs) — родственные поля.
+
+---
+
+# Ответственность
+
+Input отвечает за связку подпись ↔ поле ↔ сообщение и их a11y, проброс `ref`/нативных
+атрибутов и визуальное состояние ошибки. **Не отвечает** за валидацию (Zod/RHF снаружи),
+текст ошибки/локализацию и маски ввода.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Input
+  label={t('auth.login')}
+  hint={t('auth.loginHint')}
+  error={errors.login?.message}
+  {...register('login')}
+/>
+`}
+/>

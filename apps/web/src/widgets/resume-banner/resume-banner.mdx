@@ -1,0 +1,72 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './resume-banner.stories';
+
+<Meta of={Stories} />
+
+# ResumeBanner
+
+Баннер скачивания резюме на экране `Contact` (макет CONTACT → «Резюме (PDF)»).
+Отдельный блок под карточками контактов: заголовок, короткое описание и кнопка
+«Скачать резюме».
+
+---
+
+## Анатомия
+
+Состояние определяет проп `cvUrl` (серверное поле профиля):
+
+- **строка** — показываем баннер; кнопка вызывает `onDownload` (скачивание владеет
+  контейнер страницы — как кнопка в геро);
+- **`undefined`** — профиль ещё грузится → скелетон той же высоты;
+- **`null`** — резюме не загружено → баннер скрыт целиком.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Все состояния
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Без резюме
+
+<Canvas of={Stories.NoResume} />
+
+### Скачивание с клавиатуры
+
+<Canvas of={Stories.KeyboardDownload} />
+
+### Мобильная раскладка
+
+На узких экранах кнопка переносится под текст (`flex-wrap`).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- `<section aria-label>`; на время загрузки — `aria-busy`/`aria-live`.
+- Кнопка — настоящий `<button>` с фокусом и клавиатурой; иконка `download` декоративна.
+
+## Связанные компоненты
+
+- [`Button`](?path=/docs/shared-primitives-button--docs) / [`Icon`](?path=/docs/shared-primitives-icon--docs) / [`Skeleton`](?path=/docs/shared-primitives-skeleton--docs) — из чего собран.
+- `Widgets/ContactLinks` — соседний блок на экране Contact.
+
+---
+
+# Ответственность
+
+ResumeBanner отвечает за показ/скрытие блока по `cvUrl` и вызов `onDownload`. **Не
+отвечает** за само скачивание файла (`shared/lib/downloadFile` в контейнере) и за
+источник ссылки (`profile.cvUrl`).

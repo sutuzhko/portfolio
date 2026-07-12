@@ -1,0 +1,57 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './modal.stories';
+
+<Meta of={Stories} />
+
+# Shared / components / Modal
+
+Модальное окно поверх страницы: затемнённый фон, центрированная панель, слоты
+заголовка/подзаголовка/тела/футера. Управляется извне пропом `open`.
+
+- Закрытие по **Escape**, клику по фону и крестику.
+- Блокирует скролл фона, портируется в `body` (не зависит от контекста верстки).
+- Фон — `<button>` (a11y: не вешаем onClick на неинтерактивный `div`); панель —
+  `role="dialog" aria-modal aria-labelledby`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Default} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### С кнопками действий
+
+<Canvas of={Stories.WithFooter} />
+
+---
+
+## Когда использовать
+
+- Подтверждения, короткие формы, кадрирование изображения — то, что требует фокуса
+  и перекрывает страницу.
+- **Не** для тостов (см. `features/toaster`) и выпадающих меню (см. `Menu`).
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Modal
+  open={open}
+  onClose={close}
+  title="Кадрирование аватара"
+  description="перетащите фото · ползунок ниже — масштаб"
+  closeLabel="Закрыть"
+  footer={<Button variant="primary" onClick={apply}>Применить</Button>}
+>
+  <ImageCropper src={src} zoomLabel="Масштаб" onChange={setCrop} />
+</Modal>
+`}
+/>

@@ -1,0 +1,113 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './toggle.stories';
+
+<Meta of={Stories} />
+
+# Toggle
+
+Тумблер-переключатель с семантикой `switch` (`role="switch"` + `aria-checked`).
+Меняет состояние **мгновенно** — без кнопки «Сохранить».
+
+---
+
+## Анатомия
+
+- Корень — `<button role="switch" aria-checked>` с ползунком-`thumb` (декоративным).
+- Управляется снаружи: `checked` + `onCheckedChange(next)`.
+- `compact` — уменьшенный размер для флагов в формах.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Все состояния сразу
+
+<Canvas of={Stories.States} />
+
+### В контексте: строка настройки
+
+<Canvas of={Stories.WithLabel} />
+
+---
+
+## Живые демонстрации
+
+### Переключение
+
+<Canvas of={Stories.Toggling} />
+
+### Клавиатура
+
+Фокус по `Tab`, переключение по `Пробел`/`Enter` — нативно для кнопки.
+
+<Canvas of={Stories.KeyboardActivation} />
+
+---
+
+# Когда использовать
+
+- мгновенное вкл/выкл (тема, видимость проекта, флаг настройки);
+- бинарное состояние, применяемое сразу.
+
+# Когда **не** использовать
+
+- выбор одного из нескольких — [`Segmented`](?path=/docs/shared-components-segmented--docs);
+- отложенное согласие с сабмитом формы — нативный чекбокс уместнее по семантике.
+
+```tsx
+// ❌ Плохо — «switch» там, где нужен выбор из вариантов
+<Toggle checked={theme === 'dark'} onCheckedChange={...} />
+
+// ✅ Хорошо
+<Segmented options={themeOptions} value={theme} onChange={setTheme} />
+```
+
+---
+
+## Доступность
+
+- `role="switch"` + `aria-checked` — озвучивается как «вкл/выкл».
+- **Требует доступного имени**: `aria-label` или связанный `<label>`.
+- Полноценная клавиатура (`Пробел`/`Enter`) и фокус, потому что это `<button>`.
+
+## Токены
+
+`--primary` (включённый трек), `--raised`/`--border` (выключенный), `--radius-stadium`
+(трек), `--ring` (фокус); размер ползунка — локальные переменные модуля.
+
+## Связанные компоненты
+
+- [`Segmented`](?path=/docs/shared-components-segmented--docs) — выбор из нескольких.
+- [`Chip`](?path=/docs/shared-primitives-chip--docs) — множественный выбор-тоггл.
+
+---
+
+# Ответственность
+
+Toggle отвечает за семантику `switch`/`aria-checked` и вызов `onCheckedChange` со
+следующим значением. **Не отвечает** за хранение состояния (снаружи), подпись рядом
+(даёт потребитель) и сохранение на сервер.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Toggle
+  aria-label={t('project.visibility')}
+  checked={isVisible}
+  onCheckedChange={setVisible}
+/>
+`}
+/>

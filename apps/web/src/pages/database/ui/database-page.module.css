@@ -1,0 +1,64 @@
+.page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin: 0 auto;
+  padding: 42px 24px 90px;
+}
+
+.back {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 8px 13px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.back:hover {
+  color: var(--color-fg);
+  border-color: var(--color-primary-bright);
+}
+
+/* Стрелка «вправо» из реестра, развёрнутая влево — как на остальных экранах. */
+.backIcon {
+  transform: rotate(180deg);
+}
+
+.breadcrumb {
+  margin-bottom: 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-primary-bright);
+}
+
+.title {
+  margin: 0 0 6px;
+}
+
+.intro {
+  max-width: 640px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 264px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+@media (width <= 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,70 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './activity.stories';
+
+<Meta of={Stories} />
+
+# Activity
+
+Секция активности главной (макет `design/redesign` → STATS) — карточки **GitHub** и
+**Codewars** с публичной статистикой из прокси-эндпоинтов `/api/stats/*`.
+
+---
+
+## Анатомия
+
+- Две независимые карточки; данные и флаги ошибок — пропсами (запросы оркеструет
+  страница через RTK Query).
+- Пока данных нет — **скелетон**; при недоступности сервиса карточка деградирует в
+  компактный фолбэк, **не роняя соседнюю**.
+- Числа форматируются по текущей локали; бейдж ранга Codewars — по kyu-палитре.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все состояния
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Недоступность сервисов
+
+Карточки независимы: одна может быть в ошибке, вторая — работать.
+
+<Canvas of={Stories.GithubUnavailable} />
+<Canvas of={Stories.CodewarsUnavailable} />
+<Canvas of={Stories.BothUnavailable} />
+
+### Мобильная раскладка
+
+Две карточки в ряд сжимаются в один столбец на `--bp-md` (768).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Ссылки «Профиль ↗» — внешние (`target="_blank" rel="noopener"`).
+- На время загрузки карточки — `aria-busy`/`aria-live`; иконки уровня/сервиса — из реестра.
+
+## Связанные компоненты
+
+- `entities/stats` — источник данных (прокси с TTL-кэшем).
+- [`Icon`](?path=/docs/shared-primitives-icon--docs) — логотипы GitHub/Codewars из реестра.
+
+---
+
+# Ответственность
+
+Activity отвечает за раскладку и отображение карточек статистики. **Не отвечает** за
+запросы к API (получает данные пропсами) и за сам источник статистики (прокси на
+бэкенде с TTL-кэшем).

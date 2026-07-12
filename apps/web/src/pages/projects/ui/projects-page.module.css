@@ -1,0 +1,75 @@
+.page {
+  width: 100%;
+
+  /* Единая ширина контента со всеми страницами приложения. */
+  max-width: var(--container-page);
+  margin: 0 auto;
+  padding: 42px 24px 90px;
+}
+
+.back {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 8px 13px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.back:hover {
+  color: var(--color-fg);
+  border-color: var(--color-primary-bright);
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--color-primary-bright);
+  outline-offset: 2px;
+}
+
+.backIcon {
+  /* «arrow-right» из реестра, отражённый в «назад» — отдельная иконка не нужна. */
+  transform: scaleX(-1);
+}
+
+.breadcrumb {
+  margin-bottom: 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-small);
+  color: var(--color-primary-bright);
+}
+
+.title {
+  margin: 0 0 8px;
+}
+
+.filter {
+  margin-bottom: 18px;
+}
+
+.count {
+  margin: 0 0 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+}
+
+.countValue {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-bright);
+}
+
+/* Мобильный: ужимаем отступы страницы (--bp-md 768) */
+@media (width <= 768px) {
+  .page {
+    padding: 24px 14px 64px;
+  }
+}

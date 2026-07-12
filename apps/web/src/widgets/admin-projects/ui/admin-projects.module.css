@@ -1,0 +1,427 @@
+.card {
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-heading-3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.count {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg-dim);
+}
+
+.endpoint {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+}
+
+.headActions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+/* --- список --- */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.row:hover {
+  background: var(--color-raised);
+}
+
+.tile {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rowTitle {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  font-family: var(--font-sans), sans-serif;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.star {
+  flex: none;
+  color: var(--color-primary-bright);
+}
+
+.hiddenBadge {
+  display: inline-flex;
+  flex: none;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-dim);
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.tag {
+  padding: 2px 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-dim);
+  background: var(--color-raised);
+  border-radius: var(--radius-sm);
+}
+
+.tagMore {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-dim);
+}
+
+/* Участники проекта строкой — моно, приглушённо, с иконкой. */
+.contributors {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  overflow: hidden;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statusTag {
+  flex: none;
+  min-width: 92px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-dim);
+}
+
+.statusTag[data-status='PUBLISHED'] {
+  color: var(--color-primary-bright);
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  gap: 6px;
+  align-items: center;
+}
+
+.empty {
+  padding: 18px 22px;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-dim);
+}
+
+/* --- форма --- */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+}
+
+.field {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.inlineLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-muted);
+}
+
+.required::after {
+  margin-left: 3px;
+  color: var(--color-error);
+  content: '*';
+}
+
+.error {
+  margin: 6px 0 0;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-small);
+  color: var(--color-error);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+/* Цвет плитки: палитра + превью-градиент. */
+.tileRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.swatch {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px var(--color-surface) inset;
+}
+
+.swatch[aria-checked='true'] {
+  border-color: var(--color-fg);
+}
+
+/* Галерея скриншотов проекта. */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-2) 0;
+  list-style: none;
+}
+
+.galleryItem {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.galleryActions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+.galleryAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: #fff;
+  cursor: pointer;
+  background: color-mix(in srgb, #000 55%, transparent);
+  border: 0;
+  border-radius: var(--radius-pill);
+}
+
+.galleryAction:hover:not(:disabled) {
+  background: color-mix(in srgb, #000 75%, transparent);
+}
+
+.galleryEmpty {
+  margin: var(--space-2) 0;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-muted);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Управление участниками: чип-выбор + карандаш правки; форма под чипами. */
+
+/* Чип и кнопка правки — единый блок (карандаш примыкает к чипу). */
+.chipWrap {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.chipEdit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  color: var(--color-fg-dim);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+}
+
+.chipEdit:hover:not(:disabled) {
+  color: var(--color-fg);
+  background: var(--color-raised);
+}
+
+.chipEdit:disabled {
+  cursor: default;
+  opacity: 50%;
+}
+
+.chipEdit:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Кнопка «Удалить» в форме правки — прижата вправо, красный акцент. */
+.contributorDelete {
+  margin-left: auto;
+  color: var(--color-error);
+}
+
+/* Кнопка «+ создать участника» отбивается от ряда чипов сверху. */
+.contributorAdd {
+  margin-top: var(--space-3);
+}
+
+.contributorCreate {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 420px;
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.contributorCreateActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Живой предпросмотр: та же плитка, что в публичном списке, под подписью. */
+.tilePreview {
+  --preview-width: 380px;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: var(--preview-width);
+  margin-top: var(--space-4);
+}
+
+.previewCaption {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+}
+
+/* Флаги проекта — сетка карточек `ToggleField` во всю ширину контента. */
+.toggleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+
+@media (width <= 768px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .toggleGrid {
+    grid-template-columns: 1fr;
+  }
+}

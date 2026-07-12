@@ -1,0 +1,122 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './menu.stories';
+
+<Meta of={Stories} />
+
+# Menu
+
+Выпадающее меню-оверлей. Триггер-кнопка открывает панель с пунктами (`MenuItem`).
+Управляет своим открытием само; действия пунктов — на потребителе. Используется,
+например, для меню профиля в навбаре и kebab-меню в списках.
+
+---
+
+## Анатомия
+
+- Триггер задаётся через render-проп: на кнопку навешиваются `triggerProps`
+  (`aria-haspopup`/`aria-expanded`/`aria-controls`) и вызывается `toggle`.
+- Панель — `role="menu"`, пункты — `role="menuitem"` (`MenuItem`, с иконкой/`danger`).
+- Закрытие по Escape (с возвратом фокуса на триггер) и по клику вне.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Выравнивание
+
+Панель прижимается к левому (`start`) или правому (`end`) краю триггера.
+
+<Canvas of={Stories.Alignment} />
+
+---
+
+## Живые демонстрации
+
+### Навигация стрелками
+
+При открытии фокус уходит на первый пункт; `↑`/`↓` двигают, `Home`/`End` — к краям.
+
+<Canvas of={Stories.ArrowNavigation} />
+
+### Закрытие кликом вне
+
+<Canvas of={Stories.ClickOutside} />
+
+### Выбор пункта
+
+Клик по пункту вызывает его обработчик и закрывает меню.
+
+<Canvas of={Stories.SelectItem} />
+
+---
+
+# Когда использовать
+
+- меню профиля/аккаунта в шапке;
+- kebab-меню действий над элементом списка;
+- компактный набор редких действий, не занимающий место постоянно.
+
+# Когда **не** использовать
+
+- взаимоисключающий выбор на виду (2–4) — [`Segmented`](?path=/docs/shared-components-segmented--docs);
+- переключение панелей контента — [`Tabs`](?path=/docs/shared-components-tabs--docs);
+- навигация между URL — обычные ссылки/роутер.
+
+---
+
+## Доступность
+
+- ARIA-связка: `aria-haspopup="menu"` + `aria-expanded` + `aria-controls` на триггере;
+  `role="menu"`/`role="menuitem"` на панели и пунктах.
+- Клавиатура: Escape закрывает и возвращает фокус на триггер; `↑`/`↓`/`Home`/`End`
+  двигают фокус по пунктам (roving tabindex).
+- Клик вне панели закрывает меню.
+
+## Токены
+
+`--surface`/`--border-strong` (панель), `--raised` (hover пункта), `--color-danger`
+(пункт `danger`), `--radius-card`, `--shadow-*`, `--z-dropdown`.
+
+## Связанные компоненты
+
+- [`Button`](?path=/docs/shared-primitives-button--docs) — типовой триггер.
+- [`Icon`](?path=/docs/shared-primitives-icon--docs) — иконки пунктов.
+
+---
+
+# Ответственность
+
+Menu отвечает за открытие/закрытие оверлея и возврат фокуса, клавиатуру и ARIA-связку,
+позиционирование панели. **Не отвечает** за содержимое и действия пунктов (задаёт
+потребитель) и за данные (например, авторизацию для меню профиля).
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Menu
+  align="end"
+  ariaLabel={t('nav.profileMenu')}
+  renderTrigger={({ toggle, triggerProps }) => (
+    <Button variant="icon" onClick={toggle} aria-label={t('nav.profileMenu')} {...triggerProps}>
+      <Icon name="user" />
+    </Button>
+  )}
+>
+  <MenuItem icon="lock" onClick={goToAdmin}>{t('nav.admin')}</MenuItem>
+  <MenuItem icon="user" danger onClick={logout}>{t('nav.signOut')}</MenuItem>
+</Menu>
+`}
+/>

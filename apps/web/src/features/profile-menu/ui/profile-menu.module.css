@@ -1,0 +1,30 @@
+.card {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cardText {
+  min-width: 0;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-fg-dim);
+}
+
+.name {
+  display: block;
+  overflow: hidden;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

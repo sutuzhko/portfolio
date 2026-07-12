@@ -1,0 +1,215 @@
+.section {
+  min-width: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  box-shadow: var(--shadow);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.badge {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+  color: var(--color-fg);
+  background-color: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--space-1);
+}
+
+.brandName {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.handle {
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profileLink {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 28px;
+  padding: 0 var(--space-3);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-bright);
+  text-decoration: none;
+  border: 1.5px solid var(--color-primary-bright);
+  border-radius: var(--radius-stadium);
+}
+
+.profileLink:hover {
+  background-color: color-mix(in srgb, var(--color-primary-bright) 12%, transparent);
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.statValue {
+  /* 19px — из макета, между h3(17) и h2(23); держим локальной переменной. */
+  --stat-value-size: 19px;
+
+  font-family: var(--font-mono), monospace;
+  font-size: var(--stat-value-size);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+  color: var(--color-fg);
+}
+
+.statLabel {
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-muted);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stackLabel {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-dim);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Бейдж ранга Codewars: шестиугольник и подпись в одной grid-ячейке (без absolute).
+   Цвет — из inline-стиля по kyu, поэтому SVG использует currentColor. */
+.kyu {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 94px;
+  height: 56px;
+}
+
+.kyuHex {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.kyuLabel {
+  grid-area: 1 / 1;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: currentcolor;
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.progressHead {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+}
+
+.progressLabel {
+  color: var(--color-fg-muted);
+}
+
+.progressValue {
+  font-weight: var(--font-weight-semibold);
+}
+
+.progressTrack {
+  height: 6px;
+  overflow: hidden;
+  background-color: var(--color-raised);
+  border-radius: var(--radius-sm);
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.3s ease;
+}
+
+.cardError {
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+}
+
+.errorText {
+  font-size: var(--font-size-small);
+  color: var(--color-fg-muted);
+}
+
+/* Мобильный: карточки в один столбец (--bp-md 768) */
+@media (width <= 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

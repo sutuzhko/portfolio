@@ -1,0 +1,50 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+  padding: 40px 24px;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+}
+
+.marker {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-small);
+  color: var(--color-terminal-error);
+}
+
+.message {
+  max-width: 42ch;
+  margin: 0;
+  font-size: var(--font-size-body);
+  color: var(--color-fg);
+}
+
+.retry {
+  margin-top: var(--space-2);
+  padding: 9px 18px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-button);
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.retry:hover {
+  color: var(--color-primary-bright);
+  border-color: var(--color-primary-bright);
+}
+
+.retry:focus-visible {
+  outline: 2px solid var(--color-primary-bright);
+  outline-offset: 2px;
+}

@@ -1,0 +1,8 @@
+/* Код локали (RU/EN) — моноширинный, как в макете навбара.
+   Коробка/ховер берутся у Button variant="icon"; здесь только шрифт кода. */
+.lang {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+}

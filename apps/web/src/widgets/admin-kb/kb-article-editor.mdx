@@ -1,0 +1,81 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './kb-article-editor.stories';
+
+<Meta of={Stories} />
+
+# Widgets / AdminKb / ArticleEditor
+
+Правая панель «Базы знаний» в режиме **редактора**. Метаполя (Заголовок\*, Slug\*,
+Папка) и рабочая область Markdown с переключателем **split / preview**: в `split`
+слева исходник, справа живое превью (общий `KbMarkdown`); в `preview` исходник скрыт.
+
+Форма на **React Hook Form + Zod**. Кнопка **«Сохранить» активна только при изменениях**
+(`isDirty`) — открытие и повторный сабвит без правок не шлют запрос. Инлайн-ошибки под
+Заголовком/Slug; серверная ошибка по slug (например, `409`) приходит пропом
+`serverSlugError`.
+
+Правки идут в **активную локаль**; при сохранении контейнер собирает двуязычный объект,
+сохраняя вторую локаль исходной статьи.
+
+---
+
+## Playground
+
+<Canvas of={Stories.New} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Редактирование существующей
+
+<Canvas of={Stories.Edit} />
+
+### Только превью
+
+<Canvas of={Stories.PreviewMode} />
+
+### Slug занят (серверная ошибка)
+
+<Canvas of={Stories.SlugTaken} />
+
+---
+
+## Возможности
+
+- Метаполя Заголовок / Slug / Папка (селект с отступами по вложенности).
+- Markdown-исходник + живое превью; переключатель split / preview.
+- Валидация Zod (обязательные поля, формат slug) с инлайн-ошибками.
+- «Сохранить» неактивен без изменений — лишние запросы не уходят.
+
+## Доступность
+
+- Поля связаны с подписями; у Markdown-области есть `aria-label`.
+- Сегмент split / preview размечен группой; кнопки операбельны с клавиатуры.
+
+## Ответственность
+
+Форма статьи и её локальная валидация/состояние. **Не отвечает** за мутации и
+загрузку исходных данных (контейнер `AdminKb`).
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<KbArticleEditor
+  mode={mode}
+  initial={initialValues}
+  folders={folderOptions(tree)}
+  isSaving={isSaving}
+  serverSlugError={slugError}
+  onSave={save}
+  onCancel={close}
+/>
+`}
+/>

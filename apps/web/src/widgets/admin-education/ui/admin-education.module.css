@@ -1,0 +1,160 @@
+.card {
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-heading-3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.endpoint {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+}
+
+.save {
+  flex: none;
+}
+
+.section {
+  padding: 22px;
+}
+
+.section + .section {
+  border-top: 1px solid var(--color-border);
+}
+
+.sectionHead {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+/* Кнопка добавления записи — обведённая, моно, зелёный текст (по макету). */
+.addBtn {
+  flex: none;
+  padding: 6px 12px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-bright);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease;
+}
+
+.addBtn:hover,
+.addBtn:focus-visible {
+  border-color: var(--color-primary-bright);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-dim);
+}
+
+/* Карточка записи высшего образования: степень + удалить, ниже — место и период. */
+.entryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+}
+
+.entryTop,
+.entryBottom,
+.courseRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cellPeriod {
+  flex: none;
+  width: 160px;
+}
+
+/* Место учёбы — приглушённый текст, как в макете. Двойной класс поднимает
+   специфичность над базовым `.control` без !important. */
+.placeInput.placeInput {
+  color: var(--color-fg-muted);
+}
+
+/* Кнопка удаления — обведённая, иконка, hover краснеет (по макету). */
+.deleteBtn {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.deleteBtn:hover,
+.deleteBtn:focus-visible {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+@media (width <= 768px) {
+  .entryBottom,
+  .courseRow {
+    flex-wrap: wrap;
+  }
+
+  .cellPeriod {
+    flex: 1 1 140px;
+    width: auto;
+  }
+}

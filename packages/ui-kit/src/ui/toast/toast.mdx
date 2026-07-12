@@ -1,0 +1,124 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './toast.stories';
+
+<Meta of={Stories} />
+
+# Toast
+
+Уведомление-тост: уровень, заголовок, описание, кнопка закрытия и опциональная
+полоса автозакрытия. **Презентационный** компонент — логика очереди и таймеров
+живёт в `Toaster` (слой выше).
+
+---
+
+## Анатомия
+
+- Корень — `<div role="status|alert" aria-live>`; роль зависит от уровня.
+- Чип-иконка, тег уровня (`INFO`/`OK`/`WARN`/`ERROR`), заголовок, описание.
+- Кнопка закрытия — только при `onClose`.
+- Полоса снизу: статичная при `progress` (0–100) или анимированный отсчёт при
+  `duration` (мс), который `paused` замораживает. `duration` приоритетнее `progress`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Уровни
+
+<Canvas of={Stories.Info} />
+<Canvas of={Stories.Success} />
+<Canvas of={Stories.Warning} />
+<Canvas of={Stories.Error} />
+
+### Все типы рядом
+
+<Canvas of={Stories.AllTypes} />
+
+### Без описания / без кнопки
+
+<Canvas of={Stories.WithoutDescription} />
+<Canvas of={Stories.WithoutClose} />
+
+### Полоса: статичная и отсчёт
+
+<Canvas of={Stories.WithProgress} />
+<Canvas of={Stories.Countdown} />
+<Canvas of={Stories.CountdownPaused} />
+
+---
+
+## Состояния и края
+
+### Закрытие
+
+<Canvas of={Stories.Closing} />
+
+### Длинный текст
+
+<Canvas of={Stories.LongContent} />
+
+---
+
+# Когда использовать
+
+- краткий отклик на действие (сохранено, скопировано, ошибка запроса);
+- неблокирующее сообщение, исчезающее само.
+
+# Когда **не** использовать
+
+- критический выбор, требующий решения, — модальное окно ([`Window`](?path=/docs/shared-components-window--docs) как диалог);
+- постоянный статус формы — сообщение поля ([`FieldFrame`](?path=/docs/shared-primitives-fieldframe--docs)).
+
+---
+
+## Доступность
+
+- `info`/`success` — `role="status"` + `aria-live="polite"` (не перебивают речь);
+  `warning`/`error` — `role="alert"` + `aria-live="assertive"` (объявляются сразу).
+- Уровень не только цвет: слева тег `INFO`/`OK`/`WARN`/`ERROR` и иконка.
+- Кнопка закрытия требует `closeLabel` (доступное имя).
+
+## Токены
+
+`--color-info/success/warning/danger` (акценты уровней), `--surface`/`--border`,
+`--radius-card`; полоса прогресса — акцент уровня.
+
+## Связанные компоненты
+
+- `Toaster` (feature) — очередь, позиционирование, таймеры (использует Toast).
+- [`Icon`](?path=/docs/shared-primitives-icon--docs) — иконка уровня.
+
+---
+
+# Ответственность
+
+Toast отвечает за визуал уровня и корректную a11y-роль (`status`/`alert`), отрисовку
+заголовка/описания/полосы и кнопку закрытия при `onClose`. **Не отвечает** за очередь,
+позиционирование и таймеры (это `Toaster`), локализацию текста и повтор действия.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Toast
+  type="error"
+  title={t('toast.saveFailed.title')}
+  description={t('toast.saveFailed.text')}
+  closeLabel={t('common.close')}
+  onClose={() => dismiss(id)}
+  progress={remaining}
+/>
+`}
+/>

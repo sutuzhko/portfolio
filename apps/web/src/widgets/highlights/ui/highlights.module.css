@@ -1,0 +1,44 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  padding: 0;
+  margin: var(--space-5) 0 0;
+  list-style: none;
+}
+
+.item {
+  min-width: 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+}
+
+.value {
+  /* 25px нет в шкале токенов — фиксируем локальной переменной, а не «магией». */
+  --highlight-value-size: 25px;
+
+  font-family: var(--font-mono), monospace;
+  font-size: var(--highlight-value-size);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.5px;
+  color: var(--color-primary-bright);
+}
+
+/* Планшет: два столбца (макет ~768 → --bp-md) */
+@media (width <= 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Мобильный: один столбец (--bp-sm 480) */
+@media (width <= 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

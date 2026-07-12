@@ -1,0 +1,73 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './database-page.stories';
+
+<Meta of={Stories} />
+
+# Pages / Database
+
+Приватная база знаний (`/database`, макет `~/database`): дерево слева, читатель
+статьи справа. Маршрут за гардом `RequireAuth` — гостя уводит на `/login`.
+
+Документируется **презентационный** `DatabasePageView`; контейнер `DatabasePage`
+тянет дерево и статью (`entities/kb`), держит выбранный slug и при загрузке дерева
+автоматически открывает первую статью.
+
+---
+
+## Архитектура
+
+- **`DatabasePage`** (контейнер) — `useDatabaseTree` + `useArticle(slug)`, автовыбор
+  первой статьи, переходы (дерево, вики-ссылки, бэклинки).
+- **`DatabasePageView`** — раскладка: [`KbTree`](?path=/docs/widgets-kbtree--docs) +
+  [`KbArticle`](?path=/docs/widgets-kbarticle--docs). Ошибку дерева показывает на
+  уровне страницы, ошибку статьи — внутри читателя.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Ошибка дерева
+
+<Canvas of={Stories.TreeError} />
+
+### Мобильная раскладка
+
+Дерево и читатель складываются в одну колонку.
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Дерево — `<nav>` с ролями `tree`/`treeitem`; читатель — `<article>`.
+- Скелетоны объявляют загрузку; ошибки — через `ErrorState`.
+
+## Связанные
+
+- `entities/kb` — `useDatabaseTree`, `useArticle`.
+- `app/router/RequireAuth` — гард приватного маршрута.
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+{ element: <RequireAuth />, children: [{ path: '/database', Component: DatabasePage }] }
+`}
+/>

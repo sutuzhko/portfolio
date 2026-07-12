@@ -1,0 +1,13 @@
+.label {
+  /* Отступ секции — локальными переменными, чтобы не «магичить» числами. */
+  --section-label-gap-top: var(--space-8);
+  --section-label-gap-bottom: var(--space-4);
+
+  margin: var(--section-label-gap-top) 0 var(--section-label-gap-bottom);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-primary-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}

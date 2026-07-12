@@ -1,0 +1,470 @@
+.card {
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+
+.head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-heading-3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.endpoint {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+}
+
+.body {
+  padding: 22px;
+}
+
+.sectionLabel {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12.5px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-muted);
+}
+
+/* ---------- Технологии: сетка по категориям ---------- */
+
+/* Заголовок секции «Технологии» + кнопка «+ блок» (появляется при наведении). */
+.sectionHead {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.sectionHead .sectionLabel {
+  margin-bottom: 0;
+}
+
+.addBlock {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 3px 9px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-bright);
+  cursor: pointer;
+  background: transparent;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 7px;
+  opacity: 0%;
+  transition:
+    opacity 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.sectionHead:hover .addBlock,
+.sectionHead:focus-within .addBlock {
+  opacity: 100%;
+}
+
+.addBlock:hover {
+  border-color: var(--color-primary-bright);
+}
+
+/* Максимум 3 колонки; лишние категории переносятся на следующий ряд. */
+.techGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 24px;
+  margin-top: 14px;
+}
+
+@media (width <= 900px) {
+  .techGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width <= 560px) {
+  .techGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.techColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+/* Пока блок тащат — приподнимаем над соседями и слегка гасим. */
+.columnDragging {
+  z-index: 1;
+  opacity: 75%;
+}
+
+/* Ручка перетаскивания блока — грип слева в заголовке, проявляется при наведении. */
+.categoryDrag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 1px;
+  color: var(--color-fg-dim);
+  cursor: grab;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  opacity: 0%;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+
+  /* чтобы тач-перетаскивание не прокручивало страницу */
+  touch-action: none;
+}
+
+.categoryHead:hover .categoryDrag,
+.categoryHead:focus-within .categoryDrag {
+  opacity: 100%;
+}
+
+.categoryDrag:hover {
+  color: var(--color-fg-muted);
+}
+
+.categoryDrag:active {
+  cursor: grabbing;
+}
+
+.categoryDrag:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+  opacity: 100%;
+}
+
+/* Заголовок категории: имя + карандаш переименования (появляется при наведении). */
+.categoryHead {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-height: 22px;
+}
+
+.categoryLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--color-primary-bright);
+}
+
+.categoryEdit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  color: var(--color-fg-dim);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  opacity: 0%;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+}
+
+.categoryDelete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  color: var(--color-fg-dim);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  opacity: 0%;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+}
+
+.categoryHead:hover .categoryEdit,
+.categoryHead:focus-within .categoryEdit,
+.categoryHead:hover .categoryDelete,
+.categoryHead:focus-within .categoryDelete {
+  opacity: 100%;
+}
+
+.categoryEdit:hover {
+  color: var(--color-fg);
+}
+
+.categoryDelete:hover {
+  color: var(--color-danger);
+}
+
+/* Инлайн-поле переименования категории — под стиль моно-заголовка. */
+.categoryInput {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--color-primary-bright);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.chip {
+  display: inline-flex;
+
+  /* не сжиматься в flex-контейнере: во время drag'а иначе схлопывается до min-content
+     и текст переносится по буквам (узкая «колонка»). nowrap держит подпись в строку. */
+  flex: none;
+  gap: 6px;
+  align-items: center;
+  padding: 5px 7px 5px 11px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  white-space: nowrap;
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+}
+
+.chipRemove {
+  padding: 0 2px;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--color-fg-dim);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  transition: color 0.15s ease;
+}
+
+.chipRemove:hover {
+  color: var(--color-danger);
+}
+
+/* Перетаскиваемый чип: слева ручка-грип берёт левый отступ. */
+.chipSortable {
+  padding-left: 5px;
+}
+
+.chipHandle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1px;
+  color: var(--color-fg-dim);
+  cursor: grab;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+
+  /* чтобы тач-перетаскивание не прокручивало страницу */
+  touch-action: none;
+}
+
+.chipHandle:hover {
+  color: var(--color-fg-muted);
+}
+
+.chipHandle:active {
+  cursor: grabbing;
+}
+
+.chipHandle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* Пока чип тащат — приподнимаем и подсвечиваем. */
+.chipDragging {
+  z-index: 1;
+  opacity: 65%;
+  box-shadow: var(--shadow);
+}
+
+/* Инлайн-поле нового чипа (технология/навык) — выглядит как чип. */
+.inlineInput {
+  padding: 5px 9px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  background: var(--color-bg);
+  border: 1px solid var(--color-primary-bright);
+  border-radius: 7px;
+  outline: none;
+}
+
+.inlineInput::placeholder {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg-dim);
+}
+
+/* Чип-кнопка «+» для добавления в блок — появляется при наведении на блок. */
+.addChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 9px;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 7px;
+  opacity: 0%;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.techColumn:hover .addChip,
+.techColumn:focus-within .addChip,
+.skillSection:hover .addChip,
+.skillSection:focus-within .addChip {
+  opacity: 100%;
+}
+
+.addChip:hover {
+  color: var(--color-primary-bright);
+  border-color: var(--color-primary-bright);
+}
+
+/* ---------- Языки ---------- */
+.langSection {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Навыки — плоские чипы (как технологии, но без категорий); показываются на «Опыте». */
+.skillSection {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-border);
+}
+
+.skillHint {
+  margin: -6px 0 12px;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+}
+
+.langHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.langHead .sectionLabel {
+  margin-bottom: 0;
+}
+
+.langAdd {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 12px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-bright);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.langAdd:hover {
+  border-color: var(--color-primary-bright);
+}
+
+.langRows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.langRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.langName {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.langLevel {
+  flex: none;
+  width: 88px;
+}
+
+.langPct {
+  flex: none;
+  width: 72px;
+}
+
+.pctSign {
+  flex: none;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--color-fg-dim);
+}
+
+.langRemove {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.langRemove:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.empty {
+  margin: 0 0 10px;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-dim);
+}

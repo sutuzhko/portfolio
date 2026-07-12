@@ -1,0 +1,82 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './login-page.stories';
+
+<Meta of={Stories} />
+
+# Pages / Login
+
+Экран входа в приватную зону (`/login`, макет `~/login`). Слева — форма, справа —
+декоративный терминал. Документируется **презентационный** `LoginPageView`:
+контейнер `LoginPage` добавляет мутацию `login`, тосты и редирект.
+
+---
+
+## Архитектура
+
+- **`LoginPage`** (контейнер) — `useLoginMutation` + `useAuth`, тост об успехе/ошибке,
+  возврат на исходный маршрут; уже авторизованного сразу перенаправляет.
+- **`LoginPageView`** (ниже) — форма на **React Hook Form + Zod** (сообщения из i18n).
+  Отправка и результат приходят пропами, поэтому вид управляем и тестируется.
+
+Сессия живёт в HttpOnly-cookie — клиент токены не хранит, статус берёт из `getMe`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Неверные данные
+
+<Canvas of={Stories.Invalid} />
+
+### Отправка
+
+<Canvas of={Stories.Submitting} />
+
+### Валидация пустой формы
+
+<Canvas of={Stories.Validation} />
+
+### Мобильная раскладка
+
+Терминал-декор скрыт — на узком экране важна форма.
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Каждое поле — `Input` с подписью и `aria-invalid`/`aria-describedby` при ошибке.
+- Ошибка сервера — `role="alert"` (объявляется сразу).
+- Валидация не блокирует нативную отправку по Enter (`noValidate` + схема Zod).
+
+## Связанные
+
+- `entities/session` — `login`/`logout`/`getMe`, `useAuth`.
+- [`Input`](?path=/docs/shared-primitives-input--docs), [`Button`](?path=/docs/shared-primitives-button--docs).
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+const [login] = useLoginMutation();
+
+const onSubmit = async (credentials) => {
+  const user = await login(credentials).unwrap();
+  notify({ type: 'success', title: t('auth.toast.welcome.title') });
+  navigate(redirectTo, { replace: true });
+};
+`}
+/>

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    /* Настройки совпадают с apps/web/tsconfig.app.json: код переехал как есть,
+       менять строгость на ходу — значит менять его семантику. */
+    "target": "es2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom", "node"],
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true
+  },
+  "include": ["src", "types", ".storybook", "vite.config.ts"]
+}

@@ -1,0 +1,29 @@
+# Реверс-прокси + раздача SPA. Один origin для фронта и API — поэтому HttpOnly
+# cookie сессии работают без CORS. HTTPS-сертификаты Caddy получает автоматически
+# (Let's Encrypt), нужен только домен, направленный на этот сервер, и порты 80/443.
+
+sutuzhko.space, www.sutuzhko.space {
+	encode gzip zstd
+
+	# API и загруженные файлы — на бэкенд-контейнер (тот же origin).
+	handle /api/* {
+		reverse_proxy api:3000
+	}
+	handle /uploads/* {
+		reverse_proxy api:3000
+	}
+
+	# Всё остальное — статика собранного SPA, с фолбэком на index.html
+	# (клиентский роутинг React Router).
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	# Долгий кэш для хешированных ассетов, без кэша для index.html.
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+	@html path /index.html
+	header @html Cache-Control "no-cache"
+}

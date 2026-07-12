@@ -1,0 +1,19 @@
+.wrapper {
+  position: relative;
+}
+
+.select {
+  composes: control from '../field/control.module.css';
+  padding-right: 34px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.chevron {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  color: var(--color-fg-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
+}

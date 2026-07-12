@@ -1,0 +1,113 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './field-frame.stories';
+
+<Meta of={Stories} />
+
+# FieldFrame
+
+Низкоуровневая обвязка поля формы: подпись сверху, контрол, сообщение снизу (ошибка
+приоритетнее подсказки). Единый источник разметки и a11y для
+[`Input`](?path=/docs/shared-primitives-input--docs),
+[`Textarea`](?path=/docs/shared-primitives-textarea--docs) и
+[`Select`](?path=/docs/shared-primitives-select--docs) — чтобы не дублировать связку
+«label ↔ контрол ↔ сообщение».
+
+---
+
+## Анатомия
+
+- Сам контрол — это `children`; фрейм даёт только оболочку.
+- `label[for]={id}` связывает подпись с контролом.
+- Сообщение получает `messageId` для `aria-describedby` контрола.
+- Ошибка вытесняет подсказку (показывается что-то одно).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Все варианты сразу
+
+<Canvas of={Stories.States} />
+
+---
+
+## Состояния
+
+### С ошибкой
+
+Ошибка приоритетнее — подсказка не показывается (`play` это проверяет).
+
+<Canvas of={Stories.WithError} />
+
+### Без подписи
+
+<Canvas of={Stories.WithoutLabel} />
+
+---
+
+# Когда использовать
+
+- при создании **нового** поля формы в UI Kit — как основа под контрол;
+- чтобы разметка и a11y совпадали с уже существующими полями.
+
+# Когда **не** использовать
+
+В экранах и формах используйте готовые `Input`/`Textarea`/`Select`, а не собирайте
+поле из `FieldFrame` вручную — это внутренний слой UI Kit.
+
+```tsx
+// ❌ Плохо — в прикладном коде
+<FieldFrame id="login" label="Логин"><input id="login" /></FieldFrame>
+
+// ✅ Хорошо
+<Input label={t('auth.login')} {...register('login')} />
+```
+
+---
+
+## Доступность
+
+- `label[for]` даёт контролу доступное имя; `messageId` + `aria-describedby` связывают
+  сообщение с контролом.
+- Сам `aria-invalid` ставится на контроле полем-обёрткой (`Input`/`Select`/`Textarea`),
+  а не фреймом.
+
+## Токены
+
+Отступы подпись/контрол/сообщение — `--space-*`; цвет сообщения об ошибке — `--color-danger`,
+подсказки — `--fg-muted`.
+
+## Связанные компоненты
+
+- [`Input`](?path=/docs/shared-primitives-input--docs) / [`Textarea`](?path=/docs/shared-primitives-textarea--docs) / [`Select`](?path=/docs/shared-primitives-select--docs) — поля на его основе.
+
+---
+
+# Ответственность
+
+FieldFrame отвечает за раскладку подпись/контрол/сообщение, связывание `label[for]`/`messageId`
+и приоритет ошибки над подсказкой. **Не отвечает** за сам контрол и его атрибуты (это
+`children`), `aria-invalid` на контроле (ставит поле-обёртка) и валидацию.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+// внутри реализации нового поля UI Kit
+<FieldFrame id={controlId} label={label} hint={hint} error={error} messageId={messageId}>
+  <input id={controlId} aria-invalid={isInvalid || undefined} aria-describedby={messageId} />
+</FieldFrame>
+`}
+/>

@@ -1,0 +1,87 @@
+.banner {
+  --dot-size: 11px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background-color: var(--color-surface);
+}
+
+.dot {
+  flex: none;
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: var(--radius-pill);
+}
+
+/* Цвет индикатора и пульсация — по статусу доступности (макет AVAIL). */
+.active {
+  background-color: var(--color-primary-bright);
+}
+
+.open {
+  background-color: var(--color-warning);
+}
+
+.notLooking {
+  background-color: var(--color-fg-muted);
+}
+
+/* Пульсирующий ореол только для активного поиска. Кольцо — анимированной
+   тенью, без абсолютного позиционирования. Уважает reduce-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .active {
+    animation: pulse-ring 2s infinite;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary-bright) 50%, transparent);
+  }
+
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.body {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Раскладка строк-заглушек скелетона: колонка с тем же ритмом, что заголовок→описание. */
+.skeletonBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 200px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.desc {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-muted);
+}
+
+.action {
+  flex: none;
+  font-family: var(--font-mono), monospace;
+}

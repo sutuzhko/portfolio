@@ -1,0 +1,66 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './contact-page.stories';
+
+<Meta of={Stories} />
+
+# Contact
+
+Экран контактов (маршрут `/contact`, макет → CONTACT): шапка-«крошка», серверное
+интро (`shared/ui/PageIntro`), сетка каналов связи (`widgets/contact-links`) —
+Telegram, email, GitHub, Codewars — и баннер скачивания резюме
+(`widgets/resume-banner`) внизу.
+
+---
+
+## Анатомия
+
+- **Контейнер** `ContactPage` — берёт каналы, интро и ссылку на резюме из профиля +
+  навигацию; **вид** `ContactPageView` — раскладка и состояния (данные пропсами).
+- Значение ссылки чистится (без протокола/`mailto:`/`www.`); email — в почте, остальное —
+  в новой вкладке. Кнопка «Скачать резюме» вызывает `onDownloadCv`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Все состояния
+
+### Ожидание данных
+
+<Canvas of={Stories.Loading} />
+
+### Ошибка
+
+<Canvas of={Stories.Failed} />
+
+### Мобильная раскладка
+
+Две колонки каналов складываются в одну на `--bp-md` (768).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовок — `h1`; каналы — настоящие ссылки; ошибка — `role="alert"`.
+- На время загрузки блоки — `aria-busy`/`aria-live` (скелетоны).
+
+## Связанные компоненты
+
+- `Widgets/ContactLinks` / `Widgets/ResumeBanner` — из чего собран.
+- [`PageIntro`](?path=/docs/shared-components-pageintro--docs) — серверное интро.
+
+---
+
+# Ответственность
+
+`ContactPageView` отвечает за раскладку экрана и переход назад. **Не отвечает** за
+запрос профиля — это контейнер `ContactPage`.

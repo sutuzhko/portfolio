@@ -1,0 +1,77 @@
+.page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin: 0 auto;
+  padding: 42px 24px 90px;
+}
+
+.back {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 8px 13px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.back:hover {
+  color: var(--color-fg);
+  border-color: var(--color-primary-bright);
+}
+
+.backIcon {
+  transform: rotate(180deg);
+}
+
+.breadcrumb {
+  margin-bottom: 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-primary-bright);
+}
+
+.title {
+  margin: 0 0 6px;
+}
+
+.description {
+  max-width: 640px;
+  margin: 0 0 26px;
+  font-size: var(--font-size-base);
+  color: var(--color-fg-muted);
+}
+
+/* Полоса вкладок — «стеклянная» подложка по макету: полноширинный трек со
+   скрытым скроллбаром, липнет под навбаром. Вкладки не переносятся, а уезжают
+   в горизонтальный скролл при переполнении (важно для 8 вкладок). */
+.tabs {
+  display: flex;
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--space-2));
+  z-index: var(--z-sticky);
+  margin-bottom: 22px;
+  padding: 6px;
+  overflow-x: auto;
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(var(--blur-glass));
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.panel {
+  min-width: 0;
+}

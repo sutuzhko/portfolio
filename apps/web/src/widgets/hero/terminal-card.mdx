@@ -1,0 +1,50 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './terminal-card.stories';
+
+<Meta of={Stories} />
+
+# TerminalCard
+
+Терминал-карточка героя (правая колонка макета HERO BAND): «оконный» хром
+(декоративный `WindowChrome` + заголовок `bash — ~`), тело с командами (`whoami`,
+`cat stack.txt`, `location` с живыми часами МСК) и мигающим курсором, и
+плашка-приглашение открыть консоль (`>_` … `⌘+K`).
+
+---
+
+## Анатомия
+
+- `WindowChrome` (декоративный, без обработчиков) + заголовок `bash — ~`.
+- Тело — флейвор из конфига; часы — `useClock` (`Intl`, Europe/Moscow).
+- Плашка `>_ Консоль …⌘K` — кнопка, по клику зовёт `onOpenConsole`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+## Мобильная ширина
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Плашка консоли — настоящая `<button>` с доступным именем; на тач-устройствах текст
+  ярлыка меняется (шортката нет).
+- Хром декоративен (кнопки без обработчиков не попадают в дерево доступности).
+
+## Связанные компоненты
+
+- [`WindowChrome`](?path=/docs/shared-primitives-windowchrome--docs) / [`Kbd`](?path=/docs/shared-primitives-kbd--docs) — из чего собрана.
+- [`Hero`](?path=/docs/widgets-hero--docs) — левая колонка той же полосы.
+
+---
+
+# Ответственность
+
+Показать «терминальную» визитку и триггер консоли. **Не отвечает** за саму консоль
+(её открывает слой выше через `onOpenConsole`) и за данные (текст — флейвор, не из API).

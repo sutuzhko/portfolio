@@ -1,0 +1,44 @@
+.banner {
+  /* Размеры баннера из макета — локальные переменные вместо «магии» */
+  --resume-title-size: 16px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  margin-top: var(--space-5);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+}
+
+.body {
+  flex: 1 1 0;
+  min-width: 200px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--resume-title-size);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.desc {
+  margin: 3px 0 0;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-muted);
+}
+
+.action {
+  flex: none;
+}
+
+.skeletonBody {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 200px;
+}

@@ -1,0 +1,66 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './highlights.stories';
+
+<Meta of={Stories} />
+
+# Highlights
+
+Секция ключевых показателей главной (макет `design/redesign` → HIGHLIGHTS) — ряд
+карточек «крупное значение + подпись»: стаж, число построенных UI-kit'ов, уровень
+языка, ранг Codewars. Идёт сразу под геро-полосой, поэтому **без заголовка секции**
+(в отличие от `Stack`).
+
+---
+
+## Анатомия
+
+- Семантический список `<ul>/<li>` — перечисление однотипных фактов («список из 4»).
+- Каждый элемент — `Card` с крупным значением и подписью (`Text`).
+- Данные — `profile.highlights` (`[{ value, label }]`, подпись уже локализована);
+  пока грузятся — `Skeleton` той же раскладки.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Состояния и края
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Длинные подписи
+
+<Canvas of={Stories.LongLabels} />
+
+### Мобильная раскладка
+
+Грид сжимается 4 → 2 → 1 на брейкпоинтах `--bp-md` (768) и `--bp-sm` (480).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- `<ul>/<li>` озвучивается как список с числом элементов.
+- На время загрузки список помечен `aria-busy`/`aria-live` (объявит появление данных).
+
+## Связанные компоненты
+
+- [`Card`](?path=/docs/shared-primitives-card--docs) / [`Text`](?path=/docs/shared-primitives-text--docs) / [`Skeleton`](?path=/docs/shared-primitives-skeleton--docs) — из чего собрана.
+
+---
+
+# Ответственность
+
+Highlights отвечает за раскладку, вывод показателей и скелетон загрузки. **Не
+отвечает** за источник данных — значения и подписи приходят пропсом `items` из
+`profile.highlights` (запрос делает контейнер страницы).

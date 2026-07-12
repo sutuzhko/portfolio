@@ -1,0 +1,67 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './project-filter-bar.stories';
+
+<Meta of={Stories} />
+
+# ProjectFilter
+
+Панель поиска и фильтров списка проектов (макет: PROJECTS → filter bar): строка
+поиска по названию/описанию и фасеты технологий и контрибьюторов на переключаемых
+`Chip`-ах. Фасет без опций не рендерится; кнопка сброса появляется, только когда есть
+активные фильтры.
+
+Фича управляемая: всё состояние живёт в контроллере `useProjectFilter`
+(`state` + `filtered` + `toggleTech`/`toggleContributor`/`setQuery`/`clear`), а чистая
+функция `filterProjects` покрыта юнит-тестами. Панель — тонкий презентационный слой
+над контроллером, поэтому в историях оба связаны обёрткой `FilterHarness`.
+
+---
+
+## Анатомия
+
+- Строка поиска (`<input type="search">`) + опциональная кнопка сброса.
+- Фасеты — `FilterRow` с [`Chip`](?path=/docs/shared-primitives-chip--docs)-ами; фасет без опций скрыт.
+- В `isLoading` — `FilterRowSkeleton` (плейсхолдеры-чипы).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+---
+
+## Все состояния
+
+### Загрузка
+
+Пока проекты грузятся, из них ещё не выведены опции — фасеты показывают скелетон-чипы.
+
+<Canvas of={Stories.Loading} />
+
+### Живая фильтрация
+
+Ввод в поиск и переключение фасета; при активных фильтрах появляется сброс.
+
+<Canvas of={Stories.Filtering} />
+
+---
+
+## Доступность
+
+- Поиск — нативный `type="search"` с `aria-label`.
+- Фасеты — `Chip` (`aria-pressed`) с полной клавиатурой.
+
+## Связанные компоненты
+
+- [`Chip`](?path=/docs/shared-primitives-chip--docs) — фасеты.
+- `Widgets/ProjectList` — отображает отфильтрованный результат.
+
+---
+
+# Ответственность
+
+ProjectFilter отвечает за ввод условий фильтрации и их отображение. **Не отвечает**
+за саму выборку данных (её делает `useProjects`) — фильтрация клиентская и работает
+над уже загруженным списком.

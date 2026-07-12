@@ -1,0 +1,65 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './experience-page.stories';
+
+<Meta of={Stories} />
+
+# Experience
+
+Экран опыта работы (маршрут `/experience`, макет → EXPERIENCE): шапка-«крошка»,
+серверное интро (`shared/ui/PageIntro`), **таймлайн** мест работы
+(`widgets/experience-timeline`) и блок образование/языки/навыки
+(`widgets/resume-details`).
+
+---
+
+## Анатомия
+
+- **Контейнер** `ExperiencePage` — оркеструет запросы (опыт, образование, языки, навыки,
+  профиль для интро) + навигация; **вид** `ExperiencePageView` — раскладка (данные пропсами).
+- Ведущее состояние (loading/error) — по опыту как основному блоку; остальные блоки
+  скелетонят независимо.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Все состояния
+
+### Ожидание данных
+
+<Canvas of={Stories.Loading} />
+
+### Ошибка
+
+<Canvas of={Stories.Failed} />
+
+### Мобильная раскладка
+
+Таймлайн и нижние карточки складываются в один столбец на `--bp-md` (768).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовок — `h1`; ошибка — `role="alert"`; блоки при загрузке — `aria-busy`/`aria-live`.
+
+## Связанные компоненты
+
+- `Widgets/ExperienceTimeline` / `Widgets/ResumeDetails` — из чего собран.
+- [`PageIntro`](?path=/docs/shared-components-pageintro--docs) — серверное интро.
+
+---
+
+# Ответственность
+
+`ExperiencePageView` отвечает за раскладку экрана и переход назад. **Не отвечает** за
+запросы — это контейнер `ExperiencePage`.

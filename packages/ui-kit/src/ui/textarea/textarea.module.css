@@ -1,0 +1,11 @@
+.textarea {
+  composes: control from '../field/control.module.css';
+  min-height: 96px;
+  line-height: var(--line-height-base);
+  resize: vertical;
+}
+
+/* Обычный (sans) шрифт значения — для контентных полей CMS по макету. */
+.sans {
+  --control-font: var(--font-sans);
+}

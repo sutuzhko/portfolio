@@ -1,0 +1,25 @@
+/**
+ * Корневые стили оболочки приложения.
+ * Базовый сброс (box-sizing, медиа, формы, фокус-кольцо) и токены приезжают
+ * из `@sutuzhko/ui-kit/styles.css` — здесь только то, что специфично для этого
+ * приложения. Вся остальная стилизация живёт в CSS-модулях рядом с компонентами.
+ */
+
+body {
+  /* Ниже 320px не сужаемся — появляется горизонтальный скролл, а не «схлопывание». */
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-sans), sans-serif;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+#root {
+  min-height: 100vh;
+  isolation: isolate;
+}

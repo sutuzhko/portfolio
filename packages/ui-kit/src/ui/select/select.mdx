@@ -1,0 +1,100 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './select.stories';
+
+<Meta of={Stories} />
+
+# Select
+
+Стилизованный **нативный** `<select>` с подписью, подсказкой и состоянием ошибки.
+Разметку и a11y даёт общий [`FieldFrame`](?path=/docs/shared-primitives-fieldframe--docs),
+стрелку — `Icon`. Ставка на нативный контрол — ради доступности «из коробки»
+(клавиатура, мобильные пикеры) без собственного дропдауна.
+
+---
+
+## Анатомия
+
+- Подпись `label[for]`, обёртка со стрелкой (`Icon chevron-down`), нативный `<select>`.
+- Опции — `children` (`<option>`); ошибка приоритетнее подсказки (`aria-invalid`).
+- `forwardRef` (React Hook Form).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Все состояния сразу
+
+<Canvas of={Stories.States} />
+
+### Много опций
+
+<Canvas of={Stories.ManyOptions} />
+
+---
+
+## Состояния и края
+
+### С ошибкой
+
+<Canvas of={Stories.WithError} />
+
+---
+
+# Когда использовать
+
+- выбор одного значения из фиксированного списка (папка, статус, язык);
+- когда важны нативная клавиатура и мобильный пикер.
+
+# Когда **не** использовать
+
+- переключение 2–4 взаимоисключающих вариантов на виду — [`Segmented`](?path=/docs/shared-components-segmented--docs);
+- множественный выбор фильтров — набор [`Chip`](?path=/docs/shared-primitives-chip--docs);
+- поиск/автодополнение по длинному списку — отдельный комбобокс (пока не в UI Kit).
+
+---
+
+## Доступность
+
+- Нативный `<select>` — полноценная клавиатура и мобильные пикеры без доработок.
+- `label[for]` + сообщение через `aria-describedby`; ошибка — `aria-invalid`.
+- Стрелка (`Icon`) декоративна (`aria-hidden`), чтобы не мешать озвучке.
+
+## Токены
+
+Общие для полей: `--surface`/`--border`, `--ring` (фокус), `--color-danger` (ошибка),
+`--radius-button`; цвет стрелки — `--fg-muted`.
+
+## Связанные компоненты
+
+- [`FieldFrame`](?path=/docs/shared-primitives-fieldframe--docs) — обвязка поля.
+- [`Segmented`](?path=/docs/shared-components-segmented--docs) — выбор из 2–4 вариантов на виду.
+
+---
+
+# Ответственность
+
+Select отвечает за стилизацию нативного `<select>` и стрелку, связку подпись ↔ контрол ↔
+сообщение и a11y, проброс `ref`/нативных атрибутов. **Не отвечает** за источник опций
+(передаёт потребитель), валидацию и локализацию.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Select label={t('article.folder')} error={errors.folderId?.message} {...register('folderId')}>
+  {folders.map((f) => (<option key={f.id} value={f.id}>{f.title}</option>))}
+</Select>
+`}
+/>

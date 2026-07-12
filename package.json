@@ -1,0 +1,59 @@
+{
+  "name": "portfolio",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.11.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "backend": "docker compose up -d --wait && pnpm --filter @portfolio/api db:deploy && pnpm --filter @portfolio/api dev",
+    "backend:seed": "docker compose up -d --wait && pnpm --filter @portfolio/api db:deploy && pnpm --filter @portfolio/api prisma:seed",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "format": "prettier --write .",
+    "prepare": "husky",
+    "contract:generate": "pnpm --filter @portfolio/api contract:generate && pnpm --filter @portfolio/contract generate && pnpm --filter @portfolio/contract build",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm --filter @sutuzhko/ui-kit build && changeset publish",
+    "ui-kit": "pnpm --filter @sutuzhko/ui-kit storybook",
+    "ui-kit:build": "pnpm --filter @sutuzhko/ui-kit build-storybook"
+  },
+  "lint-staged": {
+    "apps/api/**/*.ts": [
+      "pnpm --filter @portfolio/api exec eslint --fix",
+      "prettier --write"
+    ],
+    "apps/web/**/*.{ts,tsx}": [
+      "pnpm --filter @portfolio/web exec eslint --fix",
+      "prettier --write"
+    ],
+    "apps/web/**/*.css": [
+      "pnpm --filter @portfolio/web exec stylelint --fix",
+      "prettier --write"
+    ],
+    "packages/ui-kit/**/*.{ts,tsx}": [
+      "pnpm --filter @sutuzhko/ui-kit exec eslint --fix",
+      "prettier --write"
+    ],
+    "packages/ui-kit/**/*.css": [
+      "pnpm --filter @sutuzhko/ui-kit exec stylelint --fix",
+      "prettier --write"
+    ],
+    "packages/contract/**/*.ts": [
+      "prettier --write"
+    ],
+    "**/*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.4.2"
+  }
+}

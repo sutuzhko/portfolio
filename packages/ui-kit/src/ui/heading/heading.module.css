@@ -1,0 +1,41 @@
+.heading {
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-fg);
+  letter-spacing: -0.01em;
+}
+
+/* Визуальный уровень — из типографической шкалы токенов */
+.display {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+}
+
+.h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+}
+
+.h2 {
+  font-size: var(--font-size-h2);
+}
+
+.h3 {
+  font-size: var(--font-size-h3);
+}
+
+/* Тон */
+.toneDefault {
+  color: var(--color-fg);
+}
+
+.toneMuted {
+  color: var(--color-fg-muted);
+}
+
+.tonePrimary {
+  color: var(--color-accent);
+}

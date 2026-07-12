@@ -1,0 +1,82 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './profile-menu.stories';
+
+<Meta of={Stories} />
+
+# Features / ProfileMenu
+
+Содержимое меню профиля в навбаре, зависящее от авторизации: гость видит «Войти»,
+вошедший — карточку пользователя и «Выйти». Рендерится в слоте `profileMenu`
+навбара, поэтому виджеты навбара не знают об авторизации — связку сводит эта фича.
+
+---
+
+## Архитектура
+
+- **`ProfileMenu`** (контейнер) — `useAuth` + `useProfile` + `useLogoutMutation`, выход с
+  тостом и навигацией; передаётся навбару в `profileMenu`.
+- **`ProfileMenuView`** (ниже) — презентационные пункты по `user`, аватару и колбэкам.
+  Возвращает только пункты (без обёртки-меню) — панель даёт навбар.
+- **`ProfileMenuTrigger`** — содержимое кнопки-триггера в навбаре (`profileTrigger`):
+  залогиненному показывает **аватар профиля** (фото или инициалы имени на выбранном
+  цвете — то же, что на сайте), гостю — иконку пользователя.
+
+Аватар в карточке и триггере — из **профиля** (`useProfile`: фото / инициалы имени /
+цвет), а не из логина; декоративен (`aria-hidden`) — имя рядом уже текстом.
+
+---
+
+## Playground
+
+<Canvas of={Stories.LoggedOut} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Гость
+
+<Canvas of={Stories.LoggedOut} />
+
+### Вошедший
+
+<Canvas of={Stories.LoggedIn} />
+
+### С фото
+
+<Canvas of={Stories.WithPhoto} />
+
+### Выход
+
+<Canvas of={Stories.SigningOut} />
+
+---
+
+## Доступность
+
+- Пункты — `role="menuitem"` (требуют родителя `role="menu"` — его даёт навбар).
+- «Выйти» помечен `danger` (красный акцент) и блокируется во время запроса.
+- Карточка пользователя не перехватывает фокус — навигация идёт по пунктам.
+
+## Связанные
+
+- `entities/session` — `useAuth`, `useLogoutMutation`.
+- [`Menu`](?path=/docs/shared-components-menu--docs) (навбар), [`Avatar`](?path=/docs/shared-primitives-avatar--docs).
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Navbar
+  onOpenConsole={openConsole}
+  profileMenu={<ProfileMenu />}
+  profileTrigger={<ProfileMenuTrigger />}
+/>
+`}
+/>

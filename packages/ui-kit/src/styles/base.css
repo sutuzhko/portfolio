@@ -1,0 +1,59 @@
+/**
+ * Базовый сброс, необходимый компонентам UI Kit.
+ * Здесь только то, без чего компоненты выглядят сломанно у любого консюмера:
+ * box-sizing, сброс полей, нормализация медиа и форм, единое фокус-кольцо.
+ * Оболочка приложения (body, #root) — забота консюмера, а не библиотеки.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  text-size-adjust: 100%;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Единое управление фокус-кольцом: только клавиатурная навигация */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

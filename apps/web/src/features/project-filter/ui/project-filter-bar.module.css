@@ -1,0 +1,87 @@
+.bar {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background-color: var(--color-surface);
+  padding: var(--space-4) 18px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 11px 14px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  transition: border-color 0.15s ease;
+}
+
+.search:focus-within {
+  border-color: var(--color-border-strong);
+}
+
+.searchIcon {
+  flex: none;
+  color: var(--color-fg-muted);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-fg);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-small);
+}
+
+.input::placeholder {
+  color: var(--color-fg-dim);
+}
+
+.reset {
+  flex: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+  transition: color 0.15s ease;
+}
+
+.reset:hover {
+  color: var(--color-primary-bright);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.rowLabel {
+  flex: none;
+  width: 118px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  color: var(--color-fg-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+/* Узкий экран: подпись фасета встаёт над чипами (--bp-sm 640) */
+@media (width <= 640px) {
+  .rowLabel {
+    width: 100%;
+  }
+}

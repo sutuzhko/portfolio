@@ -1,0 +1,18 @@
+/* Общий трей свёрнутых окон: фиксирован внизу справа, пилюли стыкуются снизу
+   вверх (новые — сверху). Сам контейнер прозрачен для кликов, чтобы пустой трей
+   не перехватывал события страницы; активны только пилюли внутри. */
+.tray {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: var(--z-tray);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-3);
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.tray > * {
+  pointer-events: auto;
+}

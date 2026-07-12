@@ -1,0 +1,116 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './tag.stories';
+
+<Meta of={Stories} />
+
+# Tag
+
+Read-only метка: технология, счётчик (`+3`), статусный бейдж. Неинтерактивна —
+это `<span>`, а не кнопка. Для **переключаемого** фильтра используйте
+[`Chip`](?path=/docs/shared-primitives-chip--docs).
+
+---
+
+## Анатомия
+
+- Корень — `<span>` с моноширинным текстом; все атрибуты пробрасываются прозрачно.
+- `shape` задаёт форму (`rounded` метка / `pill` таблетка), `tone` — акцент.
+- Контент — текст, `+N` или `<Icon> + текст`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Формы и тона
+
+<Canvas of={Stories.Shapes} />
+<Canvas of={Stories.Tones} />
+
+### Матрица «всё-сразу»
+
+<Canvas of={Stories.Matrix} />
+
+### С иконкой и счётчиком
+
+<Canvas of={Stories.WithIcon} />
+<Canvas of={Stories.AsCounter} />
+
+### В контексте
+
+<Canvas of={Stories.InContext} />
+
+---
+
+## Состояния и края
+
+Своих состояний у метки нет (она read-only). Единственный край — длинное значение:
+перенос обеспечивает контейнер, сама метка раскладку не ломает.
+
+<Canvas of={Stories.LongLabel} />
+
+---
+
+# Когда использовать
+
+- перечисление технологий проекта;
+- счётчик скрытых элементов (`+5`);
+- неизменяемый статус (`commercial`, `archived`).
+
+# Когда **не** использовать
+
+Если по метке нужно кликать/фильтровать — это `Chip`, а не `Tag`.
+
+```tsx
+// ❌ Плохо — интерактив на неинтерактивном span
+<Tag onClick={toggleFilter}>React</Tag>
+
+// ✅ Хорошо
+<Chip selected={active} onClick={toggleFilter}>React</Chip>
+```
+
+---
+
+## Доступность
+
+- `Tag` — не в tab-порядке и без роли: скринридер читает его как обычный текст,
+  что верно для метки.
+- Не вешайте `onClick`/`role="button"` на `Tag` — интерактив требует настоящей
+  кнопки (`Chip`) с фокусом и клавиатурой.
+
+## Токены
+
+`--tag-tint` (акцент tinted-тона, по умолчанию `--color-success`), `--raised`/`--border`
+(фон и рамка neutral), `--radius-button`/`--radius-stadium` (формы), `--font-mono`.
+
+## Связанные компоненты
+
+- [`Chip`](?path=/docs/shared-primitives-chip--docs) — интерактивный аналог (фильтр).
+- [`Icon`](?path=/docs/shared-primitives-icon--docs) — иконка внутри метки.
+
+---
+
+# Ответственность
+
+Tag отвечает за визуальную форму/тон метки и проброс `--tag-tint`. **Не отвечает**
+за клики и состояние выбора (это `Chip`) и за локализацию содержимого.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+{project.technologies.map((tech) => (<Tag key={tech.id}>{tech.name}</Tag>))}
+{hiddenCount > 0 && <Tag shape="pill" tone="tinted">+{hiddenCount}</Tag>}
+`}
+/>

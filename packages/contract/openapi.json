@@ -1,0 +1,5404 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthUserDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Неверный логин или пароль"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthUserDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Недействительная сессия"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthUserDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/change-password": {
+      "post": {
+        "operationId": "AuthController_changePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация или неверный текущий пароль"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/database/tree": {
+      "get": {
+        "operationId": "DatabaseController_getTree",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatabaseTreeDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      }
+    },
+    "/api/database/folders": {
+      "get": {
+        "operationId": "DatabaseController_listFolders",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FolderAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      },
+      "post": {
+        "operationId": "DatabaseController_createFolder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFolderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Родительская папка не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      }
+    },
+    "/api/database/folders/{id}": {
+      "patch": {
+        "operationId": "DatabaseController_updateFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFolderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderAdminDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Недопустимое перемещение папки"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Папка не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      },
+      "delete": {
+        "operationId": "DatabaseController_removeFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "Папка не пуста"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Папка не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      }
+    },
+    "/api/database/articles/admin/{id}": {
+      "get": {
+        "operationId": "DatabaseController_getArticleAdmin",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Статья не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      }
+    },
+    "/api/database/articles": {
+      "post": {
+        "operationId": "DatabaseController_createArticle",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArticleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Папка не найдена"
+          },
+          "409": {
+            "description": "slug уже занят"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      }
+    },
+    "/api/database/articles/{id}": {
+      "patch": {
+        "operationId": "DatabaseController_updateArticle",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateArticleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Статья не найдена"
+          },
+          "409": {
+            "description": "slug уже занят"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      },
+      "delete": {
+        "operationId": "DatabaseController_removeArticle",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Статья не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      }
+    },
+    "/api/database/articles/{slug}": {
+      "get": {
+        "operationId": "DatabaseController_getArticle",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Статья не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "database"
+        ]
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "operationId": "ProfileController_get",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "profile"
+        ]
+      },
+      "patch": {
+        "operationId": "ProfileController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/profile/admin": {
+      "get": {
+        "operationId": "ProfileController_getAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Профиль не настроен"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/profile/contacts": {
+      "post": {
+        "operationId": "ProfileController_addContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactLinkDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminContactLinkDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/profile/contacts/{id}": {
+      "patch": {
+        "operationId": "ProfileController_updateContact",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactLinkDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminContactLinkDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Контакт не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "profile"
+        ]
+      },
+      "delete": {
+        "operationId": "ProfileController_removeContact",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Контакт не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/projects": {
+      "get": {
+        "operationId": "ProjectsController_list",
+        "parameters": [
+          {
+            "name": "tech",
+            "required": false,
+            "in": "query",
+            "description": "Filter by technology name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contributor",
+            "required": false,
+            "in": "query",
+            "description": "Filter by contributor id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Free-text search in title/description",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectListItemDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "projects"
+        ]
+      },
+      "post": {
+        "operationId": "ProjectsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectAdminDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Связь не найдена"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "409": {
+            "description": "slug уже занят"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/admin": {
+      "get": {
+        "operationId": "ProjectsController_listAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/admin/{id}": {
+      "get": {
+        "operationId": "ProjectsController_getAdmin",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{id}": {
+      "patch": {
+        "operationId": "ProjectsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectAdminDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Связь не найдена"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Проект не найден"
+          },
+          "409": {
+            "description": "slug уже занят"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "projects"
+        ]
+      },
+      "delete": {
+        "operationId": "ProjectsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{slug}": {
+      "get": {
+        "operationId": "ProjectsController_getBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDetailDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/contributors/admin": {
+      "get": {
+        "operationId": "ContributorsController_listAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContributorAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "contributors"
+        ]
+      }
+    },
+    "/api/contributors": {
+      "post": {
+        "operationId": "ContributorsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContributorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributorAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "contributors"
+        ]
+      }
+    },
+    "/api/contributors/{id}": {
+      "patch": {
+        "operationId": "ContributorsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContributorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributorAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Участник не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "contributors"
+        ]
+      },
+      "delete": {
+        "operationId": "ContributorsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Участник не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "contributors"
+        ]
+      }
+    },
+    "/api/technologies": {
+      "get": {
+        "operationId": "TechnologiesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TechnologyDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "technologies"
+        ]
+      },
+      "post": {
+        "operationId": "TechnologiesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTechnologyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnologyAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "technologies"
+        ]
+      }
+    },
+    "/api/technologies/admin": {
+      "get": {
+        "operationId": "TechnologiesController_listAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TechnologyAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "technologies"
+        ]
+      }
+    },
+    "/api/technologies/{id}": {
+      "patch": {
+        "operationId": "TechnologiesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTechnologyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnologyAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Технология не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "technologies"
+        ]
+      },
+      "delete": {
+        "operationId": "TechnologiesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Технология не найдена"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "technologies"
+        ]
+      }
+    },
+    "/api/experience": {
+      "get": {
+        "operationId": "ExperienceController_list",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExperienceDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "experience"
+        ]
+      },
+      "post": {
+        "operationId": "ExperienceController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExperienceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceAdminDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Связь не найдена"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "experience"
+        ]
+      }
+    },
+    "/api/experience/admin": {
+      "get": {
+        "operationId": "ExperienceController_listAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExperienceAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "experience"
+        ]
+      }
+    },
+    "/api/experience/{id}": {
+      "patch": {
+        "operationId": "ExperienceController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExperienceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceAdminDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Связь не найдена"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Опыт не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "experience"
+        ]
+      },
+      "delete": {
+        "operationId": "ExperienceController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Опыт не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "experience"
+        ]
+      }
+    },
+    "/api/education": {
+      "get": {
+        "operationId": "EducationController_list",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EducationDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "education"
+        ]
+      },
+      "post": {
+        "operationId": "EducationController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEducationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EducationAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "education"
+        ]
+      }
+    },
+    "/api/education/admin": {
+      "get": {
+        "operationId": "EducationController_listAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EducationAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "education"
+        ]
+      }
+    },
+    "/api/education/{id}": {
+      "patch": {
+        "operationId": "EducationController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEducationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EducationAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Образование не найдено"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "education"
+        ]
+      },
+      "delete": {
+        "operationId": "EducationController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Образование не найдено"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "education"
+        ]
+      }
+    },
+    "/api/languages": {
+      "get": {
+        "operationId": "LanguagesController_list",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "languages"
+        ]
+      },
+      "post": {
+        "operationId": "LanguagesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLanguageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LanguageAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "languages"
+        ]
+      }
+    },
+    "/api/languages/admin": {
+      "get": {
+        "operationId": "LanguagesController_listAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "languages"
+        ]
+      }
+    },
+    "/api/languages/{id}": {
+      "patch": {
+        "operationId": "LanguagesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLanguageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LanguageAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Язык не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "languages"
+        ]
+      },
+      "delete": {
+        "operationId": "LanguagesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Язык не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "languages"
+        ]
+      }
+    },
+    "/api/skills": {
+      "get": {
+        "operationId": "SkillsController_list",
+        "parameters": [
+          {
+            "name": "locale",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "ru",
+                "en"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SkillDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "skills"
+        ]
+      },
+      "post": {
+        "operationId": "SkillsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSkillDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "skills"
+        ]
+      }
+    },
+    "/api/skills/admin": {
+      "get": {
+        "operationId": "SkillsController_listAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SkillAdminDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "skills"
+        ]
+      }
+    },
+    "/api/skills/{id}": {
+      "patch": {
+        "operationId": "SkillsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSkillDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Навык не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "skills"
+        ]
+      },
+      "delete": {
+        "operationId": "SkillsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Навык не найден"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "skills"
+        ]
+      }
+    },
+    "/api/stats/github": {
+      "get": {
+        "operationId": "StatsController_github",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GithubStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "stats"
+        ]
+      }
+    },
+    "/api/stats/codewars": {
+      "get": {
+        "operationId": "StatsController_codewars",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodewarsStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "stats"
+        ]
+      }
+    },
+    "/api/settings": {
+      "get": {
+        "operationId": "SettingsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "settings"
+        ]
+      },
+      "patch": {
+        "operationId": "SettingsController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/media/gallery": {
+      "post": {
+        "operationId": "MediaController_addGalleryImage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file",
+                  "projectId"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "projectId": {
+                    "type": "string"
+                  },
+                  "altRu": {
+                    "type": "string"
+                  },
+                  "altEn": {
+                    "type": "string"
+                  },
+                  "order": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaAssetAdminDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Проект не найден или файл невалиден"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/media/avatar": {
+      "post": {
+        "operationId": "MediaController_setAvatar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "cropX": {
+                    "type": "integer"
+                  },
+                  "cropY": {
+                    "type": "integer"
+                  },
+                  "cropWidth": {
+                    "type": "integer"
+                  },
+                  "cropHeight": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvatarResultDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректное изображение или область кадрирования"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/media/cv": {
+      "post": {
+        "operationId": "MediaController_uploadCv",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CvResultDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректный PDF"
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/media/{id}": {
+      "patch": {
+        "operationId": "MediaController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMediaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaAssetAdminDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Медиа не найдено"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "media"
+        ]
+      },
+      "delete": {
+        "operationId": "MediaController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Требуется авторизация"
+          },
+          "403": {
+            "description": "Недостаточно прав"
+          },
+          "404": {
+            "description": "Медиа не найдено"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": [
+          "media"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Portfolio API",
+    "description": "Console Portfolio backend. The OpenAPI document is the contract: frontend types are generated from it.",
+    "version": "0.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "access_token"
+      }
+    },
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "UserRole": {
+        "type": "string",
+        "enum": [
+          "ADMIN"
+        ]
+      },
+      "AuthUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRole"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "role"
+        ]
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ]
+      },
+      "PublishStatus": {
+        "type": "string",
+        "enum": [
+          "DRAFT",
+          "PUBLISHED"
+        ]
+      },
+      "ArticleStubDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "tags",
+          "status",
+          "order"
+        ]
+      },
+      "FolderNodeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "articles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArticleStubDto"
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderNodeDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "order",
+          "articles",
+          "children"
+        ]
+      },
+      "DatabaseTreeDto": {
+        "type": "object",
+        "properties": {
+          "folders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderNodeDto"
+            }
+          },
+          "rootArticles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArticleStubDto"
+            }
+          }
+        },
+        "required": [
+          "folders",
+          "rootArticles"
+        ]
+      },
+      "LocalizedTextDto": {
+        "type": "object",
+        "properties": {
+          "ru": {
+            "type": "string"
+          },
+          "en": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "ru"
+        ]
+      },
+      "FolderAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "parentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "parentId",
+          "order"
+        ]
+      },
+      "LocalizedTextInput": {
+        "type": "object",
+        "properties": {
+          "ru": {
+            "type": "string"
+          },
+          "en": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ru"
+        ]
+      },
+      "CreateFolderDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateFolderDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "ArticleAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "bodyMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "order": {
+            "type": "number"
+          },
+          "folderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "bodyMarkdown",
+          "tags",
+          "status",
+          "order",
+          "folderId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateArticleDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "bodyMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "order": {
+            "type": "number"
+          },
+          "folderId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "bodyMarkdown"
+        ]
+      },
+      "UpdateArticleDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "bodyMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "order": {
+            "type": "number"
+          },
+          "folderId": {
+            "type": "string"
+          }
+        }
+      },
+      "ArticleLinkDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title"
+        ]
+      },
+      "ArticleDetailDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "bodyMarkdown": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "breadcrumb": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "backlinks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArticleLinkDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "bodyMarkdown",
+          "tags",
+          "status",
+          "updatedAt",
+          "breadcrumb",
+          "backlinks"
+        ]
+      },
+      "ProfileHighlightDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "значение показателя, напр. \"3+\" или \"C1\""
+          },
+          "label": {
+            "type": "string",
+            "description": "подпись показателя (локализована)"
+          }
+        },
+        "required": [
+          "value",
+          "label"
+        ]
+      },
+      "AvailabilityStatus": {
+        "type": "string",
+        "enum": [
+          "ACTIVE",
+          "OPEN",
+          "NOTLOOKING"
+        ]
+      },
+      "ProfileContactDto": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string",
+            "description": "telegram | codewars | linkedin | github | email | ..."
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "icon",
+          "url"
+        ]
+      },
+      "ProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "roleTitle": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string",
+            "description": "питч героя (2–3 предложения)"
+          },
+          "location": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatarPhotoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatarColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "cvUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "ссылка на PDF-резюме"
+          },
+          "heroStack": {
+            "description": "слова печатающей строки героя",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "highlights": {
+            "description": "показатели над «Обо мне»",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileHighlightDto"
+            }
+          },
+          "availability": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AvailabilityStatus"
+              }
+            ]
+          },
+          "bioMarkdown": {
+            "type": "string",
+            "nullable": true,
+            "description": "null, если владелец скрыл био"
+          },
+          "projectsIntro": {
+            "type": "string",
+            "nullable": true,
+            "description": "интро экрана проектов"
+          },
+          "experienceIntro": {
+            "type": "string",
+            "nullable": true,
+            "description": "интро экрана опыта"
+          },
+          "contactIntro": {
+            "type": "string",
+            "nullable": true,
+            "description": "интро экрана контактов"
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileContactDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "roleTitle",
+          "headline",
+          "location",
+          "email",
+          "avatarPhotoUrl",
+          "avatarColor",
+          "cvUrl",
+          "heroStack",
+          "highlights",
+          "availability",
+          "bioMarkdown",
+          "projectsIntro",
+          "experienceIntro",
+          "contactIntro",
+          "contacts"
+        ]
+      },
+      "ProfileHighlightAdminDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          }
+        },
+        "required": [
+          "value",
+          "label"
+        ]
+      },
+      "AdminContactLinkDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "description": "telegram | codewars | linkedin | github | email | ..."
+          },
+          "url": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "icon",
+          "url",
+          "hidden",
+          "order"
+        ]
+      },
+      "ProfileAdminDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "roleTitle": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "headline": {
+            "description": "питч героя (2–3 предложения)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatarPhotoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatarColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "cvUrl": {
+            "nullable": true,
+            "description": "PDF-резюме по локали",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "heroStack": {
+            "description": "слова печатающей строки героя",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileHighlightAdminDto"
+            }
+          },
+          "availability": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AvailabilityStatus"
+              }
+            ]
+          },
+          "bioMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "isBioHidden": {
+            "type": "boolean"
+          },
+          "bioUpdatedAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "projectsIntro": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "experienceIntro": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "contactIntro": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminContactLinkDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "roleTitle",
+          "headline",
+          "location",
+          "email",
+          "avatarPhotoUrl",
+          "avatarColor",
+          "cvUrl",
+          "heroStack",
+          "highlights",
+          "availability",
+          "bioMarkdown",
+          "isBioHidden",
+          "bioUpdatedAt",
+          "projectsIntro",
+          "experienceIntro",
+          "contactIntro",
+          "contacts"
+        ]
+      },
+      "LocalizedTextPatch": {
+        "type": "object",
+        "properties": {
+          "ru": {
+            "type": "string"
+          },
+          "en": {
+            "type": "string"
+          }
+        }
+      },
+      "ProfileHighlightInput": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          }
+        },
+        "required": [
+          "value",
+          "label"
+        ]
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "roleTitle": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "headline": {
+            "description": "питч героя",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextPatch"
+              }
+            ]
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatarPhotoUrl": {
+            "type": "string"
+          },
+          "avatarColor": {
+            "type": "string"
+          },
+          "cvUrl": {
+            "description": "ссылка на PDF-резюме по локали",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextPatch"
+              }
+            ]
+          },
+          "heroStack": {
+            "description": "слова печатающей строки героя",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileHighlightInput"
+            }
+          },
+          "availability": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AvailabilityStatus"
+              }
+            ]
+          },
+          "bioMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "isBioHidden": {
+            "type": "boolean"
+          },
+          "projectsIntro": {
+            "description": "интро экрана проектов",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextPatch"
+              }
+            ]
+          },
+          "experienceIntro": {
+            "description": "интро экрана опыта",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextPatch"
+              }
+            ]
+          },
+          "contactIntro": {
+            "description": "интро экрана контактов",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextPatch"
+              }
+            ]
+          }
+        }
+      },
+      "CreateContactLinkDto": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "icon",
+          "url"
+        ]
+      },
+      "UpdateContactLinkDto": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "ContributorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "image",
+          "color"
+        ]
+      },
+      "ProjectListItemDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "period": {
+            "type": "string",
+            "nullable": true
+          },
+          "tileColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "runnable": {
+            "type": "boolean"
+          },
+          "runCommand": {
+            "type": "string",
+            "nullable": true
+          },
+          "embedUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryLanguage": {
+            "type": "string",
+            "nullable": true
+          },
+          "technologies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContributorDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "description",
+          "subtitle",
+          "category",
+          "period",
+          "tileColor",
+          "pinned",
+          "runnable",
+          "runCommand",
+          "embedUrl",
+          "primaryLanguage",
+          "technologies",
+          "contributors"
+        ]
+      },
+      "LocalizedListDto": {
+        "type": "object",
+        "properties": {
+          "ru": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "en": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ru"
+        ]
+      },
+      "ProjectLinkAdminDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "href": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "href"
+        ]
+      },
+      "MediaType": {
+        "type": "string",
+        "enum": [
+          "AVATAR",
+          "GALLERY",
+          "CV"
+        ]
+      },
+      "MediaFormatVariantDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "url",
+          "width",
+          "height"
+        ]
+      },
+      "MediaFormatsDto": {
+        "type": "object",
+        "properties": {
+          "thumbnail": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaFormatVariantDto"
+              }
+            ]
+          },
+          "small": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaFormatVariantDto"
+              }
+            ]
+          },
+          "medium": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaFormatVariantDto"
+              }
+            ]
+          },
+          "large": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaFormatVariantDto"
+              }
+            ]
+          }
+        }
+      },
+      "MediaAssetAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaType"
+              }
+            ]
+          },
+          "alt": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "width": {
+            "type": "number",
+            "nullable": true
+          },
+          "height": {
+            "type": "number",
+            "nullable": true
+          },
+          "mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "number",
+            "nullable": true
+          },
+          "formats": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaFormatsDto"
+              }
+            ]
+          },
+          "order": {
+            "type": "number"
+          },
+          "projectId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "type",
+          "alt",
+          "width",
+          "height",
+          "mime",
+          "size",
+          "formats",
+          "order",
+          "projectId"
+        ]
+      },
+      "ProjectAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "description": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "subtitle": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "bodyMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "bullets": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedListDto"
+              }
+            ]
+          },
+          "role": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "period": {
+            "type": "string",
+            "nullable": true
+          },
+          "tileColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectLinkAdminDto"
+            }
+          },
+          "runnable": {
+            "type": "boolean"
+          },
+          "runCommand": {
+            "type": "string",
+            "nullable": true
+          },
+          "embedUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "runHint": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          },
+          "primaryLanguageId": {
+            "type": "string",
+            "nullable": true
+          },
+          "technologyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contributorIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gallery": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaAssetAdminDto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "description",
+          "subtitle",
+          "bodyMarkdown",
+          "bullets",
+          "role",
+          "category",
+          "period",
+          "tileColor",
+          "links",
+          "runnable",
+          "runCommand",
+          "embedUrl",
+          "runHint",
+          "status",
+          "hidden",
+          "pinned",
+          "order",
+          "primaryLanguageId",
+          "technologyIds",
+          "contributorIds",
+          "gallery",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "LocalizedListInput": {
+        "type": "object",
+        "properties": {
+          "ru": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "en": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ru"
+        ]
+      },
+      "ProjectLinkInput": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "href": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "href"
+        ]
+      },
+      "CreateProjectDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "description": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "subtitle": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "bodyMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "bullets": {
+            "$ref": "#/components/schemas/LocalizedListInput"
+          },
+          "role": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "category": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          },
+          "tileColor": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectLinkInput"
+            }
+          },
+          "runnable": {
+            "type": "boolean"
+          },
+          "runCommand": {
+            "type": "string"
+          },
+          "embedUrl": {
+            "type": "string"
+          },
+          "runHint": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          },
+          "primaryLanguageId": {
+            "type": "string"
+          },
+          "technologyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contributorIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "description",
+          "bodyMarkdown"
+        ]
+      },
+      "LocalizedListPatch": {
+        "type": "object",
+        "properties": {
+          "ru": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "en": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateProjectDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "description": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "subtitle": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "bodyMarkdown": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "bullets": {
+            "$ref": "#/components/schemas/LocalizedListPatch"
+          },
+          "role": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "category": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          },
+          "tileColor": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectLinkInput"
+            }
+          },
+          "runnable": {
+            "type": "boolean"
+          },
+          "runCommand": {
+            "type": "string"
+          },
+          "embedUrl": {
+            "type": "string"
+          },
+          "runHint": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            ]
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "number"
+          },
+          "primaryLanguageId": {
+            "type": "string"
+          },
+          "technologyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contributorIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ProjectLinkDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "href"
+        ]
+      },
+      "MediaAssetDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string",
+            "nullable": true
+          },
+          "width": {
+            "type": "number",
+            "nullable": true
+          },
+          "height": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "url",
+          "alt",
+          "width",
+          "height"
+        ]
+      },
+      "ProjectDetailDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "period": {
+            "type": "string",
+            "nullable": true
+          },
+          "tileColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "runnable": {
+            "type": "boolean"
+          },
+          "runCommand": {
+            "type": "string",
+            "nullable": true
+          },
+          "embedUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryLanguage": {
+            "type": "string",
+            "nullable": true
+          },
+          "technologies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContributorDto"
+            }
+          },
+          "bodyMarkdown": {
+            "type": "string"
+          },
+          "bullets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "role": {
+            "type": "string",
+            "nullable": true
+          },
+          "runHint": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectLinkDto"
+            }
+          },
+          "gallery": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaAssetDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "description",
+          "subtitle",
+          "category",
+          "period",
+          "tileColor",
+          "pinned",
+          "runnable",
+          "runCommand",
+          "embedUrl",
+          "primaryLanguage",
+          "technologies",
+          "contributors",
+          "bodyMarkdown",
+          "bullets",
+          "role",
+          "runHint",
+          "links",
+          "gallery"
+        ]
+      },
+      "ContributorAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "link": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "image",
+          "color",
+          "link",
+          "order"
+        ]
+      },
+      "CreateContributorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "image": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateContributorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "image": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "TechnologyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "category"
+        ]
+      },
+      "TechnologyAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "category",
+          "order"
+        ]
+      },
+      "CreateTechnologyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateTechnologyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "ExperienceDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "sub": {
+            "type": "string",
+            "nullable": true,
+            "description": "Уточнение под должностью (проект и т.п.)"
+          },
+          "bullets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "current": {
+            "type": "boolean",
+            "description": "Текущее место работы"
+          },
+          "dotColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "technologies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "company",
+          "location",
+          "sub",
+          "bullets",
+          "startDate",
+          "endDate",
+          "current",
+          "dotColor",
+          "technologies"
+        ]
+      },
+      "ExperienceAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "company": {
+            "type": "string"
+          },
+          "location": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "sub": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "bullets": {
+            "$ref": "#/components/schemas/LocalizedListDto"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "dotColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "number"
+          },
+          "technologyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "company",
+          "location",
+          "sub",
+          "bullets",
+          "startDate",
+          "endDate",
+          "current",
+          "dotColor",
+          "order",
+          "technologyIds"
+        ]
+      },
+      "CreateExperienceDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "company": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "sub": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "bullets": {
+            "$ref": "#/components/schemas/LocalizedListInput"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "dotColor": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "technologyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "role",
+          "company",
+          "bullets",
+          "startDate"
+        ]
+      },
+      "UpdateExperienceDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "company": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "sub": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "bullets": {
+            "$ref": "#/components/schemas/LocalizedListPatch"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "current": {
+            "type": "boolean"
+          },
+          "dotColor": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "technologyIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EducationType": {
+        "type": "string",
+        "enum": [
+          "MAIN",
+          "ADDITIONAL"
+        ]
+      },
+      "EducationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EducationType"
+              }
+            ]
+          },
+          "degree": {
+            "type": "string"
+          },
+          "place": {
+            "type": "string",
+            "nullable": true
+          },
+          "period": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "degree",
+          "place",
+          "period"
+        ]
+      },
+      "EducationAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EducationType"
+              }
+            ]
+          },
+          "degree": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "place": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedTextDto"
+              }
+            ]
+          },
+          "period": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "degree",
+          "place",
+          "period",
+          "order"
+        ]
+      },
+      "CreateEducationDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EducationType"
+              }
+            ]
+          },
+          "degree": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "place": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "period": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "degree"
+        ]
+      },
+      "UpdateEducationDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EducationType"
+              }
+            ]
+          },
+          "degree": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "place": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "period": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "LanguageDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "description": "Уровень по CEFR: A1…C2 или native"
+          },
+          "pct": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Уровень владения в процентах"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "level",
+          "pct"
+        ]
+      },
+      "LanguageAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "level": {
+            "type": "string"
+          },
+          "pct": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "level",
+          "pct",
+          "order"
+        ]
+      },
+      "CreateLanguageDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "level": {
+            "type": "string",
+            "description": "Уровень по CEFR: A1…C2 или native"
+          },
+          "pct": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "level",
+          "pct"
+        ]
+      },
+      "UpdateLanguageDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "level": {
+            "type": "string"
+          },
+          "pct": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "SkillDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "SkillAdminDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextDto"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "order"
+        ]
+      },
+      "CreateSkillDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "order": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateSkillDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalizedTextPatch"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "GithubStatsDto": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "example": "@sutuzhko"
+          },
+          "url": {
+            "type": "string"
+          },
+          "repos": {
+            "type": "number",
+            "description": "Число публичных репозиториев"
+          },
+          "followers": {
+            "type": "number"
+          },
+          "following": {
+            "type": "number"
+          },
+          "since": {
+            "type": "string",
+            "description": "Год регистрации на GitHub",
+            "example": "2020"
+          },
+          "topLanguages": {
+            "description": "Ключевые языки/технологии профиля (курируется на сервере)",
+            "example": [
+              "JavaScript",
+              "TypeScript",
+              "React",
+              "Vue",
+              "Node"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "handle",
+          "url",
+          "repos",
+          "followers",
+          "following",
+          "since",
+          "topLanguages"
+        ]
+      },
+      "CodewarsStatsDto": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "example": "sutuzhko"
+          },
+          "url": {
+            "type": "string"
+          },
+          "kyu": {
+            "type": "number",
+            "description": "Ранг в kyu (1 — высший)",
+            "example": 3
+          },
+          "rankName": {
+            "type": "string",
+            "description": "Название ранга",
+            "example": "3 kyu"
+          },
+          "honor": {
+            "type": "number",
+            "description": "Очки чести (honor)"
+          },
+          "katas": {
+            "type": "number",
+            "description": "Число решённых ката"
+          },
+          "leaderboardPosition": {
+            "type": "number",
+            "description": "Позиция в общем лидерборде"
+          },
+          "nextKyu": {
+            "type": "number",
+            "nullable": true,
+            "description": "Следующий ранг (kyu) или null для 1 kyu",
+            "example": 2
+          },
+          "progress": {
+            "type": "number",
+            "description": "Прогресс до следующего ранга, %",
+            "example": 62
+          }
+        },
+        "required": [
+          "handle",
+          "url",
+          "kyu",
+          "rankName",
+          "honor",
+          "katas",
+          "leaderboardPosition",
+          "nextKyu",
+          "progress"
+        ]
+      },
+      "SettingsDto": {
+        "type": "object",
+        "properties": {
+          "siteTitle": {
+            "type": "string",
+            "description": "Логотип/название сайта в шапке"
+          },
+          "defaultTheme": {
+            "type": "string"
+          },
+          "accentColor": {
+            "type": "string",
+            "description": "Акцент оформления: green | blue | bright"
+          },
+          "defaultLang": {
+            "type": "string"
+          },
+          "availableLanguages": {
+            "description": "Языки, доступные на сайте (подмножество ru/en)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "consoleGlow": {
+            "type": "boolean",
+            "description": "Свечение за курсором в консоли"
+          },
+          "showHighlights": {
+            "type": "boolean",
+            "description": "Показывать блок показателей на главной"
+          },
+          "showAbout": {
+            "type": "boolean",
+            "description": "Показывать блок «Обо мне» на главной"
+          },
+          "showStack": {
+            "type": "boolean",
+            "description": "Показывать блок стека на главной"
+          },
+          "showActivity": {
+            "type": "boolean",
+            "description": "Показывать блок активности (GitHub/Codewars) на главной"
+          },
+          "showNow": {
+            "type": "boolean",
+            "description": "Показывать баннер доступности (open-to-work) на главной"
+          },
+          "showFeatured": {
+            "type": "boolean",
+            "description": "Показывать блок избранных проектов на главной"
+          },
+          "showProjects": {
+            "type": "boolean",
+            "description": "Показывать страницу проектов (/projects)"
+          },
+          "showExperience": {
+            "type": "boolean",
+            "description": "Показывать страницу опыта (/experience)"
+          },
+          "showContact": {
+            "type": "boolean",
+            "description": "Показывать страницу контактов (/contact)"
+          }
+        },
+        "required": [
+          "siteTitle",
+          "defaultTheme",
+          "accentColor",
+          "defaultLang",
+          "availableLanguages",
+          "consoleGlow",
+          "showHighlights",
+          "showAbout",
+          "showStack",
+          "showActivity",
+          "showNow",
+          "showFeatured",
+          "showProjects",
+          "showExperience",
+          "showContact"
+        ]
+      },
+      "UpdateSettingsDto": {
+        "type": "object",
+        "properties": {
+          "siteTitle": {
+            "type": "string"
+          },
+          "defaultTheme": {
+            "type": "string"
+          },
+          "accentColor": {
+            "type": "string"
+          },
+          "defaultLang": {
+            "type": "string"
+          },
+          "availableLanguages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "consoleGlow": {
+            "type": "boolean"
+          },
+          "showHighlights": {
+            "type": "boolean"
+          },
+          "showAbout": {
+            "type": "boolean"
+          },
+          "showStack": {
+            "type": "boolean"
+          },
+          "showActivity": {
+            "type": "boolean"
+          },
+          "showNow": {
+            "type": "boolean"
+          },
+          "showFeatured": {
+            "type": "boolean"
+          },
+          "showProjects": {
+            "type": "boolean"
+          },
+          "showExperience": {
+            "type": "boolean"
+          },
+          "showContact": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AvatarResultDto": {
+        "type": "object",
+        "properties": {
+          "avatarPhotoUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "avatarPhotoUrl"
+        ]
+      },
+      "CvResultDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "публичный URL загруженного PDF-резюме"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "UpdateMediaDto": {
+        "type": "object",
+        "properties": {
+          "alt": {
+            "$ref": "#/components/schemas/LocalizedTextInput"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

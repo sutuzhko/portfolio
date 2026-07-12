@@ -1,0 +1,289 @@
+/* ============================ Оверлей ============================ */
+
+.overlay {
+  --console-inset: var(--space-16) var(--space-5) var(--space-5);
+  --console-width: 720px;
+
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--console-inset);
+
+  /* Зелёный radial-glow сверху + точечная текстура + затемнённый фон страницы. */
+  background:
+    radial-gradient(
+      680px 360px at 86% 4%,
+      color-mix(in srgb, var(--color-primary) 24%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+        circle,
+        color-mix(in srgb, var(--color-fg-dim) 26%, transparent) 1px,
+        transparent 1.6px
+      )
+      0 0 / 20px 20px,
+    color-mix(in srgb, var(--color-bg) 86%, transparent);
+  backdrop-filter: blur(7px);
+}
+
+.overlayMax {
+  --console-inset: 0;
+}
+
+/* Полноэкранный «ловец клика» для закрытия по фону. Не в таб-порядке. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: default;
+}
+
+/* ============================= Окно ============================= */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--console-width);
+  max-height: 80vh;
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-band);
+  box-shadow: var(--shadow);
+  transform-origin: 100% 100%;
+  animation: console-in 0.28s cubic-bezier(0.34, 0.05, 0.2, 1);
+}
+
+.cardMax {
+  --console-width: none;
+
+  height: 100%;
+  max-height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+.head {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg);
+}
+
+.title {
+  margin-left: var(--space-2);
+  overflow: hidden;
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  color: var(--color-fg-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================= Лента ============================= */
+
+.feed {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 240px;
+  padding: var(--space-2) var(--space-6) var(--space-5);
+  overflow-y: auto;
+  cursor: text;
+  overflow-wrap: break-word;
+}
+
+/* Блоки ленты не сжимаются: иначе flex-колонка «схлопывает» высокие блоки
+   (таблицу справки с overflow:hidden), обрезая их вместо прокрутки ленты. */
+.feed > * {
+  flex-shrink: 0;
+}
+
+.line {
+  font-family: var(--font-mono), monospace;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--color-fg);
+}
+
+.user {
+  color: var(--color-primary-bright);
+}
+
+.path {
+  color: var(--color-fg-dim);
+}
+
+.cmd {
+  color: var(--color-fg);
+}
+
+.inputEcho {
+  color: var(--color-fg);
+  white-space: pre-wrap;
+}
+
+.textOut {
+  font-family: var(--font-mono), monospace;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--color-fg-muted);
+  white-space: pre-wrap;
+}
+
+/* Блок-курсор терминала. */
+.cursor {
+  display: inline-block;
+  width: 9px;
+  height: 17px;
+  margin-left: 2px;
+  vertical-align: -3px;
+  background: var(--color-primary-bright);
+  animation: console-blink 1s step-end infinite;
+}
+
+/* Реальное поле ввода спрятано: видимый ввод рисуем строкой с курсором. */
+.hiddenInput {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 2px;
+  height: 2px;
+  padding: 0;
+  margin: 0;
+
+  /* 16px не даёт iOS Safari зумить при фокусе. */
+  font-size: 16px;
+  color: transparent;
+  background: transparent;
+  border: 0;
+  opacity: 0%;
+}
+
+/* =========================== Приветствие =========================== */
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-mono), monospace;
+}
+
+.banner {
+  margin: 0;
+  overflow-x: auto;
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--color-primary-bright);
+}
+
+.welcomeLine {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.output {
+  font-family: var(--font-mono), monospace;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--color-fg-muted);
+}
+
+.welcomeHint {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--color-fg-dim);
+}
+
+/* ============================= Справка ============================= */
+
+.help {
+  overflow: hidden;
+  font-family: var(--font-mono), monospace;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.helpTitle {
+  padding: var(--space-2) var(--space-3);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-fg);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.helpList {
+  padding: var(--space-2) 0;
+  margin: 0;
+}
+
+.helpRow {
+  display: flex;
+  gap: var(--space-4);
+  padding: 7px var(--space-3);
+}
+
+.helpUsage {
+  flex: 0 0 172px;
+  margin: 0;
+  color: var(--color-primary-bright);
+}
+
+.helpDesc {
+  margin: 0;
+  color: var(--color-fg-muted);
+}
+
+/* Свёрнутая консоль рендерится общей пилюлей `DockPill` в общий трей
+   (`TrayPortal`) — вместе с раннером, поэтому собственного дока у консоли нет. */
+
+/* ============================ Анимации ============================ */
+
+@keyframes console-in {
+  from {
+    opacity: 0%;
+    transform: scale(0.96) translateY(6px);
+  }
+
+  to {
+    opacity: 100%;
+    transform: none;
+  }
+}
+
+@keyframes console-blink {
+  50% {
+    opacity: 0%;
+  }
+}
+
+@media (width <= 480px) {
+  .overlay {
+    --console-inset: var(--space-3);
+  }
+
+  .card {
+    max-height: 88vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+
+  .cursor {
+    animation: none;
+  }
+}

@@ -1,0 +1,66 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './contact-links.stories';
+
+<Meta of={Stories} />
+
+# ContactLinks
+
+Сетка каналов связи на экране контактов (макет: CONTACT) — карточки-ссылки на
+Telegram, email, GitHub, Codewars и т.п. Каждая карточка (`ContactCard`) = бейдж-
+аббревиатура (`TG`/`@`/`GH`/`CW`), название канала и очищенное значение ссылки (без
+протокола и `www`).
+
+---
+
+## Анатомия
+
+- Грид карточек `ContactCard` (ссылка-карта на весь блок).
+- Email открывается как `mailto:` (в той же вкладке); остальные — во внешней вкладке
+  (`target="_blank" rel="noopener noreferrer"`).
+- Пока грузится — скелетон-плитки той же высоты.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Состояния и края
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Один канал
+
+<Canvas of={Stories.SingleChannel} />
+
+### Мобильная раскладка
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Каждая карточка — настоящая ссылка (`<a>`), доступное имя = название + значение.
+- Внешние ссылки безопасны (`rel="noopener noreferrer"`); на время загрузки грид —
+  `aria-busy`/`aria-live`.
+
+## Связанные компоненты
+
+- `Widgets/ResumeBanner` — соседний блок на экране Contact.
+- [`Skeleton`](?path=/docs/shared-primitives-skeleton--docs) — плитки загрузки.
+
+---
+
+# Ответственность
+
+ContactLinks отвечает за раскладку карточек и корректные атрибуты ссылок. **Не
+отвечает** за источник каналов (их даёт профиль), бейджи и форматирование значений —
+это конфиг `model/config.ts` (`contactBadge`/`contactLabel`/`contactValue`).

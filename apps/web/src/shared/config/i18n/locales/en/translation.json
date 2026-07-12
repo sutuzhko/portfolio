@@ -1,0 +1,717 @@
+{
+  "common": {
+    "languageName": "English",
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme",
+    "switchLanguage": "Switch language",
+    "skipToContent": "Skip to content"
+  },
+  "nav": {
+    "openConsole": "Open console",
+    "home": "Go home",
+    "profileMenu": "Profile menu"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "openSection": "Open section →",
+    "adminPanel": "Admin panel",
+    "loggedInAs": "Signed in as",
+    "toast": {
+      "welcome": {
+        "title": "Welcome back",
+        "desc": "Signed in as @{{username}}"
+      },
+      "loggedOut": {
+        "title": "Signed out",
+        "desc": "Session ended"
+      },
+      "error": {
+        "title": "Sign-in failed",
+        "desc": "Check your login and password"
+      }
+    }
+  },
+  "login": {
+    "breadcrumb": "~/login",
+    "badge": "// access",
+    "title": "Sign in",
+    "subtitle": "private",
+    "hint": "Access to the private section of the site.",
+    "username": "login",
+    "password": "password",
+    "submit": "Sign in",
+    "invalid": "Invalid login or password",
+    "noAccess": "no access? message me on Telegram",
+    "required": {
+      "username": "Enter your login",
+      "password": "Enter your password"
+    },
+    "terminal": {
+      "title": "auth — secure",
+      "ssh": "ssh login@sutuzhko.dev",
+      "connecting": "→ establishing connection…",
+      "secured": "✓ channel secured",
+      "login": "login",
+      "prompt": "login and password required"
+    }
+  },
+  "footer": {
+    "consoleHint": "press <accent>{{shortcut}}</accent> for console"
+  },
+  "console": {
+    "a11y": {
+      "dialog": "Console",
+      "input": "Console command input",
+      "close": "Close console",
+      "minimize": "Minimize console",
+      "maximize": "Maximize console",
+      "restore": "Restore console size"
+    },
+    "welcome": {
+      "hint": "type help — command list"
+    },
+    "help": {
+      "title": "Available commands",
+      "rows": {
+        "help": "show the command list",
+        "man": "manual for a command",
+        "ls": "list files and sections",
+        "cd": "go to a section",
+        "pwd": "current path",
+        "cat": "print a file",
+        "whoami": "who am I",
+        "location": "where I am and the time",
+        "date": "date and time (MSK)",
+        "echo": "print text",
+        "history": "command history",
+        "uname": "system (-a for details)",
+        "neofetch": "system and art",
+        "theme": "theme: dark, light or toggle",
+        "open": "open a contact (telegram, github…)",
+        "resume": "download résumé (PDF)",
+        "sudo": "go on, try 😉",
+        "clear": "clear the console",
+        "exit": "close the console",
+        "run": "run a project (e.g. run 2048)",
+        "notify": "toast: info · success · warning · error"
+      }
+    },
+    "msg": {
+      "themeSet": "✓ theme: {{mode}}",
+      "themeToggle": "✓ theme toggled",
+      "themeUsage": "✗ theme [dark|light]",
+      "navigating": "→ {{route}}",
+      "cdNotFound": "cd: no such section: {{path}}",
+      "catMissing": "cat: missing file operand",
+      "catNotFound": "cat: {{file}}: no such file",
+      "catBinary": "cat: {{file}}: binary file — type resume to download",
+      "manUsage": "man: what manual page do you want?",
+      "manNotFound": "man: no manual entry for “{{command}}”",
+      "openMissing": "open: specify a channel (telegram, github, email, codewars)",
+      "openUnknown": "open: unknown channel: {{channel}}",
+      "openDone": "→ opening {{channel}}",
+      "exit": "logout",
+      "resume": "→ downloading résumé (PDF)…",
+      "sudo": "🔒 permission denied: you are not in the sudoers group.\n(this is a portfolio, not a real shell — but nice try 😄)",
+      "notFound": "command not found: {{command}}\ntype help for the command list",
+      "loading": "profile is still loading…",
+      "runUsage": "run: specify a project (e.g. run 2048)",
+      "runLaunching": "▶ launching «{{project}}»…",
+      "runNotFound": "✗ project «{{command}}» not found or not runnable",
+      "notifyUsage": "notify [info|success|warning|error] <text>",
+      "notifyDone": "→ notification sent"
+    }
+  },
+  "home": {
+    "section": "// whoami",
+    "availability": {
+      "ACTIVE": "Available for work",
+      "OPEN": "Open to offers",
+      "NOTLOOKING": "Not looking right now"
+    },
+    "loading": "Loading profile",
+    "error": "Failed to load profile",
+    "retry": "Retry",
+    "hero": {
+      "greeting": "// hi, I am",
+      "typing": "Currently writing in",
+      "actions": {
+        "cv": "Download CV",
+        "projects": "Projects",
+        "contact": "Get in touch"
+      },
+      "console": {
+        "title": "Console",
+        "text": "press {{shortcut}} or click >_ in the header",
+        "textTouch": "tap to open"
+      }
+    },
+    "sections": {
+      "about": "// about me",
+      "stack": "// stack",
+      "activity": "// activity",
+      "featured": "// featured projects"
+    },
+    "featured": {
+      "all": "All projects →",
+      "extra": "+{{count}}",
+      "categories": {
+        "commercial": "Commercial",
+        "side-project": "Side project"
+      }
+    },
+    "activity": {
+      "profile": "Profile ↗",
+      "unavailable": "Statistics temporarily unavailable",
+      "github": {
+        "repos": "Repositories",
+        "followers": "Followers",
+        "following": "Following",
+        "stackLabel": "Stack on GitHub"
+      },
+      "codewars": {
+        "honor": "Honor",
+        "katas": "Katas",
+        "leaderboard": "Leaderboard",
+        "next": "to {{kyu}} kyu"
+      }
+    },
+    "now": {
+      "label": "Work availability",
+      "active": {
+        "title": "Actively looking",
+        "desc": "Ready to start soon — considering fullstack / frontend roles."
+      },
+      "open": {
+        "title": "Open to opportunities",
+        "desc": "Currently Frontend at Go Mobile. Open to interesting fullstack / frontend work."
+      },
+      "notLooking": {
+        "title": "Not looking right now",
+        "desc": "Not actively searching, but always open to a good chat."
+      },
+      "btn": "View experience →"
+    }
+  },
+  "projects": {
+    "back": "cd ~",
+    "breadcrumb": "~/projects",
+    "title": "Projects",
+    "error": "Failed to load projects",
+    "retry": "Retry",
+    "filter": {
+      "searchPlaceholder": "Search by name or description…",
+      "reset": "reset",
+      "tech": "Technologies",
+      "contributors": "Contributors"
+    },
+    "results": {
+      "found": "Found"
+    },
+    "card": {
+      "extra": "+{{count}}"
+    },
+    "empty": {
+      "marker": "// 0 results",
+      "title": "Nothing found",
+      "description": "Try changing your query or clearing the filters.",
+      "button": "Clear filters"
+    },
+    "categories": {
+      "commercial": "Commercial",
+      "side-project": "Side project"
+    }
+  },
+  "project": {
+    "back": "cd ../projects",
+    "whatsInside": "What's inside",
+    "role": "Role",
+    "period": "Period",
+    "stack": "Stack",
+    "team": "Team",
+    "error": "Failed to load project",
+    "retry": "Retry",
+    "run": "Run"
+  },
+  "experience": {
+    "back": "cd ~",
+    "breadcrumb": "~/experience",
+    "title": "Work experience",
+    "present": "present",
+    "education": "Education",
+    "additional": "Additional",
+    "languages": "Languages",
+    "skills": "Skills",
+    "error": "Failed to load experience",
+    "retry": "Retry"
+  },
+  "contact": {
+    "back": "cd ~",
+    "breadcrumb": "~/contact",
+    "title": "Get in touch",
+    "resume": {
+      "title": "Resume (PDF)",
+      "desc": "Full experience, stack and projects — in one file.",
+      "download": "Download CV"
+    },
+    "error": "Failed to load contacts",
+    "retry": "Retry"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "This page doesn't exist or has been moved.",
+    "back": "Back to home"
+  },
+  "forbidden": {
+    "code": "403",
+    "title": "Access denied",
+    "description": "You don't have permission to view this page.",
+    "back": "Back to home"
+  },
+  "serverError": {
+    "code": "500",
+    "title": "Something went wrong",
+    "description": "An error occurred. Try refreshing the page or going back home.",
+    "back": "Back to home"
+  },
+  "admin": {
+    "back": "cd ~",
+    "breadcrumb": "~/admin",
+    "title": "Admin panel",
+    "description": "Manage site content without touching code — profile, projects and knowledge base. Every change is sent to your API (NestJS) with server-side validation.",
+    "save": "Save",
+    "saveCount": "Save {{count}}",
+    "cancel": "Discard",
+    "close": "Close",
+    "saved": "Saved",
+    "saveError": "Failed to save",
+    "loadError": "Failed to load data",
+    "unsaved": "Unsaved changes",
+    "diffCount": "{{count}} in diff",
+    "tabs": {
+      "profile": "Profile & status",
+      "projects": "Projects",
+      "experience": "Experience",
+      "stack": "Stack & languages",
+      "education": "Education",
+      "kb": "Knowledge base",
+      "locale": "Localization",
+      "settings": "Settings"
+    },
+    "kb": {
+      "library": "Library",
+      "libraryCount": "{{folders}} folders · {{articles}} articles",
+      "newFolder": "New folder",
+      "newArticle": "New article",
+      "folderNamePlaceholder": "Folder name",
+      "parentRoot": "— root —",
+      "create": "Create",
+      "cancel": "Cancel",
+      "rename": "Rename",
+      "articleHere": "Article here",
+      "subfolder": "Subfolder",
+      "moveTo": "Move to",
+      "delete": "Delete",
+      "actions": "Actions",
+      "empty": "No article selected",
+      "emptyHint": "Pick an article in the library on the left, or create one with “+” in its header.",
+      "updatedAt": "updated {{date}}",
+      "edit": "Edit",
+      "backlinks": "Linked from",
+      "save": "Save",
+      "editorNew": "New article",
+      "editorEdit": "Edit article",
+      "split": "split",
+      "preview": "preview",
+      "titleLabel": "Title",
+      "slugLabel": "Slug",
+      "folderLabel": "Folder (nesting)",
+      "bodyLabel": "MARKDOWN · [[slug]] for links",
+      "titleRequired": "Enter a title",
+      "slugRequired": "Enter a slug",
+      "slugTaken": "This slug is already taken",
+      "bodyRequired": "Add the article text",
+      "deleteArticleText": "“{{name}}” will be deleted permanently.",
+      "deleteFolderText": "Folder “{{name}}” will be deleted. It must have no articles or subfolders.",
+      "notEmpty": "Empty the folder of articles and subfolders first",
+      "endpoint": "GET · POST · PUT · DELETE /api/database"
+    },
+    "stack": {
+      "title": "Stack & languages",
+      "tech": "Technologies",
+      "techName": "Technology",
+      "techPlaceholder": "Add technology…",
+      "removeTech": "Remove “{{name}}”",
+      "lang": "Languages",
+      "langAdd": "language",
+      "langEmpty": "No languages yet",
+      "langName": "Language",
+      "level": "Level",
+      "pct": "Proficiency, %",
+      "removeLang": "Delete language",
+      "skills": "Skills",
+      "skillHint": "Flat competency tags — shown on the Experience screen.",
+      "skillName": "Skill",
+      "skillPlaceholder": "Add a skill…",
+      "removeSkill": "Remove “{{name}}”",
+      "addCategory": "+ block",
+      "categoryName": "Block name",
+      "categoryPlaceholder": "Block name…",
+      "renameCategory": "Rename “{{name}}”",
+      "addTechTo": "Add to “{{category}}”",
+      "addSkill": "Add a skill",
+      "removeBlock": "Delete block “{{name}}”",
+      "reorder": "Reorder “{{name}}”",
+      "reorderBlock": "Reorder block “{{name}}”"
+    },
+    "education": {
+      "mainTitle": "Higher education",
+      "extraTitle": "Courses & certificates",
+      "addMain": "entry",
+      "addExtra": "course",
+      "degree": "Degree / field",
+      "degreePlaceholder": "Degree / field",
+      "place": "Institution",
+      "placePlaceholder": "Institution",
+      "period": "Period",
+      "periodPlaceholder": "2018 — 2022",
+      "coursePlaceholder": "Course / certificate name",
+      "coursePeriodPlaceholder": "09/2022 — 07/2024",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirmDelete": "Delete?",
+      "yes": "Yes",
+      "no": "No",
+      "empty": "No entries yet",
+      "created": "Entry added",
+      "deleted": "Entry removed"
+    },
+    "experience": {
+      "add": "Add",
+      "present": "present",
+      "now": "now",
+      "empty": "No positions yet",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmTitle": "Delete position?",
+      "confirmDelete": "“{{name}}” will be permanently removed.",
+      "created": "Position added",
+      "deleted": "Position removed",
+      "newTitle": "New position",
+      "editTitle": "Edit position",
+      "cancel": "Cancel",
+      "company": "Company",
+      "role": "Role",
+      "location": "Location",
+      "startDate": "Start",
+      "endDate": "End",
+      "endDateCurrent": "current position — no end date",
+      "bullets": "Achievements",
+      "bulletsHint": "one per line",
+      "technologies": "Technologies",
+      "current": "Current position",
+      "currentHint": "I still work here",
+      "errors": {
+        "company": "Enter the company",
+        "role": "Enter the role",
+        "startDate": "Enter the start date"
+      }
+    },
+    "projects": {
+      "add": "New project",
+      "empty": "No projects yet",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmTitle": "Delete project?",
+      "confirmDelete": "“{{name}}” will be permanently removed.",
+      "created": "Project created",
+      "deleted": "Project removed",
+      "newTitle": "New project",
+      "editTitle": "Edit project",
+      "cancel": "Cancel",
+      "name": "Title",
+      "slug": "Slug (URL)",
+      "role": "Role",
+      "year": "Year",
+      "subtitle": "Subtitle",
+      "subtitlePlaceholder": "A short line under the title",
+      "summary": "Summary",
+      "category": "Category",
+      "categoryPlaceholder": "Commercial · Pet project · Side project",
+      "body": "Full description",
+      "bullets": "Key points",
+      "bulletsHint": "one per line",
+      "links": "Links",
+      "linksHint": "format: Label | https://…",
+      "technologies": "Technologies",
+      "contributors": "Collaborators",
+      "tileColor": "Tile color",
+      "status": "Status",
+      "statusDraft": "Draft",
+      "statusPublished": "Published",
+      "hidden": "Hidden on the site",
+      "hiddenHint": "Do not show the project in the public list",
+      "hiddenShort": "hidden",
+      "pinned": "Featured (on home)",
+      "pinnedHint": "Show the project tile in the Featured block",
+      "runnable": "Runs in the browser",
+      "runnableHint": "Adds a Run button and embeds the project",
+      "embedUrl": "iframe URL",
+      "runCommand": "Run command",
+      "errors": {
+        "slug": "Enter a slug",
+        "slugFormat": "Lowercase latin letters, digits and hyphens only",
+        "title": "Enter a title",
+        "description": "Enter a summary",
+        "body": "Fill in the full description",
+        "technologies": "Select at least one technology"
+      },
+      "preview": "Preview",
+      "previewDescription": "Short project description",
+      "contributorAdd": "+ add contributor",
+      "contributorName": "Name",
+      "contributorColor": "Avatar color",
+      "contributorLink": "Link (optional)",
+      "contributorSave": "Add",
+      "contributorCreated": "Contributor added",
+      "contributorUpdate": "Save",
+      "contributorUpdated": "Contributor updated",
+      "contributorDelete": "Delete",
+      "contributorDeleted": "Contributor deleted",
+      "contributorEditName": "Edit “{{name}}”",
+      "contributorConfirmTitle": "Delete contributor?",
+      "contributorConfirmText": "“{{name}}” will be removed from the catalog and all projects. This cannot be undone.",
+      "gallery": "Screenshots",
+      "galleryUpload": "Upload screenshot",
+      "galleryRemove": "Remove screenshot",
+      "galleryEmpty": "No screenshots yet. Video and GIF — later.",
+      "galleryUploaded": "Screenshot uploaded",
+      "galleryDeleted": "Screenshot removed",
+      "galleryCopy": "Copy link",
+      "galleryCopied": "Link copied",
+      "galleryCopyFailed": "Copy failed"
+    },
+    "locale": {
+      "title": "Localization",
+      "subtitle": "ru ↔ en · both-locale review",
+      "coverage": "EN coverage",
+      "searchPlaceholder": "search by key or text…",
+      "empty": "Nothing found for the current filter.",
+      "stat": {
+        "ok": "translated",
+        "missing": "no EN",
+        "same": "same as RU",
+        "total": "{{count}} rows total"
+      },
+      "filters": {
+        "all": "All",
+        "problems": "Issues",
+        "missing": "No EN",
+        "same": "= RU",
+        "changed": "Changed"
+      },
+      "col": {
+        "key": "key",
+        "ru": "russian",
+        "en": "english"
+      },
+      "sections": {
+        "profile": "Profile",
+        "project": "Project",
+        "experience": "Experience",
+        "education": "Education"
+      },
+      "flags": {
+        "missing": "no EN",
+        "same": "= RU",
+        "changed": "changed"
+      },
+      "cell": {
+        "edit": "Edit {{locale}}",
+        "done": "Done",
+        "cancel": "Cancel",
+        "hint": "⌘↵ / Esc",
+        "missing": "— no translation · RU shown on the site",
+        "pending": "not saved"
+      },
+      "note": {
+        "title": "Articles are excluded from localization",
+        "text": "The knowledge base is kept in a single language by design — the bilingual review does not apply to it."
+      },
+      "save": {
+        "title": "Unsaved changes",
+        "diff": "{{count}} in diff",
+        "submit": "Save {{count}}",
+        "discard": "Discard"
+      }
+    },
+    "settings": {
+      "title": "Application settings",
+      "siteTitle": "Logo",
+      "siteTitleHint": "Header logo text — <bogdan.sutuzhko />",
+      "required": "Required field",
+      "defaultsTitle": "Defaults",
+      "accent": "Accent",
+      "accentHint": "Site accent brand color",
+      "accents": {
+        "green": "Green",
+        "blue": "Blue",
+        "bright": "Bright"
+      },
+      "theme": "Default theme",
+      "themeHint": "Color theme for new visitors",
+      "themeDark": "Dark",
+      "themeLight": "Light",
+      "lang": "Default language",
+      "langHint": "Language a guest sees on first visit",
+      "langRu": "RU",
+      "langEn": "EN",
+      "languages": {
+        "title": "Site languages",
+        "hint": "Which languages visitors can use. A disabled language is hidden from the switcher; translations are kept.",
+        "ru": "Russian",
+        "ruDesc": "Russian site locale",
+        "en": "English",
+        "enDesc": "English site locale"
+      },
+      "glowTitle": "Console cursor glow",
+      "behaviorTitle": "Behavior",
+      "glowDesc": "Dynamic green gradient on the terminal backdrop",
+      "activityTitle": "Activity",
+      "activityDesc": "GitHub and Codewars cards",
+      "sections": {
+        "title": "Section visibility",
+        "hint": "Turn off blocks you don't need on the home page. Hero can't be hidden.",
+        "highlightsTitle": "Highlights",
+        "highlightsDesc": "Key numbers block under the Hero",
+        "aboutTitle": "About",
+        "aboutDesc": "Biography text block",
+        "stackTitle": "Stack",
+        "stackDesc": "Technologies by category",
+        "nowTitle": "Availability",
+        "nowDesc": "Open-to-work banner",
+        "featuredTitle": "Featured",
+        "featuredDesc": "Pinned project tiles"
+      },
+      "pages": {
+        "title": "Page visibility",
+        "hint": "A disabled page is unreachable by link and hidden from navigation (console, home buttons).",
+        "projectsTitle": "Projects",
+        "projectsDesc": "The /projects page and project detail",
+        "experienceTitle": "Experience",
+        "experienceDesc": "The /experience page",
+        "contactTitle": "Contact",
+        "contactDesc": "The /contact page"
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "telegram": "Telegram",
+      "github": "GitHub",
+      "role": "Role",
+      "location": "Location",
+      "avatar": "Avatar",
+      "avatarHint": "photo or initials + color",
+      "avatarUpload": "Upload photo",
+      "avatarRemove": "remove photo",
+      "avatarColor": "Avatar color",
+      "avatarCrop": {
+        "title": "Crop avatar",
+        "subtitle": "drag the photo · slider below — zoom",
+        "zoom": "Zoom",
+        "apply": "Apply",
+        "cancel": "Cancel"
+      },
+      "cv": "Résumé (PDF)",
+      "cvHint": "per-locale upload ({{lang}})",
+      "cvUpload": "Upload PDF",
+      "cvCurrent": "current file",
+      "cvRemove": "remove",
+      "cvEmpty": "not uploaded",
+      "headline": "Hero headline",
+      "heroStack": "Hero stack line",
+      "heroStackHint": "comma-separated: React, Vue 3, …",
+      "bio": "About",
+      "bioHidden": "Hide the About block on home",
+      "bioHiddenHint": "Do not show the biography to visitors",
+      "projectsIntro": "Projects screen intro",
+      "experienceIntro": "Experience screen intro",
+      "contactIntro": "Contact screen intro",
+      "highlights": {
+        "label": "Highlights (above “About”)",
+        "hint": "Big numbers on the homepage: value + short caption.",
+        "value": "Value",
+        "caption": "Caption",
+        "add": "+ highlight",
+        "remove": "Remove highlight"
+      },
+      "availabilityLabel": "Status for employers",
+      "availabilityHint": "Like LinkedIn's «Open to work» — shown as a status banner on the home page.",
+      "availability": {
+        "ACTIVE": "Actively looking",
+        "OPEN": "Open to offers",
+        "NOTLOOKING": "Not looking right now"
+      },
+      "errors": {
+        "name": "Enter a name",
+        "email": "Enter a valid email",
+        "telegram": "Enter Telegram",
+        "role": "Enter a role",
+        "bio": "Fill in the About field"
+      }
+    },
+    "account": {
+      "title": "Admin password",
+      "hint": "Changing the password revokes active sessions on other devices.",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Repeat new password",
+      "submit": "Change password",
+      "changed": "Password changed",
+      "errors": {
+        "current": "Enter your current password",
+        "short": "At least 8 characters",
+        "mismatch": "Passwords do not match",
+        "wrong": "Wrong current password"
+      }
+    }
+  },
+  "database": {
+    "back": "cd ~",
+    "breadcrumb": "~/database",
+    "title": "Knowledge base",
+    "intro": "Notes, deep-dives and write-ups — with links between articles. Click the tree on the left or the cross-links inside the text.",
+    "treeLabel": "Knowledge base tree",
+    "backlinks": "↩ Linked from",
+    "empty": "Pick an article from the tree on the left",
+    "error": "Failed to load the knowledge base",
+    "retry": "Retry"
+  },
+  "runner": {
+    "loading": "loading project…",
+    "error": {
+      "bash": "bash: failed to launch “{{title}}”: project unavailable",
+      "hint": "The project may have moved or is temporarily offline. Try again later.",
+      "toastTitle": "Couldn’t launch the project",
+      "toastDescription": "“{{title}}” is unavailable — it may have moved or is temporarily offline."
+    },
+    "a11y": {
+      "dialog": "Running project: {{project}}",
+      "close": "Close project",
+      "minimize": "Minimize project",
+      "maximize": "Maximize",
+      "restore": "Restore size"
+    }
+  },
+  "toaster": {
+    "a11y": {
+      "region": "Notifications",
+      "close": "Dismiss notification"
+    }
+  }
+}

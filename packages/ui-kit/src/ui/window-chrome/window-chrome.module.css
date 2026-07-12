@@ -1,0 +1,47 @@
+.lights {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.light {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+}
+
+.actionable {
+  cursor: pointer;
+}
+
+.close {
+  background-color: var(--color-traffic-close);
+}
+
+.minimize {
+  background-color: var(--color-traffic-minimize);
+}
+
+.maximize {
+  background-color: var(--color-traffic-maximize);
+}
+
+.glyph {
+  opacity: 0%;
+  transition: opacity 0.12s ease;
+}
+
+.lights:hover .glyph,
+.light:focus-visible .glyph {
+  opacity: 100%;
+}
+
+.light:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

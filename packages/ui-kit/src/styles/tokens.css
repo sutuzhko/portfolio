@@ -1,0 +1,165 @@
+/**
+ * Дизайн-токены редизайна «Console Portfolio» (GitHub-dark).
+ * Тема по умолчанию — тёмная (на :root); светлая включается через [data-theme='light'].
+ * Любой токен — CSS-переменная, компоненты ссылаются только на них, без литералов.
+ */
+
+:root {
+  /* Поверхности */
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-header: #161b22; /* шапки «оконного» хрома */
+  --color-raised: #21262d; /* чипы, вставки */
+
+  /* Границы */
+  --color-border: #30363d;
+  --color-border-strong: #484f58; /* инпуты, акцентные рамки */
+
+  /* Текст */
+  --color-fg: #e6edf3;
+
+  /* muted/dim подняты до контраста ≥4.5:1 на bg и raised (a11y WCAG 1.4.3):
+     было #7d8590 (4.08 на raised) и #6e7681 (4.12 на bg). */
+  --color-fg-muted: #8b949e;
+  --color-fg-dim: #868f99; /* моно/третичный */
+
+  /* Акцент (один зелёный primary, синий — альтернативный) */
+  --color-primary: #238636;
+  --color-primary-bright: #3fb950; /* подсветка, курсор */
+  --color-accent-blue: #1f6feb;
+
+  /* Текущий акцент темы — переопределяется через [data-accent] */
+  --color-accent: var(--color-primary);
+
+  /* Статусы и тосты */
+  --color-info: #539bf5;
+  --color-success: #57c66a;
+  --color-warning: #d9a528;
+  --color-error: #f47067;
+  --color-danger: #e0533d; /* удаление, обязательные поля */
+  --color-terminal-error: #ff7a6e; /* текст ошибки в терминале */
+
+  /* Светофор оконного хрома — не зависит от темы */
+  --color-traffic-close: #ff5f57;
+  --color-traffic-minimize: #febc2e;
+  --color-traffic-maximize: #28c840;
+
+  /* Шрифты. Основной + полный системный фолбэк, чтобы до загрузки веб-шрифта
+     (или при его сбое) текст рисовался родным шрифтом ОС, а не безликим generic. */
+  --font-sans:
+    'Geist', 'System UI', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Arial',
+    sans-serif;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', 'Segoe UI Mono', 'Roboto Mono',
+    monospace;
+
+  /* Типографическая шкала (размер / насыщенность / трекинг) */
+  --font-size-display: 56px;
+  --font-size-h1: 34px;
+  --font-size-h2: 23px;
+  --font-size-h3: 17px;
+  --font-size-body: 15px;
+  --font-size-small: 13px;
+  --font-size-mono-caption: 12px;
+  --font-size-mono-label: 11px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+  --line-height-prose: 1.6;
+
+  /* Сетка отступов (шаг 4px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Контейнеры */
+  --container-page: 1200px;
+  --container-detail: 980px;
+  --container-admin: 1180px;
+
+  /* Глобальная обвязка */
+  --navbar-height: 64px;
+  --blur-glass: 14px; /* «стеклянное» размытие фона липких панелей */
+
+  /* Слои z-index — по РОЛИ, а не по имени компонента.
+     Все, кто накладывается, берут значение отсюда, чтобы порядок был предсказуем. */
+  --z-sticky: 100; /* липкие панели внутри страницы (sticky-заголовки, вкладки кабинета) */
+  --z-nav: 150; /* верхний навбар приложения — выше внутристраничных sticky (его дропдаун-меню не должно перекрываться) */
+  --z-dropdown: 200; /* дропдауны, меню, поповеры, тултипы, плавающие панели (save-bar) */
+  --z-tray: 250; /* свёрнутые окна (консоль/раннер) — выше дропдаунов и save-bar, ниже активного оверлея */
+  --z-overlay: 300; /* модалки, дровера, открытые окна консоли/раннера и их фон */
+  --z-toast: 400; /* тосты — поверх всего */
+
+  /* Брейкпоинты — ЕДИНСТВЕННЫЙ допустимый набор точек адаптива приложения.
+     Значения нормализованы к стандартной шкале (макет использует ~760 → md).
+     ВНИМАНИЕ: CSS не поддерживает var() в условии @media, поэтому внутри самих
+     медиа-запросов те же числа пишутся литералами; эти токены — источник правды. */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+
+  /* Скругления */
+  --radius-sm: 7px;
+  --radius-button: 9px;
+  --radius-card: 12px;
+  --radius-panel: 16px;
+  --radius-band: 22px; /* герой-полоса */
+  --radius-pill: 50%; /* круг: аватары, точки-индикаторы */
+  --radius-stadium: 999px; /* «таблетка»: пилюли-кнопки, чипы со скруглёнными торцами */
+
+  /* Тень и фокус */
+  --shadow: 0 10px 40px rgb(1 4 9 / 60%);
+  --focus-ring: 0 0 0 3px rgb(35 134 54 / 42%);
+
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-header: #f6f8fa;
+  --color-raised: #f6f8fa;
+  --color-border: #d0d7de;
+  --color-border-strong: #afb8c1;
+  --color-fg: #1f2328;
+  --color-fg-muted: #59636e;
+  --color-fg-dim: #818b98;
+  --color-primary: #1f883d;
+  --color-primary-bright: #1a7f37;
+  --color-accent-blue: #0969da;
+  --color-info: #0969da;
+  --color-success: #1a7f37;
+  --color-warning: #9a6700;
+  --color-error: #cf222e;
+  --color-terminal-error: #cf222e;
+  --focus-ring: 0 0 0 3px rgb(31 136 61 / 42%);
+
+  /* Тёмная тень (near-black) на белом фоне читается слишком тяжело — на свету
+     берём мягкую нейтрально-серую в духе GitHub light, чтобы блоки не «висели». */
+  --shadow: 0 8px 24px rgb(140 149 159 / 20%);
+
+  color-scheme: light;
+}
+
+/* Акцент оформления сайта — выбирается в кабинете, ставится на <html data-accent>.
+   Значения используют цвета с корректными вариантами для тёмной/светлой темы. */
+[data-accent='green'] {
+  --color-accent: var(--color-primary);
+}
+
+[data-accent='blue'] {
+  --color-accent: var(--color-accent-blue);
+}
+
+[data-accent='bright'] {
+  --color-accent: var(--color-primary-bright);
+}

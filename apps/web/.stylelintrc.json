@@ -1,0 +1,14 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "selector-class-pattern": null,
+    "custom-property-pattern": null,
+    "keyframes-name-pattern": null,
+    "color-hex-length": null,
+    "alpha-value-notation": "percentage",
+    "property-no-unknown": [true, { "ignoreProperties": ["composes"] }],
+    "color-function-notation": "modern",
+    "declaration-empty-line-before": null,
+    "no-descending-specificity": null
+  }
+}

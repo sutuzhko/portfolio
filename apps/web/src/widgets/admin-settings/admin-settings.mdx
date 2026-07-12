@@ -1,0 +1,60 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './admin-settings.stories';
+
+<Meta of={Stories} />
+
+# Widgets / AdminSettings
+
+Вкладка «Настройки приложения» личного кабинета — форма `PATCH /api/settings` по
+макету: **название сайта** и **пароль раздела Interview** (текстовые поля с валидацией),
+**язык** и **тема** по умолчанию ([`Segmented`](?path=/docs/shared-components-segmented--docs),
+`role=radiogroup`), а также тумблеры поведения — **свечение курсора в консоли** и
+**блок активности на главной** ([`Toggle`](?path=/docs/shared-primitives-toggle--docs),
+`role=switch`).
+
+Документируется **презентационный** `AdminSettingsView`; контейнер `AdminSettings`
+тянет настройки и сохраняет с тостом. Настройки — синглтон, значения не локализуются.
+Сохранение доступно только при изменениях (`isDirty`); пустое название / короткий
+пароль блокируют отправку.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Default} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Сохранение
+
+<Canvas of={Stories.Saving} />
+
+---
+
+## Доступность
+
+- Сегменты — `Segmented` (`role=radiogroup` + `role=radio`, стрелки/Home/End).
+- Тумблеры — `Toggle` (`role=switch` + `aria-checked`), с текстовой подписью.
+- Текстовые поля подписаны через `<label>`; ошибка валидации — `aria-describedby`.
+
+## Ответственность
+
+Форма настроек сайта. **Не отвечает** за загрузку/сохранение (контейнер) и
+оболочку вкладок (`pages/admin`).
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+const [update] = useUpdateSettingsMutation();
+<AdminSettingsView settings={settings} isSaving={isSaving} onSave={(s) => update(s)} />
+`}
+/>

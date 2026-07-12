@@ -1,0 +1,77 @@
+.text {
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  line-height: var(--line-height-base);
+}
+
+/* Размер — из типографической шкалы токенов */
+.body {
+  font-size: var(--font-size-body);
+}
+
+.small {
+  font-size: var(--font-size-small);
+}
+
+.caption {
+  font-size: var(--font-size-mono-caption);
+}
+
+.label {
+  font-size: var(--font-size-mono-label);
+  letter-spacing: 0.02em;
+}
+
+/* Тон текста */
+.toneDefault {
+  color: var(--color-fg);
+}
+
+.toneMuted {
+  color: var(--color-fg-muted);
+}
+
+.toneDim {
+  color: var(--color-fg-dim);
+}
+
+.tonePrimary {
+  color: var(--color-accent);
+}
+
+.toneDanger {
+  color: var(--color-danger);
+}
+
+/* Насыщенность */
+.regular {
+  font-weight: var(--font-weight-regular);
+}
+
+.medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.bold {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Семейство шрифта */
+.sans {
+  font-family: var(--font-sans), sans-serif;
+}
+
+.mono {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Обрезка одной строкой с многоточием */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

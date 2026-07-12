@@ -1,0 +1,62 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './project-page.stories';
+
+<Meta of={Stories} />
+
+# Project
+
+Страница детали проекта (маршрут `/projects/:slug`, макет → PROJECT DETAIL) — кнопка
+«назад» к списку и виджет `ProjectDetail`.
+
+---
+
+## Анатомия
+
+- **Контейнер** `ProjectPage` — берёт slug из маршрута, запрашивает проект, навигация;
+  **вид** `ProjectPageView` — раскладка (`ProjectDetailDto` + `isLoading`/`isError` пропсами).
+- Пока грузится — деталь скелетонит; при ошибке (например, неверный slug) — сообщение с повтором.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Все состояния
+
+### Ожидание данных
+
+<Canvas of={Stories.Loading} />
+
+### Ошибка
+
+<Canvas of={Stories.Failed} />
+
+### Мобильная раскладка
+
+Две колонки (контент + сайдбар) складываются в одну на `--bp-md` (768).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовок проекта — `h1`; ошибка — `role="alert"`; кнопка «назад» доступна с клавиатуры.
+
+## Связанные компоненты
+
+- `Widgets/ProjectDetail` — тело экрана.
+- `Pages/Projects` — откуда приходят по клику на карточку.
+
+---
+
+# Ответственность
+
+`ProjectPageView` отвечает за раскладку экрана и переход назад. **Не отвечает** за
+запрос проекта и разбор маршрута — это контейнер `ProjectPage`.

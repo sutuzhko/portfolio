@@ -1,0 +1,67 @@
+import { Meta, Canvas, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './theme-switch.stories';
+
+<Meta of={Stories} />
+
+# ThemeSwitch
+
+Фича переключения светлой/тёмной темы. Собрана **из UI Kit** — `Button variant="icon"`
+с `Icon` (moon/sun), а не собственный `<button>`. Хранит выбор в `ThemeProvider`
+(context + localStorage) и синхронизирует `<html data-theme>`, от которого зависят
+токены. Иконка отражает текущую тему, подпись — целевую.
+
+---
+
+## Анатомия
+
+- `Button variant="icon"` + `Icon name="moon"|"sun"`.
+- Состояние — из `useTheme()` (context над `ThemeProvider`); клик вызывает `toggle`.
+
+---
+
+## Пример
+
+<Canvas of={Stories.Playground} />
+
+## В контексте
+
+<Canvas of={Stories.InContext} />
+
+---
+
+# Когда использовать
+
+- в правом блоке навбара как переключатель темы всего приложения.
+
+# Когда **не** использовать
+
+- как выбор из нескольких тем/акцентов — тогда нужен [`Segmented`](?path=/docs/shared-components-segmented--docs),
+  а не бинарный тумблер иконкой.
+
+---
+
+## Доступность
+
+- Иконочная кнопка несёт `aria-label` и `title` с **целевым** действием
+  («Переключить на светлую/тёмную») — не просто «тема».
+- Полноценный фокус и клавиатура из `Button` (это `<button>`).
+
+## Связанные компоненты
+
+- [`Button`](?path=/docs/shared-primitives-button--docs) / [`Icon`](?path=/docs/shared-primitives-icon--docs) — из чего собрана.
+- [`LangSwitch`](?path=/docs/features-langswitch--docs) — сосед в навбаре.
+
+---
+
+# Ответственность
+
+Переключить тему по клику и показать иконку/подпись согласно текущему режиму.
+**Не отвечает** за раскладку навбара (её задаёт `Widgets/Navbar`) и за сами токены
+(их определяет `app/styles/tokens.css`).
+
+---
+
+# Пример использования
+
+<Source language="tsx" code={`<ThemeSwitch />`} />

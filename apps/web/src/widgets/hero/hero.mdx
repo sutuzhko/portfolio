@@ -1,0 +1,70 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './hero.stories';
+
+<Meta of={Stories} />
+
+# Hero
+
+Герой-секция главной (макет `design/redesign` → HERO BAND) на «полосе» с зелёным
+свечением и точечной текстурой. Две колонки: слева — аватар, приветствие, имя,
+хэндл·роль, **печатающая строка стека**, питч и **CTA-кнопки**; справа —
+`TerminalCard` (см. [отдельную историю](?path=/docs/widgets-hero-terminalcard--docs)).
+
+---
+
+## Анатомия
+
+- Собран из UI Kit (`Avatar`, `Heading`, `Text`, `Button`, `Icon`, `Skeleton`).
+- Идентичность, строка стека и питч — контент профиля → **под скелетоном** при загрузке.
+- CTA — действия (не данные) и терминал — статичный флейвор → доступны сразу.
+- Все действия проксируются коллбэками: `onDownloadCv`/`onProjects`/`onContact`/`onOpenConsole`.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Состояния и края
+
+### Скелетон загрузки контента
+
+Идентичность, строка стека и питч под скелетоном; CTA доступны сразу.
+
+<Canvas of={Stories.Loading} />
+
+### С фотографией
+
+<Canvas of={Stories.WithPhoto} />
+
+### Мобильная раскладка
+
+На планшете (`--bp-md` 768) колонки складываются в стопку.
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Имя — `h1` (`Heading`); печатающая строка уважает `prefers-reduced-motion`.
+- CTA — настоящие `<button>`; иконки в них декоративны.
+- Плашка консоли — кнопка с доступным именем (на тач-устройствах текст ярлыка меняется).
+
+## Связанные компоненты
+
+- [`TerminalCard`](?path=/docs/widgets-hero-terminalcard--docs) — правая колонка.
+- [`Avatar`](?path=/docs/shared-primitives-avatar--docs) / [`Button`](?path=/docs/shared-primitives-button--docs) — из чего собран.
+
+---
+
+# Ответственность
+
+Hero собирает левую колонку и терминал-карточку. **Не отвечает** за загрузку данных
+(их отдаёт страница через RTK Query), за консоль (`onOpenConsole`) и за
+навигацию/скачивание CV — действия проксируются наружу коллбэками.

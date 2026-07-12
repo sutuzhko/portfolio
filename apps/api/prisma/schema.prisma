@@ -1,0 +1,278 @@
+// Prisma-схема — Console Portfolio.
+//
+// Локализация: поля типа `Json` с пометкой `// LocalizedText` хранят двуязычное
+// значение вида `{ ru: string; en?: string }` (или `{ ru: string[]; en?: string[] }` для списков).
+// API отдаёт нужную локаль с откатом на `ru`. См. BACKEND.md.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------- enums
+
+enum UserRole {
+  ADMIN
+  // VIEWER — доступ к приватной зоне только на чтение, возможно добавим позже.
+}
+
+enum AvailabilityStatus {
+  ACTIVE
+  OPEN
+  NOTLOOKING
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum EducationType {
+  MAIN
+  ADDITIONAL
+}
+
+enum MediaType {
+  AVATAR
+  GALLERY
+  CV
+}
+
+// ---------------------------------------------------------------- identity / auth
+
+model User {
+  id            String         @id @default(cuid())
+  username      String         @unique
+  passwordHash  String
+  role          UserRole       @default(ADMIN)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------- profile
+
+model Profile {
+  id              Int                @id @default(1) // синглтон
+  name            Json // LocalizedText — имя владельца по локали (ru/en)
+  roleTitle       Json // LocalizedText
+  headline        Json // LocalizedText — питч героя (2–3 предложения)
+  location        Json // LocalizedText
+  email           String
+  avatarPhotoUrl  String?
+  avatarColor     String?
+  cvUrl           Json? // LocalizedText — ссылка на PDF-резюме по локали (ru/en)
+  heroStack       String[] // слова печатающей строки героя: React, Vue 3, Node · NestJS, …
+  // Ключевые показатели над «Обо мне»: [{ value: string, label: LocalizedText }]
+  highlights      Json               @default("[]")
+  availability    AvailabilityStatus @default(OPEN)
+  bioMarkdown     Json // LocalizedText
+  isBioHidden     Boolean            @default(false)
+  bioUpdatedAt    DateTime?
+  // Интро-абзацы экранов (LocalizedText): текст под заголовком страницы
+  projectsIntro   Json?
+  experienceIntro Json?
+  contactIntro    Json?
+  contactLinks    ContactLink[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model ContactLink {
+  id        String  @id @default(cuid())
+  icon      String // telegram | codewars | linkedin | github | email | ...
+  url       String
+  hidden    Boolean @default(false)
+  order     Int     @default(0)
+  profileId Int     @default(1)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+}
+
+// ---------------------------------------------------------------- projects & taxonomy
+
+model Technology {
+  id          String       @id @default(cuid())
+  name        String
+  category    String?
+  // Float, чтобы перестановка меняла порядок ОДНОЙ записи (дробная позиция между
+  // соседями), а не перенумеровывала все — минимальный дифф при drag&drop.
+  order       Float        @default(0)
+  primaryFor  Project[]    @relation("ProjectPrimaryLanguage")
+  projects    Project[]    @relation("ProjectTechnologies")
+  experiences Experience[] @relation("ExperienceTech")
+}
+
+model Contributor {
+  id       String    @id @default(cuid())
+  name     Json // LocalizedText
+  image    String?
+  color    String?
+  link     String?
+  order    Int       @default(0)
+  projects Project[] @relation("ProjectContributors")
+}
+
+model Project {
+  id                String        @id @default(cuid())
+  slug              String        @unique
+  title             Json // LocalizedText
+  description       Json // LocalizedText (short)
+  subtitle          Json? // LocalizedText (подзаголовок плитки/детали)
+  bodyMarkdown      Json // LocalizedText (full)
+  bullets           Json? // LocalizedText list { ru: string[]; en?: string[] }
+  role              Json? // LocalizedText
+  category          String?
+  period            String?
+  tileColor         String?
+  links             Json? // [{ label: LocalizedText | string, href: string }]
+  runnable          Boolean       @default(false)
+  runCommand        String?
+  embedUrl          String? // URL запускаемого проекта для встраивания в iframe-раннер
+  runHint           Json? // LocalizedText
+  status            PublishStatus @default(DRAFT)
+  hidden            Boolean       @default(false)
+  pinned            Boolean       @default(false)
+  order             Int           @default(0)
+  primaryLanguageId String?
+  primaryLanguage   Technology?   @relation("ProjectPrimaryLanguage", fields: [primaryLanguageId], references: [id])
+  technologies      Technology[]  @relation("ProjectTechnologies")
+  contributors      Contributor[] @relation("ProjectContributors")
+  gallery           MediaAsset[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([primaryLanguageId])
+}
+
+model MediaAsset {
+  id        String    @id @default(cuid())
+  url       String
+  type      MediaType
+  alt       Json? // LocalizedText
+  width     Int?
+  height    Int?
+  mime      String?
+  size      Int?
+  formats   Json? // responsive variants { thumbnail, small, medium, large }
+  order     Int       @default(0)
+  projectId String?
+  project   Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// ---------------------------------------------------------------- experience / education / skills
+
+model Experience {
+  id        String       @id @default(cuid())
+  role      Json // LocalizedText
+  company   String
+  location  Json? // LocalizedText
+  sub       Json? // LocalizedText
+  bullets   Json // LocalizedText list
+  startDate DateTime
+  endDate   DateTime?
+  current   Boolean      @default(false)
+  dotColor  String?
+  order     Int          @default(0)
+  tech      Technology[] @relation("ExperienceTech")
+}
+
+model Education {
+  id     String        @id @default(cuid())
+  type   EducationType @default(MAIN)
+  degree Json // LocalizedText
+  place  Json? // LocalizedText
+  period String?
+  order  Int           @default(0)
+}
+
+model Language {
+  id    String @id @default(cuid())
+  name  Json // LocalizedText
+  level String
+  pct   Int
+  order Int    @default(0)
+}
+
+model Skill {
+  id    String @id @default(cuid())
+  name  Json // LocalizedText
+  order Float  @default(0) // Float — как у Technology.order (минимальный дифф порядка)
+}
+
+// ---------------------------------------------------------------- knowledge base (private)
+
+model Folder {
+  id       String    @id @default(cuid())
+  name     Json // LocalizedText
+  order    Int       @default(0)
+  parentId String?
+  parent   Folder?   @relation("FolderTree", fields: [parentId], references: [id])
+  children Folder[]  @relation("FolderTree")
+  articles Article[]
+
+  @@index([parentId])
+}
+
+model Article {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  title        Json // LocalizedText
+  bodyMarkdown Json // LocalizedText
+  tags         String[]
+  status       PublishStatus @default(DRAFT)
+  order        Int           @default(0)
+  folderId     String?
+  folder       Folder?       @relation(fields: [folderId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([folderId])
+}
+
+// ---------------------------------------------------------------- settings
+
+model Settings {
+  id                Int      @id @default(1) // синглтон
+  siteTitle         String   @default("bogdan.sutuzhko")
+  interviewPassword String   @default("interview2026")
+  defaultTheme      String   @default("dark")
+  accentColor       String   @default("green") // акцент оформления (green | blue | bright)
+  defaultLang       String   @default("ru") // язык по умолчанию (гость + фолбэк)
+  // Языки, доступные на сайте (подмножество поддерживаемых платформой). Выключенный
+  // язык скрыт из переключателя; уже переведённый контент не удаляется, лишь не показывается.
+  availableLanguages String[] @default(["ru", "en"])
+  consoleGlow       Boolean  @default(true) // свечение за курсором в консоли
+  // Видимость секций главной (вкл/выкл из кабинета). Hero всегда включён — это идентичность.
+  showHighlights    Boolean  @default(true) // блок показателей
+  showAbout         Boolean  @default(true) // блок «Обо мне»
+  showStack         Boolean  @default(true) // блок стека
+  showActivity      Boolean  @default(true) // блок активности (GitHub/Codewars) на главной
+  showNow           Boolean  @default(true) // баннер доступности (open-to-work)
+  showFeatured      Boolean  @default(true) // блок избранных проектов
+  // Видимость публичных страниц-роутов (вкл/выкл из кабинета). Выключенная страница
+  // недоступна по URL (404) и скрыта из навигации (консоль cd/ls, CTA главной).
+  showProjects      Boolean  @default(true) // страница /projects
+  showExperience    Boolean  @default(true) // страница /experience
+  showContact       Boolean  @default(true) // страница /contact
+  updatedAt         DateTime @updatedAt
+}

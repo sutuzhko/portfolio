@@ -1,0 +1,56 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './project-form.stories';
+
+<Meta of={Stories} />
+
+# Widgets / AdminProjects / Form
+
+Форма проекта (создание/правка) на отдельном детальном маршруте. Локализованные
+поля (название, краткое/полное описание, роль, ключевые пункты, ссылки) правятся в
+**активной локали** маршрута; вторую бэкенд домёрживает.
+
+- Технологии\* — мультиселект чипами по существующим записям (id).
+- Коллабораторы — `ContributorManager`: выбор чипами + инлайн-CRUD каталога
+  (создание/правка/удаление участников).
+- Цвет плитки — палитра с превью-градиентом.
+- Ссылки — textarea «Название | https://…» построчно.
+- Статус (черновик/опубликован), «скрыт», «в избранном», «запускается в браузере»
+  (при нём появляются поля iframe-URL и команды запуска).
+- База `ru` при создании заполняется всегда (публичный фолбэк).
+
+---
+
+## Playground
+
+<Canvas of={Stories.New} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Правка существующего проекта
+
+<Canvas of={Stories.Edit} />
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<ProjectForm
+  record={record}            // null — создание
+  technologies={technologies}
+  contributors={contributors}
+  locale={locale}
+  isBusy={isBusy}
+  onCreate={(body, staged) => create(body, staged)} // staged — CRUD участников
+  onUpdate={(id, body, staged) => update(id, body, staged)}
+  onCancel={() => navigateDetail(null)}
+/>
+`}
+/>

@@ -1,0 +1,108 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './tabs.stories';
+
+<Meta of={Stories} />
+
+# Tabs
+
+Полоса вкладок (`role="tablist"`) для переключения **контента** одной области.
+Управляется снаружи; стрелки и Home/End перемещают активную вкладку, в табуляцию
+попадает только выбранная. Компонент рисует **только полосу** — панели с
+содержимым и их связывание остаются за потребителем.
+
+---
+
+## Анатомия
+
+- `role="tablist"` с кнопками `role="tab"` + `aria-selected`.
+- У каждой вкладки `id="tab-{id}"` — для связки панели через `aria-labelledby`.
+- Опциональная иконка в ярлыке; roving tabindex.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### С иконками
+
+<Canvas of={Stories.WithIcons} />
+
+### С привязанными панелями
+
+Панель — ответственность потребителя: `role="tabpanel"` + `aria-labelledby="tab-{id}"`.
+
+<Canvas of={Stories.WithPanels} />
+
+### Много вкладок
+
+<Canvas of={Stories.ManyTabs} />
+
+---
+
+## Живые демонстрации
+
+### Клавиатурная навигация
+
+<Canvas of={Stories.KeyboardNavigation} />
+
+---
+
+# Когда использовать
+
+- переключение панелей контента в одной области (кабинет, детально проекта);
+- разделы с равнозначным весом.
+
+# Когда **не** использовать
+
+- выбор значения-настройки (тема/язык) — [`Segmented`](?path=/docs/shared-components-segmented--docs);
+- навигация между URL-страницами — ссылки/роутер;
+- сокрытие вторичного контента — аккордеон/[`Tree`](?path=/docs/shared-components-tree--docs).
+
+---
+
+## Доступность
+
+- `tablist`/`tab` + `aria-selected`; панель связывается с вкладкой через
+  `aria-labelledby="tab-{id}"`.
+- `←→↑↓` циклически, `Home`/`End` — к краям; Tab входит в полосу один раз.
+- **Обязателен `aria-label`** для полосы.
+
+## Токены
+
+`--border` (нижняя линия), `--fg`/`--fg-muted` (активная/неактивная), `--primary`
+(индикатор), `--ring` (фокус).
+
+## Связанные компоненты
+
+- [`Segmented`](?path=/docs/shared-components-segmented--docs) — выбор настройки, не контента.
+- [`Icon`](?path=/docs/shared-primitives-icon--docs) — иконки в ярлыках.
+
+---
+
+# Ответственность
+
+Tabs отвечает за семантику tablist/`aria-selected`, клавиатурную навигацию (roving
+tabindex) и вызов `onChange` с id вкладки. **Не отвечает** за рендер панелей и их
+содержимое, хранение активной вкладки (снаружи) и локализацию ярлыков.
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Tabs aria-label={t('cabinet.sections')} value={tab} onChange={setTab} tabs={sections} />
+<section role="tabpanel" aria-labelledby={\`tab-\${tab}\`}>
+  {renderSection(tab)}
+</section>
+`}
+/>

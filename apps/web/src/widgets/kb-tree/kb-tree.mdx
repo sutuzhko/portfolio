@@ -1,0 +1,58 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './kb-tree.stories';
+
+<Meta of={Stories} />
+
+# Widgets / KbTree
+
+Боковое дерево базы знаний: папки и статьи. Строится из `DatabaseTreeDto` поверх
+UI-kit [`Tree`](?path=/docs/shared-components-tree--docs) — клик по статье выбирает
+её, папки раскрываются сами, работает клавиатурная навигация.
+
+**Презентационный**: данные и выбор приходят пропами. Пока дерево грузится
+(`tree === undefined`) — скелетон.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Default} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Без выбранной статьи
+
+<Canvas of={Stories.NoSelection} />
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+---
+
+## Доступность
+
+- Контейнер — `<nav>` с `aria-busy` во время загрузки.
+- Клавиатура и роли (`tree`/`treeitem`/`group`) — от UI-kit `Tree`.
+
+## Ответственность
+
+Отвечает за разворачивание дерева БЗ в узлы `Tree` (папки → статьи по slug) и
+скелетон загрузки. **Не отвечает** за загрузку данных и чтение статьи (это страница
+и `KbArticle`).
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<KbTree tree={tree} selectedSlug={slug} onSelectArticle={setSlug} />
+`}
+/>

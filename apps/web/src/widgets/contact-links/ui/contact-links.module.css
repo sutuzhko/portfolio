@@ -1,0 +1,71 @@
+.grid {
+  display: grid;
+
+  /* minmax(0, …) вместо 1fr: иначе авто-минимум трека раздувается под
+     min-content длинного URL и колонка вылезает за контейнер (гориз. скролл) */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 20px;
+  text-decoration: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--color-primary-bright);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-primary-bright);
+  outline-offset: 2px;
+}
+
+.badge {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-family: var(--font-mono), monospace;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-bright);
+  background: var(--color-raised);
+  border-radius: var(--radius-button);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  font-size: 14.5px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+}
+
+.value {
+  overflow: hidden;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Мобильный: один столбец (--bp-md 768) */
+@media (width <= 768px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

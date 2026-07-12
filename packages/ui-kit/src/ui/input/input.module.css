@@ -1,0 +1,8 @@
+.input {
+  composes: control from '../field/control.module.css';
+}
+
+/* Обычный (sans) шрифт значения — для контентных полей CMS по макету. */
+.sans {
+  --control-font: var(--font-sans);
+}

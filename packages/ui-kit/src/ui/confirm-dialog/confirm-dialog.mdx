@@ -1,0 +1,71 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './confirm-dialog.stories';
+
+<Meta of={Stories} />
+
+# Shared / components / ConfirmDialog
+
+Диалог подтверждения опасного действия — как правило, удаления. Поверх примитива
+`Modal`: иконка-корзина в красной плашке, заголовок, пояснение (что именно и почему
+необратимо) и пара кнопок «Отмена» / опасное действие (красная).
+
+Заменяет разрозненные инлайн-подтверждения «точно? да / нет» в списках кабинета на
+единый модальный паттерн (фон с блюром, `Escape`/клик по фону — отмена).
+
+**Домен-агностичен**: все подписи приходят пропами — shared-компонент не знает про
+i18n. Тексты подставляет вызывающая сторона (виджеты кабинета через `t()`).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Default} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### В процессе
+
+<Canvas of={Stories.Busy} />
+
+---
+
+## Возможности
+
+- Заголовок + пояснение + опасное действие красным.
+- `busy` блокирует обе кнопки на время запроса (защита от двойного удаления).
+- Наследует от `Modal`: портал в `body`, блокировка скролла, `Escape` и клик по фону.
+
+## Доступность
+
+- Роль `dialog` с `aria-modal`, связка заголовка через `aria-labelledby` (из `Modal`).
+- Кнопка-крестик и фон помечены `cancelLabel`; иконка декоративна (`aria-hidden`).
+
+## Ответственность
+
+Только подтверждение действия и вызов колбэков. **Не отвечает** за сам запрос
+удаления и тосты — это контейнер вкладки.
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<ConfirmDialog
+  open={pendingId !== null}
+  title={t('admin.projects.confirmTitle')}
+  message={t('admin.projects.confirmDelete')}
+  confirmLabel={t('admin.delete')}
+  cancelLabel={t('admin.cancel')}
+  busy={isDeleting}
+  onConfirm={() => remove(pendingId)}
+  onCancel={() => setPendingId(null)}
+/>
+`}
+/>

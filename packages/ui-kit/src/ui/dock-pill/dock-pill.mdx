@@ -1,0 +1,51 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './dock-pill.stories';
+
+<Meta of={Stories} />
+
+# DockPill
+
+Свёрнутое окно в «трее» — компактная пилюля со «светофором» и моно-подписью.
+Из неё собран трей консоли и раннера: жёлтый свет и клик по подписи разворачивают
+окно обратно, зелёный — сразу на всю ширину, красный — закрывают.
+
+Компонент **презентационный** и переиспользуемый: он ничего не знает о конкретном
+окне, только показывает подпись и пробрасывает три действия. Позиционирование и
+стыковку нескольких пилюль обеспечивает [`Tray`](?path=/docs/shared-components-tray--docs).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Варианты
+
+### Раннер
+
+Та же пилюля, другая подпись — так в трее уживаются консоль (`bash — ~`) и раннер
+(`2048 — game`).
+
+<Canvas of={Stories.Runner} />
+
+### Светофор
+
+<Canvas of={Stories.Controls} />
+
+---
+
+## Доступность
+
+- «Светофор» — три кнопки с `aria-label` (передаются пропами `closeLabel` /
+  `restoreLabel` / `maximizeLabel`), доступны с клавиатуры.
+- Подпись — тоже кнопка: разворачивает окно кликом или Enter.
+
+## Связанные компоненты
+
+- [`Tray`](?path=/docs/shared-components-tray--docs) — контейнер, стыкующий пилюли.
+- [`WindowChrome`](?path=/docs/shared-components-window--docs) — «светофор» окна.

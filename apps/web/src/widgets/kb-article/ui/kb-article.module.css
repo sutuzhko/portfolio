@@ -1,0 +1,127 @@
+.reader {
+  display: block;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+.head {
+  padding: 18px 26px 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.breadcrumb {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.tag {
+  padding: 2px 7px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-bright);
+  background: color-mix(in srgb, var(--color-primary-bright) 12%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.body {
+  padding: 24px 26px;
+}
+
+.backlinks {
+  padding: 16px 26px;
+  background: var(--color-raised);
+  border-top: 1px solid var(--color-border);
+}
+
+.backlinksLabel {
+  margin-bottom: 10px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-label);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-fg-dim);
+}
+
+.backlinksList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.backlink {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 11px;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+  cursor: pointer;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease;
+}
+
+.backlink:hover {
+  border-color: var(--color-primary-bright);
+}
+
+.backlinkIcon {
+  color: var(--color-primary-bright);
+}
+
+.empty {
+  padding: 60px 26px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+  text-align: center;
+}
+
+.error {
+  margin: 26px;
+}
+
+/* Скелетоны */
+.skeleton {
+  display: block;
+}
+
+.skeletonHead {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 26px 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.skeletonTags {
+  display: flex;
+  gap: 6px;
+}
+
+.skeletonBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px 26px;
+}
+
+.skeletonParagraph {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}

@@ -1,0 +1,103 @@
+.menu {
+  position: relative;
+  display: inline-flex;
+
+  /* Компонент-специфичные размеры — локальными переменными, без «магии» */
+  --menu-panel-min-width: 200px;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  z-index: var(--z-dropdown);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: var(--menu-panel-min-width);
+  padding: var(--space-2);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+.alignEnd {
+  right: 0;
+  left: auto;
+}
+
+.item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-sans), sans-serif;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fg);
+  text-align: left;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.item:hover,
+.item:focus-visible {
+  background-color: var(--color-raised);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.itemIcon {
+  flex: none;
+  color: var(--color-fg-muted);
+}
+
+.danger {
+  color: var(--color-danger);
+}
+
+.danger .itemIcon {
+  color: var(--color-danger);
+}
+
+/* Основное действие меню — зелёная кнопка по центру (напр. «Открыть раздел»). */
+.primary {
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  color: #fff;
+  background-color: var(--color-primary);
+}
+
+.primary:hover,
+.primary:focus-visible {
+  color: #fff;
+  background-color: var(--color-primary);
+  filter: brightness(1.08);
+}
+
+.primary .itemIcon {
+  color: #fff;
+}
+
+/* Вторичное действие — обведённая кнопка по центру (напр. «Личный кабинет»). */
+.bordered {
+  justify-content: center;
+  padding: 10px var(--space-3);
+  border: 1px solid var(--color-border-strong);
+}
+
+.bordered:hover,
+.bordered:focus-visible {
+  background-color: var(--color-raised);
+  border-color: var(--color-fg-dim);
+}

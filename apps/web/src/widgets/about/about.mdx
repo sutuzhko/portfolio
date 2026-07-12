@@ -1,0 +1,67 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './about.stories';
+
+<Meta of={Stories} />
+
+# About
+
+Секция «Обо мне» главной (макет `design/redesign` → ABOUT) — заголовок `// обо мне`
+и текст-био в несколько абзацев со ссылками.
+
+---
+
+## Анатомия
+
+- `SectionLabel` (`// обо мне`) + `.prose` с Markdown через `react-markdown`.
+- Ссылки открываются в новой вкладке (`target="_blank" rel="noopener noreferrer"`);
+  сырой HTML не рендерится (безопасно по умолчанию).
+- Био — `profile.bioMarkdown` (локализовано); пока грузится — скелетон-абзацы.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Состояния и края
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Короткое био
+
+<Canvas of={Stories.ShortBio} />
+
+### Мобильная раскладка
+
+Ширина текста ограничена (`--about-max-width`); на узких экранах абзацы занимают всю
+ширину.
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовок секции — `<h2>` (`SectionLabel`).
+- Внешние ссылки безопасны: `rel="noopener noreferrer"`; на время загрузки контейнер —
+  `aria-busy`/`aria-live`.
+
+## Связанные компоненты
+
+- [`SectionLabel`](?path=/docs/shared-primitives-sectionlabel--docs) / [`Skeleton`](?path=/docs/shared-primitives-skeleton--docs) — из чего собрана.
+- `Widgets/PageIntro` — короткое интро на других экранах (тоже серверный текст).
+
+---
+
+# Ответственность
+
+About отвечает за отображение и типографику био. **Не отвечает** за загрузку профиля
+(получает `bioMarkdown`/`isLoading` пропсами) и за разметку контента — её задаёт автор
+в CMS через Markdown.

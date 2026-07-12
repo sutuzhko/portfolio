@@ -1,0 +1,23 @@
+services:
+  db:
+    # Закреплено на локально закешированный образ, т.к. реестр Docker сейчас недоступен (DNS).
+    # Когда доступ к registry восстановится — можно вернуть postgres:17-alpine.
+    image: postgres:16.0-alpine
+    container_name: portfolio-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: portfolio
+    ports:
+      - '5432:5432'
+    volumes:
+      - portfolio-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d portfolio']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  portfolio-db-data:

@@ -1,0 +1,60 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+}
+
+.empty {
+  padding: 38px 24px;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-panel);
+}
+
+.emptyMarker {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-small);
+  color: var(--color-terminal-error);
+}
+
+.emptyTitle {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  color: var(--color-fg);
+}
+
+.emptyDesc {
+  margin: 4px 0 0;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-muted);
+}
+
+.emptyButton {
+  margin-top: 18px;
+  padding: 11px 18px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  cursor: pointer;
+  background: var(--color-primary);
+  border: 0;
+  border-radius: var(--radius-button);
+}
+
+.emptyButton:hover {
+  filter: brightness(1.08);
+}
+
+.emptyButton:focus-visible {
+  outline: 2px solid var(--color-primary-bright);
+  outline-offset: 2px;
+}
+
+/* Мобильный: одна колонка (--bp-md 768) */
+@media (width <= 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

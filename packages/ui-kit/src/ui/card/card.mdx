@@ -1,0 +1,109 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './card.stories';
+
+<Meta of={Stories} />
+
+# Card
+
+Контейнер-карточка на поверхности: фон, рамка, скругление, отступ. Базовый
+строительный блок раскладки экранов.
+
+---
+
+## Анатомия
+
+- Корень — `<div>` с поверхностью и рамкой; атрибуты пробрасываются прозрачно.
+- `padding` (`none`/`md`/`lg`) — внутренний отступ; `interactive` — hover-подъём.
+- Содержимое и его раскладку задаёт потребитель.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Отступы
+
+<Canvas of={Stories.Paddings} />
+
+### Интерактивная
+
+<Canvas of={Stories.Interactive} />
+
+### В контексте
+
+<Canvas of={Stories.Composed} />
+
+---
+
+# Когда использовать
+
+- группировка связанного контента на поверхности;
+- карточка проекта, опыта, навыка;
+- контейнер `padding="none"` со своей раскладкой (например, заполняющая ссылка).
+
+# Когда **не** использовать
+
+`interactive` даёт только визуальный подъём — **семантику клика он не добавляет**.
+Для кликабельной карточки оберните содержимое в ссылку/кнопку.
+
+<Canvas of={Stories.InteractiveLink} />
+
+```tsx
+// ❌ Плохо — клик на div без роли и клавиатуры
+<Card interactive onClick={open}>…</Card>
+
+// ✅ Хорошо
+<Card interactive padding="none">
+  <Link to={href} className={fillCardClass}>…</Link>
+</Card>
+```
+
+Для оконной семантики (шапка со светофором) используйте `Window`, а не голую `Card`.
+
+---
+
+## Доступность
+
+- Карточка сама по себе нейтральна (`<div>`) — вся клавиатура/фокус приходят от
+  вложенной ссылки/кнопки.
+- Не вешайте `role="button"`/`onClick` на `Card`: это ловушка без фокуса и клавиатуры.
+
+## Токены
+
+`--surface`/`--color-border` (поверхность и рамка), `--radius-card`, `--shadow-*`
+(подъём в `interactive`), отступы — `--space-*`.
+
+## Связанные компоненты
+
+- [`Window`](?path=/docs/shared-components-window--docs) — карточка + оконный хром.
+- [`Skeleton`](?path=/docs/shared-primitives-skeleton--docs) — заглушка карточки при загрузке.
+
+---
+
+# Ответственность
+
+Card отвечает за поверхность, рамку, скругление, отступ и визуальный hover в
+`interactive`. **Не отвечает** за семантику клика и навигацию, собственную раскладку
+содержимого и оконный хром (это `Window`).
+
+---
+
+# Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<Card interactive>
+  <Heading level="h3">{project.title}</Heading>
+  <Text tone="muted" size="small">{project.summary}</Text>
+</Card>
+`}
+/>

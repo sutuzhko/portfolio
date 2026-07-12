@@ -1,0 +1,49 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './image-cropper.stories';
+
+<Meta of={Stories} />
+
+# Shared / components / ImageCropper
+
+Кадрирование **квадратной** области изображения перетаскиванием и масштабом.
+Картинка всегда покрывает вьюпорт (без зазоров), круглая маска показывает, как
+результат будет выглядеть скруглённым аватаром, сетка «правило третей» помогает
+кадрировать.
+
+Компонент отдаёт наружу `CropRect { x, y, size }` — квадрат в пикселях исходного
+изображения (для серверного `cropX/Y/Width/Height`). Вычисления вынесены в чистый
+`crop-math` и покрыты юнит-тестами.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Default} />
+
+<Controls />
+
+---
+
+## Возможности
+
+- Перетаскивание (pointer events + `touch-action: none` для тача).
+- Масштаб ползунком и кнопками − / +.
+- `onChange` вызывается при загрузке, зуме и сдвиге — родитель хранит последний кадр.
+
+## Доступность
+
+- Ползунок и кнопки масштаба имеют `aria-label`.
+- Картинка декоративна (`alt=""`); перетаскивание не выделяет и не тянет изображение.
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+const [crop, setCrop] = useState<CropRect | null>(null);
+
+<ImageCropper src={objectUrl} zoomLabel="Масштаб" onChange={setCrop} />
+// crop → { x, y, size } в пикселях исходника → cropX/Y/Width/Height
+`}
+/>

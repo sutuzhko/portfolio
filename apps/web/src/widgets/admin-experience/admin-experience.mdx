@@ -1,0 +1,60 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './admin-experience.stories';
+
+<Meta of={Stories} />
+
+# Widgets / AdminExperience
+
+Вкладка «Опыт работы» — **список** мест работы. Добавление и правка ведут на
+отдельные детальные маршруты (`/admin/experience/:locale/new` и `/:id`), поэтому
+форма живёт на своём URL, а смена локали пересобирает её на данных нужного языка.
+Форма документируется отдельно — `Widgets/AdminExperience/Form`.
+
+`AdminExperienceView` презентационный: список, значок «сейчас», удаление с
+подтверждением. Контейнер `AdminExperience` по детальному сегменту маршрута
+показывает список или форму и дергает мутации (тег `Experience` → публичный экран
+опыта обновляется).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Default} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Локаль EN
+
+<Canvas of={Stories.English} />
+
+### Пустой список
+
+<Canvas of={Stories.Empty} />
+
+---
+
+## Ответственность
+
+Список и удаление. **Не отвечает** за форму (отдельный маршрут/компонент),
+загрузку/мутации (контейнер) и оболочку вкладок (`pages/admin`).
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<AdminExperienceView
+  items={items}
+  locale={locale}
+  isBusy={isBusy}
+  onAdd={() => navigateDetail('new')}
+  onEdit={(id) => navigateDetail(id)}
+  onDelete={(id) => remove(id)}
+/>
+`}
+/>

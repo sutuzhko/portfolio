@@ -1,0 +1,48 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './admin-page.stories';
+
+<Meta of={Stories} />
+
+# Pages / Admin
+
+Личный кабинет / CMS (`/admin`, макет `~/admin`): шапка, полоса вкладок и панель
+активной вкладки. Маршрут за гардом `RequireAuth`.
+
+Документируется **презентационная** оболочка `AdminPageView`; контейнер `AdminPage`
+держит активную вкладку и подставляет её контент (виджеты `admin-*`).
+
+---
+
+## Playground
+
+<Canvas of={Stories.Default} />
+
+<Controls />
+
+---
+
+## Архитектура
+
+- **`AdminPage`** (контейнер) — состояние активной вкладки, навигация, маппинг
+  `ADMIN_TABS` → контент вкладки.
+- **`AdminPageView`** — шапка (`~/admin`, «Личный кабинет»), UI-kit [`Tabs`](?path=/docs/shared-components-tabs--docs)
+  (`role=tablist`) и `role=tabpanel` с контентом.
+
+Вкладки растут по мере готовности: сейчас — «Профиль» ([`AdminProfile`](?path=/docs/widgets-adminprofile--docs)).
+
+## Доступность
+
+- Полоса вкладок — `role=tablist` с клавиатурой (UI-kit `Tabs`); контент — `role=tabpanel`
+  с доступным именем активной вкладки.
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+{ element: <RequireAuth />, children: [{ path: '/admin', Component: AdminPage }] }
+`}
+/>

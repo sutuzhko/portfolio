@@ -1,0 +1,117 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card {
+  padding: 20px 22px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+}
+
+.label,
+.labelGap {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-primary-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.label {
+  margin: 0 0 14px;
+}
+
+.labelGap {
+  margin: 20px 0 12px;
+}
+
+.eduList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.eduDegree {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg);
+}
+
+.eduPlace {
+  margin-top: 2px;
+  font-size: var(--font-size-small);
+  color: var(--color-fg-muted);
+}
+
+.eduPeriod {
+  margin-top: 3px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  color: var(--color-fg-dim);
+}
+
+.langList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.langHead {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  color: var(--color-fg);
+}
+
+.langLevel {
+  font-family: var(--font-mono), monospace;
+  color: var(--color-fg-muted);
+}
+
+.langTrack {
+  height: 6px;
+  overflow: hidden;
+  background: var(--color-raised);
+  border-radius: var(--radius-sm);
+}
+
+.langFill {
+  height: 100%;
+  background: var(--color-primary-bright);
+  border-radius: var(--radius-sm);
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.skillTag {
+  padding: 6px 11px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--font-size-mono-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fg);
+  background: var(--color-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+}
+
+/* Мобильный: одна колонка (--bp-md 768) */
+@media (width <= 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

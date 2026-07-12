@@ -1,0 +1,171 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  api:
+    name: API · lint · build · test · contract
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portfolio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d portfolio"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/portfolio?schema=public
+      JWT_ACCESS_SECRET: ci-access-secret
+      JWT_REFRESH_SECRET: ci-refresh-secret
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin12345
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.11.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Prisma generate
+        run: pnpm --filter @portfolio/api prisma:generate
+
+      - name: Lint
+        run: pnpm --filter @portfolio/api lint:check
+
+      - name: Build (api + contract)
+        run: |
+          pnpm --filter @portfolio/api build
+          pnpm --filter @portfolio/contract build
+
+      # Контракт в репозитории должен совпадать с генерируемым из кода.
+      # Сгенерированные файлы прогоняем через prettier, т.к. в репозитории они
+      # отформатированы pre-commit хуком.
+      - name: Contract is up to date
+        run: |
+          pnpm contract:generate
+          pnpm exec prettier --write "packages/contract/openapi.json" "packages/contract/src/generated/schema.ts"
+          git diff --exit-code -- packages/contract/openapi.json packages/contract/src/generated/schema.ts
+
+      - name: Migrate + seed
+        run: |
+          pnpm --filter @portfolio/api exec prisma migrate deploy
+          pnpm --filter @portfolio/api prisma:seed
+
+      - name: Unit tests
+        run: pnpm --filter @portfolio/api test
+
+      - name: E2E tests
+        run: pnpm --filter @portfolio/api test:e2e
+
+  ui-kit:
+    name: UI Kit · lint · test · build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.11.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # Истории пакета прогоняются в реальном Chromium (Vitest browser mode).
+      - name: Install Chromium
+        run: pnpm --filter @sutuzhko/ui-kit exec playwright install --with-deps chromium
+
+      - name: Lint
+        run: |
+          pnpm --filter @sutuzhko/ui-kit lint
+          pnpm --filter @sutuzhko/ui-kit lint:styles
+
+      - name: Typecheck
+        run: pnpm --filter @sutuzhko/ui-kit typecheck
+
+      - name: Tests (unit + stories)
+        run: pnpm --filter @sutuzhko/ui-kit test
+
+      - name: Build library + Storybook
+        run: |
+          pnpm --filter @sutuzhko/ui-kit build
+          pnpm --filter @sutuzhko/ui-kit build-storybook
+
+  web:
+    name: Web · lint · test · build · e2e
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.11.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # Фронт типизируется от собранного контракта.
+      - name: Build contract
+        run: pnpm --filter @portfolio/contract build
+
+      # Нужен и историям (Vitest browser mode), и e2e.
+      - name: Install Chromium
+        run: pnpm --filter @portfolio/web exec playwright install --with-deps chromium
+
+      - name: Lint
+        run: |
+          pnpm --filter @portfolio/web lint
+          pnpm --filter @portfolio/web lint:styles
+
+      - name: Typecheck
+        run: pnpm --filter @portfolio/web typecheck
+
+      - name: Tests (unit + stories)
+        run: pnpm --filter @portfolio/web test
+
+      - name: Build
+        run: pnpm --filter @portfolio/web build
+
+      # E2E собирает прод-сборку и поднимает preview с MSW-моками (см. playwright.config.ts).
+      - name: E2E tests
+        run: pnpm --filter @portfolio/web test:e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/test-results
+          retention-days: 7

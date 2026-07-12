@@ -1,0 +1,66 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './stack.stories';
+
+<Meta of={Stories} />
+
+# Stack
+
+Секция технологического стека главной (макет `design/redesign` → STACK) — заголовок
+`// стек` и карточки-слои (Frontend / Backend / Tooling), каждая со списком меток
+технологий.
+
+---
+
+## Анатомия
+
+- `SectionLabel` (`// стек`, локализуется) + грид карточек-слоёв.
+- Технологии приходят с бэкенда (`entities/technology`, поле `category`) и группируются
+  по слою хелпером `groupTechnologies`; метки — `Tag`.
+- Пока грузятся — `Skeleton` карточек.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Состояния и края
+
+### Ожидание данных
+
+<Canvas of={Stories.Loading} />
+
+### Пустой стек
+
+<Canvas of={Stories.Empty} />
+
+### Мобильная раскладка
+
+Грид слоёв сжимается 3 → 2 → 1 на `--bp-lg` (1024) и `--bp-md` (768); метки внутри
+карточки переносятся по ширине.
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовок секции — `<h2>` (`SectionLabel`), встроен в порядок заголовков страницы.
+- На время загрузки грид помечен `aria-busy`/`aria-live`.
+
+## Связанные компоненты
+
+- [`SectionLabel`](?path=/docs/shared-primitives-sectionlabel--docs) / [`Card`](?path=/docs/shared-primitives-card--docs) / [`Tag`](?path=/docs/shared-primitives-tag--docs) — из чего собрана.
+
+---
+
+# Ответственность
+
+Stack отвечает за раскладку заголовка и карточек-слоёв и скелетон загрузки. **Не
+отвечает** за источник данных стека (`entities/technology`, запрос делает контейнер
+страницы) и за группировку (хелпер `groupTechnologies`).

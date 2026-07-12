@@ -1,0 +1,78 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './open-to-work.stories';
+
+<Meta of={Stories} />
+
+# OpenToWork
+
+Баннер доступности к работе на главной (макет `design/redesign` → NOW / OPEN TO WORK),
+в духе LinkedIn «Open to work» — точка-индикатор, статус, короткое описание и переход
+к разделу «Опыт».
+
+---
+
+## Анатомия
+
+- `<section aria-label>` с точкой-индикатором, текстом (заголовок + описание) и кнопкой.
+- Статус — `profile.availability` (`ACTIVE`/`OPEN`/`NOTLOOKING`): текст из i18n
+  (`home.now.<key>`), цвет/пульсация точки — CSS-модификатор по тому же ключу.
+- Пока грузится — скелетон той же высоты.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Playground} />
+
+<Controls />
+
+---
+
+## Все возможности
+
+### Все статусы сразу
+
+<Canvas of={Stories.AllStatuses} />
+
+### Отдельные статусы
+
+Точка меняет цвет по статусу; пульсирующий ореол (анимированная тень, уважает
+`prefers-reduced-motion`) — только для активного поиска.
+
+<Canvas of={Stories.Active} />
+<Canvas of={Stories.NotLooking} />
+
+---
+
+## Состояния и края
+
+### Загрузка
+
+<Canvas of={Stories.Loading} />
+
+### Мобильная раскладка
+
+Кнопка переносится под текст на узких экранах (`flex-wrap`).
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Точка декоративна (`aria-hidden`) — статус несёт **текст**, не только цвет.
+- Секция подписана (`aria-label`); на время загрузки — `aria-busy`/`aria-live`.
+- Анимация пульсации отключается при `prefers-reduced-motion`.
+
+## Связанные компоненты
+
+- [`Button`](?path=/docs/shared-primitives-button--docs) / [`Skeleton`](?path=/docs/shared-primitives-skeleton--docs) — из чего собран.
+
+---
+
+# Ответственность
+
+OpenToWork отвечает за отображение статуса доступности и переход к опыту. **Не
+отвечает** за загрузку профиля — получает `availability`/`isLoading` пропсами от
+страницы.

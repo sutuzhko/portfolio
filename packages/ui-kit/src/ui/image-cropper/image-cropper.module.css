@@ -1,0 +1,98 @@
+.cropper {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+
+.viewport {
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  background: var(--color-bg);
+  border-radius: var(--radius-card);
+
+  /* Перетаскивание пальцем не должно скроллить страницу. */
+  touch-action: none;
+}
+
+.viewport:active {
+  cursor: grabbing;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  /* Гасим глобальный сброс `img { max-width: 100% }`: при cover-масштабе картинка
+     шире вьюпорта, и клэмп ужимал её, оставляя тёмный зазор в кадре. */
+  max-width: none;
+  max-height: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Круглая маска: затемняет всё вне круга и рисует тонкое кольцо — превью аватара. */
+.mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 2px solid color-mix(in srgb, #fff 65%, transparent);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 9999px color-mix(in srgb, var(--color-bg) 55%, transparent);
+}
+
+/* Сетка «правило третей» — визуальный ориентир кадрирования. */
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, #fff 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, #fff 22%, transparent) 1px, transparent 1px);
+  background-position:
+    0 33.33%,
+    33.33% 0;
+  background-repeat: repeat-x, repeat-y;
+  background-size:
+    100% 33.34%,
+    33.34% 100%;
+}
+
+.zoomRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+
+.zoomBtn {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.zoomBtn:hover,
+.zoomBtn:focus-visible {
+  color: var(--color-fg);
+  border-color: var(--color-primary-bright);
+}
+
+.slider {
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}

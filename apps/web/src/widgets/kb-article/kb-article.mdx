@@ -1,0 +1,65 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './kb-article.stories';
+
+<Meta of={Stories} />
+
+# Widgets / KbArticle
+
+Читатель статьи базы знаний: хлебные крошки, теги, тело в Markdown и блок бэклинков.
+**Презентационный** — состояние приходит пропами.
+
+Вики-ссылки `[[slug]]` внутри текста кликабельны (внутренний переход), внешние
+ссылки открываются в новой вкладке. Бэклинки (кто ссылается на статью) считает
+бэкенд.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Возможности
+
+### Вики-ссылка в тексте
+
+<Canvas of={Stories.WithWikilink} />
+
+### Без выбора / загрузка / ошибка
+
+<Canvas of={Stories.Empty} />
+<Canvas of={Stories.Loading} />
+<Canvas of={Stories.ErrorState} />
+
+---
+
+## Доступность
+
+- Тело — семантический Markdown; вики-ссылка — `<button>` (внутренний переход, не URL).
+- Внешние ссылки — `target="_blank"` + `rel="noopener noreferrer"`.
+- Скелетон объявляет загрузку через `aria-busy`/`aria-live`.
+
+## Ответственность
+
+Отвечает за отображение статьи и переходы по связям (вики-ссылки, бэклинки).
+**Не отвечает** за загрузку статьи и выбор в дереве (это страница и `KbTree`).
+
+---
+
+## Пример использования
+
+<Source
+  language="tsx"
+  code={`
+<KbArticle
+  article={article}
+  hasSelection={slug !== undefined}
+  isLoading={isFetching}
+  onNavigate={setSlug}
+/>
+`}
+/>

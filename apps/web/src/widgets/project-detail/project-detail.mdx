@@ -1,0 +1,72 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './project-detail.stories';
+
+<Meta of={Stories} />
+
+# ProjectDetail
+
+Деталь проекта (макет `design/redesign` → PROJECT DETAIL): шапка-баннер с градиентным
+фоном (переиспользует `entities/project` → [`ProjectBackground`](?path=/docs/entities-project-background--docs)),
+основная колонка (описание в Markdown, список «что внутри», галерея) и боковая
+карточка (роль, период, стек, ссылки).
+
+---
+
+## Анатомия
+
+- **Баннер** — `ProjectBackground` + заголовок/категория.
+- **Кнопка «▶ Запустить»** — у запускаемого проекта (`runnable` + `embedUrl`):
+  открывает [`Runner`](?path=/docs/widgets-runner--docs), который встраивает проект
+  через iframe. Рядом — подсказка управления (`runHint`).
+- **Тело** — `bodyMarkdown` (react-markdown) + буллеты «что внутри» + галерея;
+  галерея и «что внутри» рендерятся **только при наличии данных**.
+- **Сайдбар** — роль, период, стек, внешние ссылки.
+- Пока данных нет — скелетон той же раскладки.
+
+---
+
+## Playground
+
+<Canvas of={Stories.Loaded} />
+
+<Controls />
+
+---
+
+## Состояния
+
+### Запускаемый проект
+
+Кнопка «▶ Запустить» появляется только у проекта с `runnable` и `embedUrl`.
+
+<Canvas of={Stories.Runnable} />
+
+### Ожидание данных
+
+<Canvas of={Stories.Loading} />
+
+### Мобильная раскладка
+
+Сайдбар складывается под основную колонку.
+
+<Canvas of={Stories.Mobile} />
+
+---
+
+## Доступность
+
+- Заголовок проекта — `h1`; секции тела — семантические заголовки.
+- Внешние ссылки открываются безопасно (`rel="noopener"`); баннер декоративен.
+
+## Связанные компоненты
+
+- [`ProjectBackground`](?path=/docs/entities-project-background--docs) — фон баннера.
+- `Pages/Project` — контейнер, который запрашивает деталь по slug.
+
+---
+
+# Ответственность
+
+ProjectDetail отвечает за раскладку и отображение детали. **Не отвечает** за запрос
+проекта и навигацию — это страница `ProjectPage`.

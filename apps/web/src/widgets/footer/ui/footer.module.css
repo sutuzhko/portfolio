@@ -1,0 +1,33 @@
+/* Полоса — во всю ширину экрана; ограничен по ширине только контент (.inner). */
+.footer {
+  border-top: 1px solid var(--color-border);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--container-page);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-6);
+}
+
+/* Акцентный ярлык в подсказке — как в макете (зелёный текст, не «клавиша») */
+.accent {
+  color: var(--color-primary-bright);
+}
+
+/* Скелетон имени владельца в копирайте — в строку с «© год». */
+.ownerSkeleton {
+  display: inline-block;
+  vertical-align: -0.15em;
+}
+
+/* Планшет/мобильный: ужимаем боковые отступы (--bp-md 768) */
+@media (width <= 768px) {
+  .inner {
+    padding: var(--space-5) var(--space-4);
+  }
+}
