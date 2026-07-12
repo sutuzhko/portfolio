@@ -1,7 +1,5 @@
-import { useTranslation } from 'react-i18next';
-
 import type { ProjectDetail as ProjectDetailData } from '@/entities/project';
-import { Button, Skeleton } from '@sutuzhko/ui-kit';
+import { Skeleton } from '@sutuzhko/ui-kit';
 
 import { ProjectDetailAside } from './project-detail-aside';
 import { ProjectDetailBanner } from './project-detail-banner';
@@ -22,8 +20,6 @@ export interface ProjectDetailProps {
  * данные приходят пропсом (страница оркеструет запрос), пока грузятся — скелетон.
  */
 export function ProjectDetail({ project, isLoading, onRun }: ProjectDetailProps) {
-  const { t } = useTranslation();
-
   if (isLoading || !project) {
     return <ProjectDetailSkeleton />;
   }
@@ -37,14 +33,6 @@ export function ProjectDetail({ project, isLoading, onRun }: ProjectDetailProps)
         subtitle={project.subtitle ?? project.description}
         color={project.tileColor}
       />
-      {canRun ? (
-        <div className={styles.runBar}>
-          <Button variant="primary" onClick={onRun}>
-            <span aria-hidden="true">▶</span> {t('project.run')}
-          </Button>
-          {project.runHint ? <span className={styles.runHint}>{project.runHint}</span> : null}
-        </div>
-      ) : null}
       <div className={styles.grid}>
         <ProjectDetailBody
           bodyMarkdown={project.bodyMarkdown}
@@ -57,6 +45,8 @@ export function ProjectDetail({ project, isLoading, onRun }: ProjectDetailProps)
           technologies={project.technologies}
           contributors={project.contributors}
           links={project.links}
+          onRun={canRun ? onRun : undefined}
+          runHint={project.runHint}
         />
       </div>
     </div>

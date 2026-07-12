@@ -24,10 +24,10 @@ const projects: ProjectListItem[] = [
     primaryLanguage: 'TypeScript',
     technologies: ['TypeScript', 'React', 'SCSS', 'Redux', 'Webpack'],
     contributors: [
-      { name: 'Богдан Сутужко', image: null, color: '#238636' },
-      { name: 'Алексей Мартынов', image: null, color: '#8957e5' },
-      { name: 'Мария Волкова', image: null, color: '#1f6feb' },
-      { name: 'Иван Петров', image: null, color: '#a371f7' },
+      { name: 'Богдан Сутужко', image: null, color: '#238636', link: null },
+      { name: 'Алексей Мартынов', image: null, color: '#8957e5', link: null },
+      { name: 'Мария Волкова', image: null, color: '#1f6feb', link: null },
+      { name: 'Иван Петров', image: null, color: '#a371f7', link: null },
     ],
   },
 ];

@@ -5,6 +5,12 @@
   padding: var(--space-4) 18px;
 }
 
+/* Сортировка — компактный селект под строкой поиска, шире не растягиваем. */
+.sort {
+  max-width: 220px;
+  margin-top: var(--space-3);
+}
+
 .search {
   display: flex;
   align-items: center;

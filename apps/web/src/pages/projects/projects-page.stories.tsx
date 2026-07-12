@@ -73,6 +73,27 @@ export const Failed: Story = {
   },
 };
 
+// 15 проектов (>12) — чтобы показать пагинацию: 12 на первой странице, 3 на второй.
+const manyProjects = Array.from({ length: 15 }, (_, index) => {
+  const base = mockProjects[index % mockProjects.length];
+  return {
+    ...base,
+    slug: `project-${index + 1}`,
+    title: `${base?.title ?? 'Проект'} ${index + 1}`,
+  };
+});
+
+export const Paginated: Story = {
+  name: 'Пагинация (>12)',
+  args: { projects: manyProjects },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // При 15 проектах появляется навигация по страницам с кнопкой «2».
+    await expect(canvas.getByRole('navigation', { name: /Страницы/ })).toBeInTheDocument();
+    await expect(canvas.getByRole('button', { name: '2' })).toBeInTheDocument();
+  },
+};
+
 export const Mobile: Story = {
   name: 'Мобильная раскладка',
   parameters: { viewport: { defaultViewport: 'mobile1' } },

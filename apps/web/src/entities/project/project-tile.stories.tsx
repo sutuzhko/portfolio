@@ -13,10 +13,10 @@ const project: ProjectTileData = {
   runCommand: null,
   technologies: ['TypeScript', 'React', 'SCSS', 'Redux', 'Webpack'],
   contributors: [
-    { name: 'Богдан', image: null, color: '#238636' },
-    { name: 'Алексей', image: null, color: '#8957e5' },
-    { name: 'Мария', image: null, color: '#1f6feb' },
-    { name: 'Иван', image: null, color: '#a371f7' },
+    { name: 'Богдан', image: null, color: '#238636', link: null },
+    { name: 'Алексей', image: null, color: '#8957e5', link: null },
+    { name: 'Мария', image: null, color: '#1f6feb', link: null },
+    { name: 'Иван', image: null, color: '#a371f7', link: null },
   ],
 };
 
@@ -59,7 +59,7 @@ export const Runnable: Story = {
       runnable: true,
       runCommand: 'run 2048',
       technologies: ['React', 'TypeScript'],
-      contributors: [{ name: 'Богдан', image: null, color: '#238636' }],
+      contributors: [{ name: 'Богдан', image: null, color: '#238636', link: null }],
     },
   },
 };

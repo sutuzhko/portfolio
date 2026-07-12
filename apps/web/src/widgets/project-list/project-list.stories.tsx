@@ -21,10 +21,10 @@ const projects: ProjectListItem[] = [
     primaryLanguage: 'TypeScript',
     technologies: ['TypeScript', 'React', 'SCSS', 'Redux', 'Webpack'],
     contributors: [
-      { name: 'Богдан', image: null, color: '#238636' },
-      { name: 'Алексей', image: null, color: '#8957e5' },
-      { name: 'Мария', image: null, color: '#1f6feb' },
-      { name: 'Иван', image: null, color: '#a371f7' },
+      { name: 'Богдан', image: null, color: '#238636', link: null },
+      { name: 'Алексей', image: null, color: '#8957e5', link: null },
+      { name: 'Мария', image: null, color: '#1f6feb', link: null },
+      { name: 'Иван', image: null, color: '#a371f7', link: null },
     ],
   },
   {
@@ -41,7 +41,7 @@ const projects: ProjectListItem[] = [
     embedUrl: 'https://sutuzhko.github.io/2048/',
     primaryLanguage: 'TypeScript',
     technologies: ['React', 'TypeScript'],
-    contributors: [{ name: 'Богдан', image: null, color: '#238636' }],
+    contributors: [{ name: 'Богдан', image: null, color: '#238636', link: null }],
   },
   {
     slug: 'deep-focus',
@@ -58,8 +58,8 @@ const projects: ProjectListItem[] = [
     primaryLanguage: 'TypeScript',
     technologies: ['React', 'TypeScript', 'Node'],
     contributors: [
-      { name: 'Богдан', image: null, color: '#238636' },
-      { name: 'Гвозденков', image: null, color: '#db6d28' },
+      { name: 'Богдан', image: null, color: '#238636', link: null },
+      { name: 'Гвозденков', image: null, color: '#db6d28', link: null },
     ],
   },
 ];

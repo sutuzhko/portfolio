@@ -30,7 +30,7 @@ const deepFocus = makeProject({
   title: 'Deep Focus',
   description: 'Pomodoro-трекер',
   technologies: ['React', 'TypeScript'],
-  contributors: [{ name: 'Bogdan', image: null, color: null }],
+  contributors: [{ name: 'Bogdan', image: null, color: null, link: null }],
 });
 
 const uiKit = makeProject({
@@ -38,7 +38,7 @@ const uiKit = makeProject({
   title: 'UI Kit',
   description: 'Библиотека компонентов на Vue',
   technologies: ['Vue', 'Storybook'],
-  contributors: [{ name: 'Anna', image: null, color: null }],
+  contributors: [{ name: 'Anna', image: null, color: null, link: null }],
 });
 
 const projects = [deepFocus, uiKit];

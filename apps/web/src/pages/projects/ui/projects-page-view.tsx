@@ -1,14 +1,19 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ProjectListItem } from '@/entities/project';
 import { ProjectFilterBar, useProjectFilter } from '@/features/project-filter';
 import { useReveal } from '@/shared/lib';
+import { Pagination } from '@/shared/ui';
 import { ErrorState, Heading, Icon, PageIntro } from '@sutuzhko/ui-kit';
 import { ProjectList } from '@/widgets/project-list';
 
 import styles from './projects-page.module.css';
 
 const noop = () => undefined;
+
+// Пагинацию показываем только при > 12 проектов (сетка 3 в ряд ⇒ 4 ряда/страница).
+const PAGE_SIZE = 12;
 
 export interface ProjectsPageViewProps {
   readonly projects?: readonly ProjectListItem[];
@@ -39,6 +44,25 @@ export function ProjectsPageView({
   const { t } = useTranslation();
   const filter = useProjectFilter(projects ?? []);
   const revealRef = useReveal();
+
+  const total = filter.filtered.length;
+  const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const [page, setPage] = useState(1);
+
+  // Смена фильтра/сортировки/набора возвращает на первую страницу.
+  useEffect(() => {
+    setPage(1);
+  }, [filter.state, filter.sortKey]);
+
+  // Если после фильтра страниц стало меньше — не зависаем на пустой странице.
+  useEffect(() => {
+    if (page > pageCount) setPage(pageCount);
+  }, [page, pageCount]);
+
+  const visible = useMemo(
+    () => filter.filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filter.filtered, page],
+  );
 
   if (isError) {
     return (
@@ -80,11 +104,22 @@ export function ProjectsPageView({
       ) : null}
 
       <ProjectList
-        projects={filter.filtered}
+        projects={visible}
         isLoading={isLoading}
         onOpen={onOpenProject}
         onClearFilters={filter.clear}
       />
+
+      {!isLoading ? (
+        <Pagination
+          page={page}
+          pageCount={pageCount}
+          onChange={setPage}
+          ariaLabel={t('projects.pagination.label')}
+          prevLabel={t('projects.pagination.prev')}
+          nextLabel={t('projects.pagination.next')}
+        />
+      ) : null}
     </main>
   );
 }

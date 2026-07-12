@@ -31,13 +31,13 @@ const projects: ProjectListItem[] = [
     slug: 'procharity',
     title: 'Procharity',
     technologies: ['TypeScript', 'React', 'SCSS'],
-    contributors: [{ name: 'Богдан', image: null, color: '#238636' }],
+    contributors: [{ name: 'Богдан', image: null, color: '#238636', link: null }],
   }),
   makeProject({
     slug: 'deep-focus',
     title: 'Deep Focus',
     technologies: ['Vue', 'Node'],
-    contributors: [{ name: 'Гвозденков', image: null, color: '#db6d28' }],
+    contributors: [{ name: 'Гвозденков', image: null, color: '#db6d28', link: null }],
   }),
 ];
 
@@ -61,6 +61,8 @@ const staticFilter: ProjectFilter = {
   techOptions: [],
   contributorOptions: [],
   hasFilters: false,
+  sortKey: 'default',
+  setSortKey: () => undefined,
   setQuery: () => undefined,
   toggleTech: () => undefined,
   toggleContributor: () => undefined,

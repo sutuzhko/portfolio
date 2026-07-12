@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
-import { Icon } from '@sutuzhko/ui-kit';
+import { Icon, Select } from '@sutuzhko/ui-kit';
 
+import { PROJECT_SORT_KEYS } from '../model/sort-projects';
 import type { ProjectFilter } from '../model/use-project-filter';
 
 import { FilterRow, FilterRowSkeleton } from './filter-row';
@@ -41,6 +42,23 @@ export function ProjectFilterBar({ filter, isLoading }: ProjectFilterBarProps) {
           </button>
         ) : null}
       </div>
+
+      <Select
+        className={styles.sort}
+        label={t('projects.sort.label')}
+        value={filter.sortKey}
+        onChange={(event) => {
+          // Значение всегда из PROJECT_SORT_KEYS — находим ключ без приведения типа.
+          const key = PROJECT_SORT_KEYS.find((candidate) => candidate === event.target.value);
+          if (key) filter.setSortKey(key);
+        }}
+      >
+        {PROJECT_SORT_KEYS.map((key) => (
+          <option key={key} value={key}>
+            {t(`projects.sort.${key}`)}
+          </option>
+        ))}
+      </Select>
 
       {isLoading ? (
         <>
