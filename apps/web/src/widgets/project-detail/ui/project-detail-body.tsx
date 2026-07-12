@@ -1,19 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import Markdown, { type Components } from 'react-markdown';
 
 import type { ProjectMedia } from '@/entities/project';
+import { Markdown } from '@/shared/ui';
 
 import styles from './project-detail.module.css';
-
-// Ссылки в описании ведут на внешние ресурсы — открываем в новой вкладке
-// безопасно; `children` пробрасываем явно (иначе jsx-a11y/anchor-has-content).
-const markdownComponents: Components = {
-  a: ({ node: _node, children, ...props }) => (
-    <a {...props} className={styles.proseLink} target="_blank" rel="noopener noreferrer">
-      {children}
-    </a>
-  ),
-};
 
 interface ProjectDetailBodyProps {
   readonly bodyMarkdown: string;
@@ -27,9 +17,7 @@ export function ProjectDetailBody({ bodyMarkdown, bullets, gallery }: ProjectDet
 
   return (
     <div className={styles.body}>
-      <div className={styles.prose}>
-        <Markdown components={markdownComponents}>{bodyMarkdown}</Markdown>
-      </div>
+      <Markdown>{bodyMarkdown}</Markdown>
 
       {bullets.length > 0 ? (
         <div>

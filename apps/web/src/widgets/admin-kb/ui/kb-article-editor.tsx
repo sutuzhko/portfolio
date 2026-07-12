@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { KbMarkdown } from '@/entities/kb';
 import { cn, countDirtyFields } from '@/shared/lib';
-import { SaveBar } from '@/shared/ui';
+import { MarkdownEditor, SaveBar } from '@/shared/ui';
 import { Button, Icon } from '@sutuzhko/ui-kit';
 
 import { type ArticleFormValues, createArticleSchema } from '../model/article-form';
@@ -39,11 +39,9 @@ export function KbArticleEditor({
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isDirty, dirtyFields },
   } = useForm<ArticleFormValues>({ resolver: zodResolver(schema), defaultValues: initial });
-  const [view, setView] = useState<'split' | 'preview'>('split');
-  const body = watch('body');
 
   return (
     <form
@@ -56,22 +54,6 @@ export function KbArticleEditor({
           {t(mode === 'new' ? 'admin.kb.editorNew' : 'admin.kb.editorEdit')}
         </p>
         <div className={styles.editorHeadActions}>
-          <div className={styles.segment} role="group" aria-label="split / preview">
-            <button
-              type="button"
-              className={cn(styles.segmentBtn, view === 'split' && styles.segmentActive)}
-              onClick={() => setView('split')}
-            >
-              {t('admin.kb.split')}
-            </button>
-            <button
-              type="button"
-              className={cn(styles.segmentBtn, view === 'preview' && styles.segmentActive)}
-              onClick={() => setView('preview')}
-            >
-              {t('admin.kb.preview')}
-            </button>
-          </div>
           <Button variant="icon" onClick={onCancel} aria-label={t('admin.close')}>
             <Icon name="close" size={16} />
           </Button>
@@ -111,25 +93,23 @@ export function KbArticleEditor({
         </label>
       </div>
 
-      <div className={cn(styles.editorWork, view === 'preview' && styles.editorPreviewOnly)}>
-        {view === 'split' ? (
-          <div className={styles.editorSource}>
-            <div className={styles.editorPaneLabel}>{t('admin.kb.bodyLabel')}</div>
-            <textarea
-              className={styles.editorTextarea}
-              aria-label={t('admin.kb.bodyLabel')}
-              {...register('body')}
-            />
-          </div>
-        ) : null}
-        <div className={styles.editorPreview}>
-          <div className={styles.editorPaneLabel}>{t('admin.kb.preview')}</div>
-          <div className={styles.editorPreviewBody}>
-            <KbMarkdown source={body} />
-          </div>
-        </div>
-      </div>
-      {errors.body ? <div className={styles.editorBodyError}>{errors.body.message}</div> : null}
+      <Controller
+        control={control}
+        name="body"
+        render={({ field }) => (
+          <MarkdownEditor
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            renderPreview={(source) => <KbMarkdown source={source} />}
+            sourceLabel={t('admin.kb.bodyLabel')}
+            ariaLabel={t('admin.kb.bodyLabel')}
+            splitLabel={t('markdownEditor.split')}
+            previewLabel={t('markdownEditor.preview')}
+            error={errors.body?.message}
+          />
+        )}
+      />
 
       <SaveBar
         visible={isDirty}

@@ -587,31 +587,6 @@
   align-items: center;
 }
 
-.segment {
-  display: flex;
-  padding: 2px;
-  background: var(--color-raised);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-}
-
-.segmentBtn {
-  padding: 5px 11px;
-  font-family: var(--font-mono), monospace;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--color-fg-muted);
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  border-radius: 6px;
-}
-
-.segmentActive {
-  color: var(--color-fg);
-  background: var(--color-surface);
-}
-
 .editorMeta {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -661,65 +636,6 @@
   font-family: var(--font-mono), monospace;
   font-size: 11px;
   color: var(--color-danger);
-}
-
-.editorWork {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 340px;
-}
-
-.editorPreviewOnly {
-  grid-template-columns: 1fr;
-}
-
-.editorSource {
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--color-border);
-}
-
-.editorPaneLabel {
-  padding: 7px 14px;
-  font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
-  color: var(--color-fg-dim);
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.editorTextarea {
-  flex: 1;
-  min-height: 280px;
-  padding: 16px 18px;
-  font-family: var(--font-mono), monospace;
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--color-fg);
-  resize: none;
-  background: transparent;
-  border: 0;
-  outline: none;
-}
-
-.editorPreview {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.editorPreviewBody {
-  flex: 1;
-  padding: 18px 22px;
-  overflow: auto;
-}
-
-.editorBodyError {
-  padding: 10px 20px;
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  color: var(--color-danger);
-  border-top: 1px solid var(--color-border);
 }
 
 /* ---------- Скелетоны ---------- */

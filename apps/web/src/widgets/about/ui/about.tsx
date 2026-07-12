@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import Markdown, { type Components } from 'react-markdown';
 
 import { cn } from '@/shared/lib';
+import { Markdown } from '@/shared/ui';
 import { SectionLabel, Skeleton } from '@sutuzhko/ui-kit';
 
 import styles from './about.module.css';
@@ -14,16 +14,6 @@ export interface AboutProps {
   readonly id?: string;
   readonly className?: string;
 }
-
-// Ссылки в био ведут на внешние ресурсы — открываем в новой вкладке безопасно
-// (`rel="noopener"`). `node` из react-markdown в DOM не пробрасываем.
-const markdownComponents: Components = {
-  a: ({ node: _node, children, ...props }) => (
-    <a {...props} className={styles.link} target="_blank" rel="noopener noreferrer">
-      {children}
-    </a>
-  ),
-};
 
 /**
  * Секция «Обо мне» (макет: ABOUT) — заголовок `// обо мне` и текст-био в Markdown.
@@ -39,9 +29,7 @@ export function About({ bioMarkdown, isLoading, id, className }: AboutProps) {
       {isLoading || !bioMarkdown ? (
         <AboutSkeleton />
       ) : (
-        <div className={styles.prose}>
-          <Markdown components={markdownComponents}>{bioMarkdown}</Markdown>
-        </div>
+        <Markdown className={styles.about}>{bioMarkdown}</Markdown>
       )}
     </section>
   );
@@ -50,7 +38,7 @@ export function About({ bioMarkdown, isLoading, id, className }: AboutProps) {
 function AboutSkeleton() {
   // Три абзаца-заглушки под структуру био (макет: 3 абзаца), высота строк = line-box.
   return (
-    <div className={styles.prose} aria-busy="true" aria-live="polite">
+    <div className={cn(styles.about, styles.skeleton)} aria-busy="true" aria-live="polite">
       {[
         ['100%', '96%', '88%'],
         ['100%', '72%'],

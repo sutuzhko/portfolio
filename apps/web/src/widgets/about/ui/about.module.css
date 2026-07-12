@@ -1,40 +1,20 @@
-.prose {
-  /* Типографика абзаца из макета — локальными переменными, без «магии чисел». */
+/* Обёртка над общим Markdown-рендерером: ограничение ширины из макета.
+   Типографика (размер/интерлиньяж/цвет/отступы) — в общем `.prose`. */
+.about {
+  /* line-box строки нужен скелетону (высота заглушек = высота реальной строки). */
   --about-text-size: 16px;
   --about-line-height: 1.7;
   --about-line-box: calc(var(--about-text-size) * var(--about-line-height));
   --about-max-width: 760px;
 
+  max-width: var(--about-max-width);
+}
+
+/* Скелетон-заглушка структуры (3 абзаца) — своя flex-раскладка. */
+.skeleton {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  max-width: var(--about-max-width);
-  font-size: var(--about-text-size);
-  line-height: var(--about-line-height);
-  color: var(--color-fg);
-}
-
-/* react-markdown рендерит обычные <p>/<strong>; селекторы тегов скоупятся под .prose. */
-.prose p {
-  margin: 0;
-}
-
-.prose strong {
-  font-weight: var(--font-weight-bold);
-  color: var(--color-fg);
-}
-
-.link {
-  color: var(--color-primary-bright);
-
-  /* Подчёркивание по умолчанию — ссылки в тексте должны отличаться не только
-     цветом (a11y: link-in-text-block / WCAG 1.4.1). */
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.link:hover {
-  text-decoration-thickness: 2px;
 }
 
 .skeletonParagraph {

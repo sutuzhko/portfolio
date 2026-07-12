@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
-import Markdown, { type Components } from 'react-markdown';
+import { type Components } from 'react-markdown';
+
+import { Markdown } from '@/shared/ui';
 
 import styles from './kb-markdown.module.css';
 
@@ -29,27 +31,22 @@ export function KbMarkdown({ source, onNavigate }: KbMarkdownProps) {
   const components = useMemo<Components>(
     () => ({
       a: ({ node: _node, href, children, ...props }) => {
-        if (href !== undefined && href.startsWith(WIKI_HREF)) {
-          const slug = href.slice(WIKI_HREF.length);
-          if (onNavigate === undefined) {
-            return <span className={styles.wikilink}>{children}</span>;
-          }
+        // Не-вики ссылка — отдаём обычную внешнюю (стили берёт общий `.prose a`).
+        if (href === undefined || !href.startsWith(WIKI_HREF)) {
           return (
-            <button type="button" className={styles.wikilink} onClick={() => onNavigate(slug)}>
+            <a {...props} href={href} target="_blank" rel="noopener noreferrer">
               {children}
-            </button>
+            </a>
           );
         }
+        const slug = href.slice(WIKI_HREF.length);
+        if (onNavigate === undefined) {
+          return <span className={styles.wikilink}>{children}</span>;
+        }
         return (
-          <a
-            {...props}
-            href={href}
-            className={styles.link}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <button type="button" className={styles.wikilink} onClick={() => onNavigate(slug)}>
             {children}
-          </a>
+          </button>
         );
       },
     }),
@@ -57,8 +54,8 @@ export function KbMarkdown({ source, onNavigate }: KbMarkdownProps) {
   );
 
   return (
-    <div className={styles.prose}>
-      <Markdown components={components}>{prepared}</Markdown>
-    </div>
+    <Markdown className={styles.kb} components={components}>
+      {prepared}
+    </Markdown>
   );
 }
