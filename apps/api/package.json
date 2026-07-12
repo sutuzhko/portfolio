@@ -1,6 +1,6 @@
 {
   "name": "@portfolio/api",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Console Portfolio backend (NestJS) — source of truth for the API contract.",
   "private": true,
   "license": "UNLICENSED",
