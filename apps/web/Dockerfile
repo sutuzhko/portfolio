@@ -23,7 +23,9 @@ RUN pnpm install --frozen-lockfile --filter "@portfolio/web..."
 COPY apps/web apps/web
 COPY packages/contract packages/contract
 COPY packages/ui-kit packages/ui-kit
-RUN pnpm --filter @portfolio/web build
+# Сначала собираем контракт (фронт типизируется от него), затем сам фронт.
+RUN pnpm --filter @portfolio/contract build \
+  && pnpm --filter @portfolio/web build
 
 # ---- runtime: Caddy раздаёт статику и проксирует API ----
 FROM caddy:2-alpine
