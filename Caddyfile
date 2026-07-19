@@ -27,3 +27,13 @@ sutuzhko.space, www.sutuzhko.space {
 	@html path /index.html
 	header @html Cache-Control "no-cache"
 }
+
+# ВРЕМЕННО: тестовый стенд baby-tracker (закрытая бета) на этом же сервере — отдаём
+# поддомен на контейнер baby-web из стека /home/deploy/baby-tracker. Внешний HTTPS и
+# сертификат берёт на себя этот Caddy; портфолио отдаётся как раньше.
+# 🔴 По окончании теста — удалить весь этот блок и запушить (маршрут и сертификат
+# отпадут). Полная очистка сервера от baby-tracker — в docs/DEPLOY_TEST.md репозитория
+# baby-tracker.
+baby-test.sutuzhko.space {
+	reverse_proxy baby-web:80
+}
