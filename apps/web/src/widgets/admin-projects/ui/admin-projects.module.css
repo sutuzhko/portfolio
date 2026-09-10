@@ -351,13 +351,54 @@
   border: 0;
 }
 
-/* Управление участниками: чип-выбор + карандаш правки; форма под чипами. */
+/* Управление участниками: ручка перетаскивания + чип-выбор + карандаш правки; форма под чипами. */
 
-/* Чип и кнопка правки — единый блок (карандаш примыкает к чипу). */
+/* Ручка, чип и кнопка правки — единый блок (переносится перетаскиванием целиком). */
 .chipWrap {
   display: inline-flex;
   gap: 3px;
   align-items: center;
+}
+
+/* Ручка перетаскивания участника: слушатели dnd-kit только на ней, поэтому чип и
+   карандаш остаются обычными кнопками. */
+.chipHandle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1px;
+  color: var(--color-fg-dim);
+  cursor: grab;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+
+  /* чтобы тач-перетаскивание не прокручивало страницу */
+  touch-action: none;
+}
+
+.chipHandle:hover:not(:disabled) {
+  color: var(--color-fg-muted);
+}
+
+.chipHandle:active:not(:disabled) {
+  cursor: grabbing;
+}
+
+.chipHandle:disabled {
+  cursor: default;
+  opacity: 50%;
+}
+
+.chipHandle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* Пока участника тащат — приподнимаем и подсвечиваем. */
+.chipDragging {
+  z-index: 1;
+  opacity: 65%;
+  box-shadow: var(--shadow);
 }
 
 /* Чип коллаборатора: заливка цветом аватара (или нейтральная), приглушён когда

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import { LocalizedTextDto, LocalizedTextInput } from '../../../common/i18n/localized.dto';
 
@@ -45,10 +45,11 @@ export class CreateContributorDto {
   @IsString()
   link?: string;
 
+  // Дробный и отрицательный order — норма: админка ставит участника между соседями
+  // (или перед первым), не перенумеровывая остальных (колонка — Float).
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsNumber()
   order?: number;
 }
 
@@ -74,9 +75,10 @@ export class UpdateContributorDto {
   @IsString()
   link?: string;
 
+  // Дробный и отрицательный order — норма: админка ставит участника между соседями
+  // (или перед первым), не перенумеровывая остальных (колонка — Float).
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsNumber()
   order?: number;
 }

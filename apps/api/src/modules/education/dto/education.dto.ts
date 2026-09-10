@@ -14,6 +14,9 @@ export class EducationDto {
   @ApiProperty({ type: String, nullable: true })
   place: string | null;
 
-  @ApiProperty({ type: String, nullable: true })
-  period: string | null;
+  @ApiProperty({ format: 'date-time' })
+  startDate: string;
+
+  @ApiProperty({ type: String, nullable: true, format: 'date-time' })
+  endDate: string | null;
 }

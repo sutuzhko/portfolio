@@ -16,7 +16,9 @@ import * as Stories from './experience-timeline.stories';
 ## Анатомия
 
 - Список `ExperienceItem` — точка → линия → карточка; линия у последнего скрыта.
-- Период — `formatPeriod` (`Intl`, месяц/год) + метка текущего места из i18n.
+- Период — `formatMonthRange` из `shared/lib` (`Intl`, месяц/год в UTC) + метка текущего
+  места из i18n.
+- Порядок — по дате начала, свежее выше (сортирует бэкенд; ручной сортировки нет).
 - Пока грузится — скелетон-карточки с той же точкой-линией.
 
 ---
@@ -60,4 +62,4 @@ import * as Stories from './experience-timeline.stories';
 
 ExperienceTimeline отвечает за раскладку таймлайна и переключение скелетон/данные.
 **Не отвечает** за загрузку опыта (её делает `useExperience`) и за форматирование
-одной записи (это `ExperienceItem` + `formatPeriod`).
+одной записи (это `ExperienceItem` + `formatMonthRange`).

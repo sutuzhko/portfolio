@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import type { CreateExperience, ExperienceAdmin, UpdateExperience } from '@/entities/experience';
 import type { AppLanguage } from '@/shared/config';
+import { isoToMonthInput, monthInputToIso } from '@/shared/lib';
 
 /**
  * Схема формы места работы. Локализованные поля (роль, локация, буллеты) правятся
@@ -36,15 +37,6 @@ export function pickText(text: ExperienceAdmin['role'] | null, locale: AppLangua
 
 function pickList(list: ExperienceAdmin['bullets'], locale: AppLanguage): string[] {
   return (locale === 'en' ? list.en : list.ru) ?? list.ru;
-}
-
-// ISO date-time → YYYY-MM для <input type="month"> (и обратно первым числом месяца).
-function toMonth(iso: string | null): string {
-  return iso ? iso.slice(0, 7) : '';
-}
-
-function toIso(month: string): string {
-  return `${month}-01T00:00:00.000Z`;
 }
 
 // Достижения: строка textarea ↔ массив (по строке на буллет, пустые отбрасываем).
@@ -97,8 +89,8 @@ export function experienceToForm(
     company: record.company,
     role: pickText(record.role, locale),
     location: pickText(record.location, locale),
-    startDate: toMonth(record.startDate),
-    endDate: toMonth(record.endDate),
+    startDate: isoToMonthInput(record.startDate),
+    endDate: isoToMonthInput(record.endDate),
     current: record.current,
     bullets: pickList(record.bullets, locale).join('\n'),
     technologyIds: [...record.technologyIds],
@@ -113,8 +105,8 @@ export function formToCreate(values: ExperienceFormValues, locale: AppLanguage):
     role: localeInput(locale, values.role.trim()),
     location: location ? localeInput(locale, location) : undefined,
     bullets: localeListInput(locale, toBullets(values.bullets)),
-    startDate: toIso(values.startDate),
-    endDate: values.current || !values.endDate ? undefined : toIso(values.endDate),
+    startDate: monthInputToIso(values.startDate),
+    endDate: values.current || !values.endDate ? undefined : monthInputToIso(values.endDate),
     current: values.current,
     technologyIds: values.technologyIds,
   };
@@ -127,12 +119,12 @@ export function formToUpdate(values: ExperienceFormValues, locale: AppLanguage):
     role: localePatch(locale, values.role.trim()),
     location: localePatch(locale, values.location.trim()),
     bullets: localeListPatch(locale, toBullets(values.bullets)),
-    startDate: toIso(values.startDate),
+    startDate: monthInputToIso(values.startDate),
     current: values.current,
     technologyIds: values.technologyIds,
   };
   // endDate нельзя обнулить через DTO — при «текущем» опускаем (флаг current
   // управляет отображением «наст. время»), иначе шлём конкретный месяц.
-  if (!values.current && values.endDate) update.endDate = toIso(values.endDate);
+  if (!values.current && values.endDate) update.endDate = monthInputToIso(values.endDate);
   return update;
 }

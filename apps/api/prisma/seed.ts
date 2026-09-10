@@ -420,7 +420,6 @@ async function main(): Promise<void> {
       startDate: new Date('2025-06-01'),
       current: true,
       dotColor: '#238636',
-      order: 0,
       bullets: {
         ru: [
           'Внутренняя финансовая CRM учёта сделок и аналитики потоков: Lighthouse 92%, покрытие тестами бизнес-логики 95%, −20% человеко-часов для байеров, −30%+ для проверки директорами.',
@@ -448,7 +447,6 @@ async function main(): Promise<void> {
       location: L('Москва', 'Moscow'),
       startDate: new Date('2024-09-01'),
       endDate: new Date('2025-06-30'),
-      order: 1,
       bullets: {
         ru: [
           'Разработал с нуля фронтенд инвестиционно-крипто платформы по дизайн-макету в pixel-perfect качестве (Next.js 15, App Router): авторизация, профиль с 8-уровневой статусной системой, реферальная сеть, баланс, каталог проектов.',
@@ -471,7 +469,6 @@ async function main(): Promise<void> {
       sub: L('Procharity — beta'),
       startDate: new Date('2024-05-01'),
       endDate: new Date('2025-02-28'),
-      order: 2,
       bullets: {
         ru: [
           'Запустил MVP сервисов профиля и регистрации НКО в микрофронтенд-архитектуре (Module Federation, Vite): требования, декомпозиция, код-ревью команды, рефакторинг и документация.',
@@ -501,8 +498,8 @@ async function main(): Promise<void> {
           'Азовский государственный педагогический университет',
           'Azov State Pedagogical University',
         ),
-        period: '2022 — 2026',
-        order: 0,
+        startDate: new Date('2022-09-01'),
+        endDate: new Date('2026-06-01'),
       },
       {
         type: 'MAIN',
@@ -511,8 +508,8 @@ async function main(): Promise<void> {
           'Российский государственный гуманитарный университет',
           'Russian State University for the Humanities',
         ),
-        period: '2014 — 2018',
-        order: 1,
+        startDate: new Date('2014-09-01'),
+        endDate: new Date('2018-06-01'),
       },
       {
         type: 'ADDITIONAL',
@@ -520,8 +517,8 @@ async function main(): Promise<void> {
           'Fullstack-разработчик — Яндекс Практикум (сертификат)',
           'Fullstack Developer — Yandex Practicum (certificate)',
         ),
-        period: '09/2022 — 07/2024',
-        order: 2,
+        startDate: new Date('2022-09-01'),
+        endDate: new Date('2024-07-01'),
       },
     ],
   });

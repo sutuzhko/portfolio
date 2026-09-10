@@ -26,13 +26,14 @@ export function formToTile(
   locale: AppLanguage,
   fallbacks: PreviewFallbacks,
 ): ProjectTileData {
-  const technologyNames = values.technologyIds
-    .map((id) => technologies.find((technology) => technology.id === id)?.name)
-    .filter((name): name is string => name !== undefined);
+  // Порядок — каталожный (глобальный `order`), а не порядок кликов: в нём же технологии
+  // и участники идут на публичной плитке, поэтому превью совпадает с сайтом.
+  const technologyNames = technologies
+    .filter((technology) => values.technologyIds.includes(technology.id))
+    .map((technology) => technology.name);
 
-  const people = values.contributorIds
-    .map((id) => contributors.find((contributor) => contributor.id === id))
-    .filter((contributor): contributor is ContributorAdmin => contributor !== undefined)
+  const people = contributors
+    .filter((contributor) => values.contributorIds.includes(contributor.id))
     .map((contributor) => ({
       name: pickText(contributor.name, locale),
       image: contributor.image,

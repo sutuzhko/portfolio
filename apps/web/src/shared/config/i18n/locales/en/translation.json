@@ -388,9 +388,9 @@
       "place": "Institution",
       "placePlaceholder": "Institution",
       "period": "Period",
-      "periodPlaceholder": "2018 — 2022",
+      "startDate": "Start date",
+      "endDate": "End date",
       "coursePlaceholder": "Course / certificate name",
-      "coursePeriodPlaceholder": "09/2022 — 07/2024",
       "edit": "Edit",
       "delete": "Delete",
       "save": "Save",
@@ -400,7 +400,11 @@
       "no": "No",
       "empty": "No entries yet",
       "created": "Entry added",
-      "deleted": "Entry removed"
+      "deleted": "Entry removed",
+      "errors": {
+        "startRequired": "Enter a start date",
+        "endBeforeStart": "End is before start"
+      }
     },
     "experience": {
       "add": "Add",
@@ -518,6 +522,7 @@
       "contributorDeleted": "Contributor deleted",
       "contributorEditName": "Edit “{{name}}”",
       "contributorToggle": "Toggle “{{name}}” for the project",
+      "contributorReorder": "Reorder “{{name}}”",
       "contributorConfirmTitle": "Delete contributor?",
       "contributorConfirmText": "“{{name}}” will be removed from the catalog and all projects. This cannot be undone.",
       "technologyAdd": "+ add",

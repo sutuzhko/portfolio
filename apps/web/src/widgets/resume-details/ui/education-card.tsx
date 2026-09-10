@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
 import type { Education } from '@/entities/education';
+import { useAppLanguage } from '@/shared/config';
+import { formatMonthRange } from '@/shared/lib';
 import { Skeleton } from '@sutuzhko/ui-kit';
 
 import styles from './resume-details.module.css';
@@ -40,13 +42,17 @@ export function EducationCard({ education, isLoading }: EducationCardProps) {
 }
 
 function EducationList({ items }: { readonly items: readonly Education[] }) {
+  const language = useAppLanguage();
+
   return (
     <div className={styles.eduList}>
       {items.map((item) => (
         <div key={item.id}>
           <div className={styles.eduDegree}>{item.degree}</div>
           {item.place !== null ? <div className={styles.eduPlace}>{item.place}</div> : null}
-          {item.period !== null ? <div className={styles.eduPeriod}>{item.period}</div> : null}
+          <div className={styles.eduPeriod}>
+            {formatMonthRange(item.startDate, item.endDate, language)}
+          </div>
         </div>
       ))}
     </div>

@@ -4,14 +4,15 @@ import type {
   UpdateContributor,
 } from '@/entities/contributor';
 import type { AppLanguage } from '@/shared/config';
+import { planMinimalOrders } from '@/shared/lib';
 
 import type { ContributorDraft } from '../ui/contributor-form';
 
 /**
- * Черновик каталожной записи участника. Весь CRUD (создание/правка/удаление)
- * копится локально и применяется одним пакетом на «Сохранить» проекта — до этого
- * изменения обратимы «Отменой». Запись = каталожная (`ContributorAdmin`) плюс
- * флаги стадии.
+ * Черновик каталожной записи участника. Весь CRUD (создание/правка/удаление) и
+ * перестановка копятся локально и применяются одним пакетом на «Сохранить» проекта —
+ * до этого изменения обратимы «Отменой». Запись = каталожная (`ContributorAdmin`)
+ * плюс флаги стадии; порядок черновика = желаемый порядок каталога.
  */
 export interface StagedContributor extends ContributorAdmin {
   /** Создан локально — реальный id придёт с бэка после применения. */
@@ -70,7 +71,8 @@ export function stageCreate(
     image: draft.image || null,
     color: draft.color || null,
     link: draft.link || null,
-    order: list.length,
+    // Позицию нового участника назначит план на сохранении (между соседями).
+    order: 0,
     isNew: true,
     isDeleted: false,
     isEdited: false,
@@ -107,6 +109,24 @@ export function stageDelete(list: readonly StagedContributor[], id: string): Sta
   });
 }
 
+/**
+ * Перетаскивание: участник `activeId` встаёт на место `overId`. Меняется только
+ * последовательность черновика — новые `order` посчитает план на сохранении.
+ */
+export function stageReorder(
+  list: readonly StagedContributor[],
+  activeId: string,
+  overId: string,
+): StagedContributor[] {
+  const from = list.findIndex((entry) => entry.id === activeId);
+  const to = list.findIndex((entry) => entry.id === overId);
+  const next = [...list];
+  if (from === -1 || to === -1 || from === to) return next;
+  const [moved] = next.splice(from, 1);
+  next.splice(to, 0, moved);
+  return next;
+}
+
 /** Видимые записи (без помеченных на удаление) — для чипов и предпросмотра плитки. */
 export function visibleStaged(list: readonly StagedContributor[]): StagedContributor[] {
   return list.filter((entry) => !entry.isDeleted);
@@ -117,18 +137,41 @@ export function stagedToCatalog(list: readonly StagedContributor[]): Contributor
   return visibleStaged(list).map(({ isNew: _n, isDeleted: _d, isEdited: _e, ...rest }) => rest);
 }
 
+/** Запись плана вместе с целевой позицией в каталоге. */
+export interface PlannedContributor {
+  readonly entry: StagedContributor;
+  readonly order: number;
+}
+
 /** План применения черновика к API. */
 export interface ContributorStagingPlan {
-  readonly creates: readonly StagedContributor[];
-  readonly updates: readonly StagedContributor[];
+  readonly creates: readonly PlannedContributor[];
+  /** Существующие с правкой полей и/или сдвинутые перетаскиванием. */
+  readonly updates: readonly PlannedContributor[];
   readonly deletes: readonly StagedContributor[];
 }
 
-/** Раскладывает черновик на операции create/update/delete. */
+/**
+ * Раскладывает черновик на операции create/update/delete. Позиции — минимальным
+ * диффом по видимой последовательности (как у технологий): сохранённые участники,
+ * чей порядок не нарушен, остаются якорями, а сдвинутые и новые встают дробной
+ * позицией между соседями — перенос одного участника = один PATCH.
+ */
 export function planContributorStaging(list: readonly StagedContributor[]): ContributorStagingPlan {
+  const visible = visibleStaged(list);
+  const orders = planMinimalOrders(
+    visible.map((entry) => ({
+      key: entry.id,
+      id: entry.isNew ? null : entry.id,
+      order: entry.order,
+    })),
+  );
+  const planned = visible.map((entry) => ({ entry, order: orders.get(entry.id) ?? entry.order }));
   return {
-    creates: list.filter((entry) => entry.isNew && !entry.isDeleted),
-    updates: list.filter((entry) => entry.isEdited && !entry.isNew && !entry.isDeleted),
+    creates: planned.filter(({ entry }) => entry.isNew),
+    updates: planned.filter(
+      ({ entry, order }) => !entry.isNew && (entry.isEdited || order !== entry.order),
+    ),
     deletes: list.filter((entry) => entry.isDeleted && !entry.isNew),
   };
 }
@@ -144,23 +187,30 @@ function toNameInput(name: ContributorAdmin['name']): CreateContributor['name'] 
   return name.en ? { ru: name.ru, en: name.en } : { ru: name.ru };
 }
 
-/** Тело create для записи черновика. */
-export function stagedToCreateBody(entry: StagedContributor): CreateContributor {
+/** Тело create для записи плана (с позицией в каталоге). */
+export function stagedToCreateBody({ entry, order }: PlannedContributor): CreateContributor {
   return {
     name: toNameInput(entry.name),
     color: entry.color ?? undefined,
     image: entry.image ?? undefined,
     link: entry.link ?? undefined,
+    order,
   };
 }
 
-/** Тело update для записи черновика. */
-export function stagedToUpdateBody(entry: StagedContributor): UpdateContributor {
+/**
+ * Тело update: правка полей шлёт их целиком, перетаскивание — только новый `order`
+ * (PATCH лишь того, что изменилось).
+ */
+export function stagedToUpdateBody({ entry, order }: PlannedContributor): UpdateContributor {
+  const orderPatch = order === entry.order ? {} : { order };
+  if (!entry.isEdited) return orderPatch;
   return {
     name: toNameInput(entry.name),
     // Сброшенный цвет шлём пустой строкой (бэк маппит в null) — undefined бы «не менять».
     color: entry.color ?? '',
     image: entry.image ?? undefined,
     link: entry.link ?? undefined,
+    ...orderPatch,
   };
 }

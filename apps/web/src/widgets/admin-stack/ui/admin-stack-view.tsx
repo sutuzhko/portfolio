@@ -1,21 +1,9 @@
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  arrayMove,
-  rectSortingStrategy,
-  sortableKeyboardCoordinates,
-} from '@dnd-kit/sortable';
+import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSortableSensors } from '@/shared/lib';
 import { SaveBar } from '@/shared/ui';
 import { Icon, Input } from '@sutuzhko/ui-kit';
 
@@ -168,12 +156,8 @@ export function AdminStackView({
     setChips((prev) => prev.filter((item) => item.key !== chip.key));
   };
 
-  // Перетаскивание — мышью (после сдвига 6px, чтобы клики по ×/кнопкам работали) и
-  // клавиатурой. Одни сенсоры на все списки (блоки, чипы каждой категории, навыки).
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
+  // Одни сенсоры на все списки (блоки, чипы каждой категории, навыки).
+  const sensors = useSortableSensors();
 
   // Перенос блока-категории: меняем порядок категорий (плоский `Technology.order`
   // пересчитает контейнер на сохранении).

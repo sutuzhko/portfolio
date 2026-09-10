@@ -23,13 +23,16 @@ import { ExperienceDto } from './dto/experience.dto';
 const adminInclude = { tech: { orderBy: { order: 'asc' } } } satisfies Prisma.ExperienceInclude;
 type ExperiencePayload = Prisma.ExperienceGetPayload<{ include: typeof adminInclude }>;
 
+// Таймлайн читается от свежего к давнему: что началось раньше — ниже.
+const ORDER_BY: Prisma.ExperienceOrderByWithRelationInput = { startDate: 'desc' };
+
 @Injectable()
 export class ExperienceService {
   constructor(private readonly prisma: PrismaService) {}
 
   async list(locale: Locale): Promise<ExperienceDto[]> {
     const items = await this.prisma.experience.findMany({
-      orderBy: [{ order: 'asc' }, { startDate: 'desc' }],
+      orderBy: ORDER_BY,
       include: adminInclude,
     });
 
@@ -52,7 +55,7 @@ export class ExperienceService {
 
   async listAdmin(): Promise<ExperienceAdminDto[]> {
     const items = await this.prisma.experience.findMany({
-      orderBy: [{ order: 'asc' }, { startDate: 'desc' }],
+      orderBy: ORDER_BY,
       include: adminInclude,
     });
     return items.map((item) => this.toAdminDto(item));
@@ -72,7 +75,6 @@ export class ExperienceService {
         endDate: dto.endDate ? new Date(dto.endDate) : null,
         current: dto.current ?? false,
         dotColor: dto.dotColor ?? null,
-        order: dto.order ?? 0,
         tech: dto.technologyIds ? { connect: dto.technologyIds.map((id) => ({ id })) } : undefined,
       },
       include: adminInclude,
@@ -95,7 +97,6 @@ export class ExperienceService {
     if (dto.endDate !== undefined) data.endDate = new Date(dto.endDate);
     if (dto.current !== undefined) data.current = dto.current;
     if (dto.dotColor !== undefined) data.dotColor = dto.dotColor;
-    if (dto.order !== undefined) data.order = dto.order;
     if (dto.technologyIds !== undefined) {
       data.tech = { set: dto.technologyIds.map((id) => ({ id })) };
     }
@@ -144,7 +145,6 @@ export class ExperienceService {
       endDate: experience.endDate ? experience.endDate.toISOString() : null,
       current: experience.current,
       dotColor: experience.dotColor,
-      order: experience.order,
       technologyIds: experience.tech.map((tech) => tech.id),
     };
   }

@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EducationType } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { IsDateString, IsEnum, IsOptional, ValidateNested } from 'class-validator';
 
 import {
   LocalizedTextDto,
@@ -22,11 +22,11 @@ export class EducationAdminDto {
   @ApiProperty({ type: () => LocalizedTextDto, nullable: true })
   place: LocalizedTextDto | null;
 
-  @ApiProperty({ type: String, nullable: true })
-  period: string | null;
+  @ApiProperty({ format: 'date-time' })
+  startDate: string;
 
-  @ApiProperty()
-  order: number;
+  @ApiProperty({ type: String, nullable: true, format: 'date-time' })
+  endDate: string | null;
 }
 
 export class CreateEducationDto {
@@ -46,16 +46,14 @@ export class CreateEducationDto {
   @Type(() => LocalizedTextInput)
   place?: LocalizedTextInput;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  period?: string;
+  @ApiProperty({ format: 'date-time' })
+  @IsDateString()
+  startDate: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ format: 'date-time' })
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  order?: number;
+  @IsDateString()
+  endDate?: string;
 }
 
 export class UpdateEducationDto {
@@ -76,14 +74,14 @@ export class UpdateEducationDto {
   @Type(() => LocalizedTextPatch)
   place?: LocalizedTextPatch;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ format: 'date-time' })
   @IsOptional()
-  @IsString()
-  period?: string;
+  @IsDateString()
+  startDate?: string;
 
-  @ApiPropertyOptional()
+  // null снимает дату окончания (курс одной датой), undefined — оставляет как есть.
+  @ApiPropertyOptional({ type: String, nullable: true, format: 'date-time' })
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  order?: number;
+  @IsDateString()
+  endDate?: string | null;
 }

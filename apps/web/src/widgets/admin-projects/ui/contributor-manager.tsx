@@ -1,31 +1,24 @@
-import { type CSSProperties, useState } from 'react';
+import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { AppLanguage } from '@/shared/config';
-import { ConfirmDialog, Icon } from '@sutuzhko/ui-kit';
+import { ConfirmDialog } from '@sutuzhko/ui-kit';
 
-import { cn } from '@/shared/lib';
+import { useSortableSensors } from '@/shared/lib';
 
 import { pickText } from '../model/project-form';
 import type { StagedContributor } from '../model/contributor-staging';
 
 import { ContributorForm, type ContributorDraft } from './contributor-form';
+import { SortableContributorChip } from './sortable-contributor-chip';
 import styles from './admin-projects.module.css';
-
-/** Заливка чипа участника: градиент из его цвета аватара (иначе — нейтральная). */
-function chipFill(color: string | null): CSSProperties | undefined {
-  if (!color) return undefined;
-  return {
-    background: `linear-gradient(135deg, ${color}, color-mix(in srgb, ${color} 60%, #000))`,
-    color: '#ffffff',
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-  };
-}
 
 export interface ContributorManagerProps {
   readonly locale: AppLanguage;
   readonly disabled: boolean;
-  /** Видимый черновик каталога (без помеченных на удаление). */
+  /** Видимый черновик каталога (без помеченных на удаление) — в желаемом порядке. */
   readonly staged: readonly StagedContributor[];
   readonly selectedIds: readonly string[];
   /** Тоггл участника в проекте. */
@@ -36,6 +29,8 @@ export interface ContributorManagerProps {
   readonly onStageUpdate: (id: string, draft: ContributorDraft) => void;
   /** Застейджить удаление из каталога. */
   readonly onStageDelete: (id: string) => void;
+  /** Перетаскивание: участник `activeId` встаёт на место `overId` (порядок каталога). */
+  readonly onReorder: (activeId: string, overId: string) => void;
 }
 
 // Состояние встроенного редактора: закрыт / создание / правка конкретной записи.
@@ -45,11 +40,12 @@ type Editor =
   | { readonly kind: 'edit'; readonly contributor: StagedContributor };
 
 /**
- * Управление участниками проекта: чипы-выбор из каталога (у каждого — карандаш
- * правки), инлайн-форма создания/правки и подтверждение удаления. Весь CRUD
- * каталога **стейджится**: колбэки лишь копят черновик, а реальные запросы
- * уходят одним пакетом при сохранении проекта. Презентационный, состояние
- * редактора — локальное.
+ * Управление участниками проекта: чипы-выбор из каталога (у каждого — ручка
+ * перетаскивания и карандаш правки), инлайн-форма создания/правки и подтверждение
+ * удаления. Порядок чипов — глобальный порядок каталога: в нём участники идут и на
+ * публичных плитках. Весь CRUD и перестановка **стейджатся**: колбэки лишь копят
+ * черновик, а реальные запросы уходят одним пакетом при сохранении проекта.
+ * Презентационный, состояние редактора — локальное.
  */
 export function ContributorManager({
   locale,
@@ -60,8 +56,10 @@ export function ContributorManager({
   onStageCreate,
   onStageUpdate,
   onStageDelete,
+  onReorder,
 }: ContributorManagerProps) {
   const { t } = useTranslation();
+  const sensors = useSortableSensors();
   const [editor, setEditor] = useState<Editor>({ kind: 'closed' });
   const [confirmDelete, setConfirmDelete] = useState<StagedContributor | null>(null);
 
@@ -83,48 +81,45 @@ export function ContributorManager({
     close();
   };
 
+  const handleDragEnd = ({ active, over }: DragEndEvent): void => {
+    if (over === null || active.id === over.id) return;
+    onReorder(String(active.id), String(over.id));
+  };
+
   return (
     <fieldset className={styles.field}>
       <legend className={styles.inlineLabel}>{t('admin.projects.contributors')}</legend>
-      <div className={styles.chips}>
-        {staged.map((contributor) => {
-          const selected = selectedIds.includes(contributor.id);
-          const label = pickText(contributor.name, locale);
-          const editing = editor.kind === 'edit' && editor.contributor.id === contributor.id;
-          return (
-            <span key={contributor.id} className={styles.chipWrap}>
-              <button
-                type="button"
-                className={cn(styles.collabChip, !selected && styles.collabChipOff)}
-                style={selected ? chipFill(contributor.color) : undefined}
-                aria-pressed={selected}
-                onClick={() => onToggle(contributor.id)}
-                title={t('admin.projects.contributorToggle', { name: label })}
-              >
-                {label}
-              </button>
-              <button
-                type="button"
-                className={cn(styles.chipEdit, editing && styles.chipEditActive)}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <div className={styles.chips}>
+          <SortableContext
+            items={staged.map((contributor) => contributor.id)}
+            strategy={rectSortingStrategy}
+          >
+            {staged.map((contributor) => (
+              <SortableContributorChip
+                key={contributor.id}
+                id={contributor.id}
+                label={pickText(contributor.name, locale)}
+                color={contributor.color}
+                selected={selectedIds.includes(contributor.id)}
+                editing={editor.kind === 'edit' && editor.contributor.id === contributor.id}
                 disabled={disabled}
-                aria-label={t('admin.projects.contributorEditName', { name: label })}
-                onClick={() => setEditor({ kind: 'edit', contributor })}
-              >
-                <Icon name="edit" size={13} />
-              </button>
-            </span>
-          );
-        })}
-        {/* «+ создать участника» — последним элементом ряда чипов (как в макете). */}
-        <button
-          type="button"
-          className={styles.chipAdd}
-          disabled={disabled}
-          onClick={() => setEditor({ kind: 'create' })}
-        >
-          {t('admin.projects.contributorAdd')}
-        </button>
-      </div>
+                onToggle={() => onToggle(contributor.id)}
+                onEdit={() => setEditor({ kind: 'edit', contributor })}
+              />
+            ))}
+          </SortableContext>
+          {/* «+ создать участника» — последним элементом ряда чипов (как в макете). */}
+          <button
+            type="button"
+            className={styles.chipAdd}
+            disabled={disabled}
+            onClick={() => setEditor({ kind: 'create' })}
+          >
+            {t('admin.projects.contributorAdd')}
+          </button>
+        </div>
+      </DndContext>
 
       {editor.kind === 'create' ? (
         <ContributorForm

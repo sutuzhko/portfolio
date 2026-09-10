@@ -2,8 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { Experience } from '@/entities/experience';
 import { useAppLanguage } from '@/shared/config';
-
-import { formatPeriod } from '../model/format-period';
+import { formatMonthRange } from '@/shared/lib';
 
 import styles from './experience-timeline.module.css';
 
@@ -15,10 +14,10 @@ interface ExperienceItemProps {
 export function ExperienceItem({ job }: ExperienceItemProps) {
   const { t } = useTranslation();
   const language = useAppLanguage();
-  const period = formatPeriod(
+  // Текущее место — открытый период «… — наст. время», даже если endDate остался от правки.
+  const period = formatMonthRange(
     job.startDate,
-    job.endDate,
-    job.current,
+    job.current ? null : job.endDate,
     language,
     t('experience.present'),
   );

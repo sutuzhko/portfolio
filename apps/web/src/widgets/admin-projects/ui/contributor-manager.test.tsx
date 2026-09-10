@@ -23,6 +23,7 @@ function renderManager(overrides: Partial<ComponentProps<typeof ContributorManag
     onStageCreate: vi.fn(),
     onStageUpdate: vi.fn(),
     onStageDelete: vi.fn(),
+    onReorder: vi.fn(),
     ...overrides,
   };
   renderWithProviders(<ContributorManager {...props} />);
@@ -36,6 +37,22 @@ describe('ContributorManager', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Богдан Сутужко' }));
     expect(onToggle).toHaveBeenCalledWith('bogdan');
+  });
+
+  it('у каждого участника есть ручка перетаскивания для смены порядка', () => {
+    renderManager();
+    expect(
+      screen.getByRole('button', { name: 'Переместить «Богдан Сутужко»' }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /^Переместить «/ })).toHaveLength(staged.length);
+  });
+
+  it('чипы идут в порядке каталога', () => {
+    renderManager();
+    const toggles = screen.getAllByRole('button', { pressed: false });
+    expect(toggles.map((button) => button.textContent)).toEqual(
+      staged.map((contributor) => contributor.name.ru),
+    );
   });
 
   it('создание стейджится (без немедленного запроса)', async () => {
@@ -90,6 +107,7 @@ describe('ContributorManager', () => {
         onStageCreate={vi.fn()}
         onStageUpdate={vi.fn()}
         onStageDelete={vi.fn()}
+        onReorder={vi.fn()}
       />,
     );
     expect(await axe(container)).toHaveNoViolations();

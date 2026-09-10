@@ -60,7 +60,6 @@ function buildInitial(): ExperienceAdmin[] {
       endDate: null,
       current: true,
       dotColor: '#3fb950',
-      order: 0,
       technologyIds: ['0', '3', '12', '11'],
     },
     {
@@ -85,7 +84,6 @@ function buildInitial(): ExperienceAdmin[] {
       endDate: '2023-01-01T00:00:00.000Z',
       current: false,
       dotColor: '#238636',
-      order: 1,
       technologyIds: ['1', '3', '4'],
     },
   ];
@@ -140,7 +138,9 @@ function toPublic(record: ExperienceAdmin, language: AppLanguage): Experience {
   };
 }
 
-const sorted = (): ExperienceAdmin[] => [...records].sort((a, b) => a.order - b.order);
+// Как на бэке: свежее выше — по убыванию даты начала.
+const sorted = (): ExperienceAdmin[] =>
+  [...records].sort((a, b) => b.startDate.localeCompare(a.startDate));
 
 /** Фикстура опыта (русская локаль) для тестов и историй. */
 export const mockExperience: Experience[] = sorted().map((record) => toPublic(record, 'ru'));
@@ -175,7 +175,6 @@ export const experienceAdminHandlers = [
         endDate: body.endDate ?? null,
         current: body.current ?? false,
         dotColor: body.dotColor ?? null,
-        order: body.order ?? records.length,
         technologyIds: body.technologyIds ?? [],
       };
       records.push(created);
@@ -197,7 +196,6 @@ export const experienceAdminHandlers = [
       if (body.endDate !== undefined) record.endDate = body.endDate;
       if (body.current !== undefined) record.current = body.current;
       if (body.dotColor !== undefined) record.dotColor = body.dotColor;
-      if (body.order !== undefined) record.order = body.order;
       if (body.technologyIds !== undefined) record.technologyIds = body.technologyIds;
       return HttpResponse.json(record);
     },

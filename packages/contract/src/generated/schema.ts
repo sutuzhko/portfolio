@@ -1238,7 +1238,6 @@ export interface components {
             endDate: string | null;
             current: boolean;
             dotColor: string | null;
-            order: number;
             technologyIds: string[];
         };
         CreateExperienceDto: {
@@ -1253,7 +1252,6 @@ export interface components {
             endDate?: string;
             current?: boolean;
             dotColor?: string;
-            order?: number;
             technologyIds?: string[];
         };
         UpdateExperienceDto: {
@@ -1268,7 +1266,6 @@ export interface components {
             endDate?: string;
             current?: boolean;
             dotColor?: string;
-            order?: number;
             technologyIds?: string[];
         };
         /** @enum {string} */
@@ -1278,29 +1275,38 @@ export interface components {
             type: components["schemas"]["EducationType"];
             degree: string;
             place: string | null;
-            period: string | null;
+            /** Format: date-time */
+            startDate: string;
+            /** Format: date-time */
+            endDate: string | null;
         };
         EducationAdminDto: {
             id: string;
             type: components["schemas"]["EducationType"];
             degree: components["schemas"]["LocalizedTextDto"];
             place: components["schemas"]["LocalizedTextDto"] | null;
-            period: string | null;
-            order: number;
+            /** Format: date-time */
+            startDate: string;
+            /** Format: date-time */
+            endDate: string | null;
         };
         CreateEducationDto: {
             type?: components["schemas"]["EducationType"];
             degree: components["schemas"]["LocalizedTextInput"];
             place?: components["schemas"]["LocalizedTextInput"];
-            period?: string;
-            order?: number;
+            /** Format: date-time */
+            startDate: string;
+            /** Format: date-time */
+            endDate?: string;
         };
         UpdateEducationDto: {
             type?: components["schemas"]["EducationType"];
             degree?: components["schemas"]["LocalizedTextPatch"];
             place?: components["schemas"]["LocalizedTextPatch"];
-            period?: string;
-            order?: number;
+            /** Format: date-time */
+            startDate?: string;
+            /** Format: date-time */
+            endDate?: string | null;
         };
         LanguageDto: {
             id: string;

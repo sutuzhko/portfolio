@@ -388,9 +388,9 @@
       "place": "Учебное заведение",
       "placePlaceholder": "Учебное заведение",
       "period": "Период",
-      "periodPlaceholder": "2018 — 2022",
+      "startDate": "Дата начала",
+      "endDate": "Дата окончания",
       "coursePlaceholder": "Название курса / сертификата",
-      "coursePeriodPlaceholder": "09/2022 — 07/2024",
       "edit": "Редактировать",
       "delete": "Удалить",
       "save": "Сохранить",
@@ -400,7 +400,11 @@
       "no": "Нет",
       "empty": "Пока нет записей",
       "created": "Запись добавлена",
-      "deleted": "Запись удалена"
+      "deleted": "Запись удалена",
+      "errors": {
+        "startRequired": "Укажите дату начала",
+        "endBeforeStart": "Окончание раньше начала"
+      }
     },
     "experience": {
       "add": "Добавить",
@@ -518,6 +522,7 @@
       "contributorDeleted": "Участник удалён",
       "contributorEditName": "Редактировать «{{name}}»",
       "contributorToggle": "Вкл/выкл «{{name}}» для проекта",
+      "contributorReorder": "Переместить «{{name}}»",
       "contributorConfirmTitle": "Удалить участника?",
       "contributorConfirmText": "Участник «{{name}}» будет удалён из каталога и всех проектов. Действие необратимо.",
       "technologyAdd": "+ добавить",

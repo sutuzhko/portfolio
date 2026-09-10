@@ -126,7 +126,7 @@ model Contributor {
   image    String?
   color    String?
   link     String?
-  order    Int       @default(0)
+  order    Float     @default(0) // Float — как у Technology.order (минимальный дифф порядка)
   projects Project[] @relation("ProjectContributors")
 }
 
@@ -192,17 +192,17 @@ model Experience {
   endDate   DateTime?
   current   Boolean      @default(false)
   dotColor  String?
-  order     Int          @default(0)
   tech      Technology[] @relation("ExperienceTech")
 }
 
+// Опыт и образование — таймлайны: порядок задаёт startDate (свежее выше), не ручной order.
 model Education {
-  id     String        @id @default(cuid())
-  type   EducationType @default(MAIN)
-  degree Json // LocalizedText
-  place  Json? // LocalizedText
-  period String?
-  order  Int           @default(0)
+  id        String        @id @default(cuid())
+  type      EducationType @default(MAIN)
+  degree    Json // LocalizedText
+  place     Json? // LocalizedText
+  startDate DateTime
+  endDate   DateTime? // null — курс одной датой
 }
 
 model Language {

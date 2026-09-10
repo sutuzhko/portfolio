@@ -4720,9 +4720,6 @@
             "type": "string",
             "nullable": true
           },
-          "order": {
-            "type": "number"
-          },
           "technologyIds": {
             "type": "array",
             "items": {
@@ -4741,7 +4738,6 @@
           "endDate",
           "current",
           "dotColor",
-          "order",
           "technologyIds"
         ]
       },
@@ -4776,9 +4772,6 @@
           },
           "dotColor": {
             "type": "string"
-          },
-          "order": {
-            "type": "number"
           },
           "technologyIds": {
             "type": "array",
@@ -4826,9 +4819,6 @@
           "dotColor": {
             "type": "string"
           },
-          "order": {
-            "type": "number"
-          },
           "technologyIds": {
             "type": "array",
             "items": {
@@ -4864,9 +4854,14 @@
             "type": "string",
             "nullable": true
           },
-          "period": {
+          "startDate": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
           }
         },
         "required": [
@@ -4874,7 +4869,8 @@
           "type",
           "degree",
           "place",
-          "period"
+          "startDate",
+          "endDate"
         ]
       },
       "EducationAdminDto": {
@@ -4902,12 +4898,14 @@
               }
             ]
           },
-          "period": {
+          "startDate": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
           },
-          "order": {
-            "type": "number"
+          "endDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
           }
         },
         "required": [
@@ -4915,8 +4913,8 @@
           "type",
           "degree",
           "place",
-          "period",
-          "order"
+          "startDate",
+          "endDate"
         ]
       },
       "CreateEducationDto": {
@@ -4935,15 +4933,18 @@
           "place": {
             "$ref": "#/components/schemas/LocalizedTextInput"
           },
-          "period": {
-            "type": "string"
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
           },
-          "order": {
-            "type": "number"
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "required": [
-          "degree"
+          "degree",
+          "startDate"
         ]
       },
       "UpdateEducationDto": {
@@ -4962,11 +4963,14 @@
           "place": {
             "$ref": "#/components/schemas/LocalizedTextPatch"
           },
-          "period": {
-            "type": "string"
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
           },
-          "order": {
-            "type": "number"
+          "endDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
           }
         }
       },

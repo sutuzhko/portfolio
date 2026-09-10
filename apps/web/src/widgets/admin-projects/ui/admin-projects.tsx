@@ -102,20 +102,24 @@ export function AdminProjects({ locale, detail, onNavigateDetail }: AdminProject
 
   // Применяет накопленный черновик участников одним пакетом ДО сохранения
   // проекта: создания дают реальные id (карта временный→реальный, чтобы
-  // ремапнуть выбор проекта), затем правки и удаления. Возвращает карту id или
-  // `null` при ошибке — тогда проект не сохраняем.
+  // ремапнуть выбор проекта), затем правки (включая новый порядок после
+  // перетаскивания) и удаления. Возвращает карту id или `null` при ошибке —
+  // тогда проект не сохраняем.
   const applyContributorStaging = async (
     staged: readonly StagedContributor[],
   ): Promise<Record<string, string> | null> => {
     const plan = planContributorStaging(staged);
     const idMap: Record<string, string> = {};
     try {
-      for (const entry of plan.creates) {
-        const created = await createContributor(stagedToCreateBody(entry)).unwrap();
-        idMap[entry.id] = created.id;
+      for (const planned of plan.creates) {
+        const created = await createContributor(stagedToCreateBody(planned)).unwrap();
+        idMap[planned.entry.id] = created.id;
       }
-      for (const entry of plan.updates) {
-        await updateContributor({ id: entry.id, body: stagedToUpdateBody(entry) }).unwrap();
+      for (const planned of plan.updates) {
+        await updateContributor({
+          id: planned.entry.id,
+          body: stagedToUpdateBody(planned),
+        }).unwrap();
       }
       for (const entry of plan.deletes) {
         await deleteContributor(entry.id).unwrap();

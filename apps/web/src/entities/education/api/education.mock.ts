@@ -14,16 +14,16 @@ function buildInitial(): EducationAdmin[] {
       type: 'MAIN',
       degree: { ru: 'Бакалавр лингвистики', en: 'BA in Linguistics' },
       place: { ru: 'МГЛУ, Москва', en: 'MSLU, Moscow' },
-      period: '2014 – 2018',
-      order: 0,
+      startDate: '2014-09-01T00:00:00.000Z',
+      endDate: '2018-06-01T00:00:00.000Z',
     },
     {
       id: 'praktikum',
       type: 'ADDITIONAL',
       degree: { ru: 'Frontend-разработка', en: 'Frontend Development' },
       place: { ru: 'Яндекс Практикум', en: 'Yandex Praktikum' },
-      period: '2020',
-      order: 1,
+      startDate: '2020-03-01T00:00:00.000Z',
+      endDate: null,
     },
   ];
 }
@@ -52,17 +52,25 @@ function mergeLocale(existing: Localized | null, patch: LocalePatch): Localized 
   return en === undefined ? { ru } : { ru, en };
 }
 
+// Как на бэке: окончание раньше начала — 400 (ISO-строки сравниваются лексикографически).
+function isValidPeriod(startDate: string, endDate: string | null): boolean {
+  return endDate === null || endDate >= startDate;
+}
+
 function toPublic(record: EducationAdmin, language: AppLanguage): Education {
   return {
     id: record.id,
     type: record.type,
     degree: localized(record.degree, language),
     place: record.place ? localized(record.place, language) : null,
-    period: record.period,
+    startDate: record.startDate,
+    endDate: record.endDate,
   };
 }
 
-const sorted = (): EducationAdmin[] => [...records].sort((a, b) => a.order - b.order);
+// Как на бэке: свежее выше — по убыванию даты начала.
+const sorted = (): EducationAdmin[] =>
+  [...records].sort((a, b) => b.startDate.localeCompare(a.startDate));
 
 /** Фикстура образования (русская локаль) для тестов и историй. */
 export const mockEducation: Education[] = sorted().map((record) => toPublic(record, 'ru'));
@@ -85,14 +93,16 @@ export const educationAdminHandlers = [
     `${env.apiBaseUrl}/education`,
     async ({ request }) => {
       const body = await request.json();
+      const endDate = body.endDate ?? null;
+      if (!isValidPeriod(body.startDate, endDate)) return new HttpResponse(null, { status: 400 });
       nextId += 1;
       const created: EducationAdmin = {
         id: String(nextId),
         type: body.type ?? 'MAIN',
         degree: { ru: body.degree.ru, en: body.degree.en },
         place: body.place ? { ru: body.place.ru, en: body.place.en } : null,
-        period: body.period ?? null,
-        order: body.order ?? records.length,
+        startDate: body.startDate,
+        endDate,
       };
       records.push(created);
       return HttpResponse.json(created, { status: 201 });
@@ -104,11 +114,15 @@ export const educationAdminHandlers = [
       const body = await request.json();
       const record = records.find((item) => item.id === params.id);
       if (record === undefined) return new HttpResponse(null, { status: 404 });
+      // null снимает окончание, undefined — оставляет (как в UpdateEducationDto).
+      const startDate = body.startDate ?? record.startDate;
+      const endDate = body.endDate === undefined ? record.endDate : body.endDate;
+      if (!isValidPeriod(startDate, endDate)) return new HttpResponse(null, { status: 400 });
       if (body.type !== undefined) record.type = body.type;
       if (body.degree !== undefined) record.degree = mergeLocale(record.degree, body.degree);
       if (body.place !== undefined) record.place = mergeLocale(record.place, body.place);
-      if (body.period !== undefined) record.period = body.period;
-      if (body.order !== undefined) record.order = body.order;
+      record.startDate = startDate;
+      record.endDate = endDate;
       return HttpResponse.json(record);
     },
   ),

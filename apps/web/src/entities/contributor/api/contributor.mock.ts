@@ -62,7 +62,10 @@ export const mockContributorsAdmin: ContributorAdmin[] = buildInitial();
 
 /** MSW-обработчики контрибьюторов: список + CRUD (создание/правка/удаление). */
 export const contributorHandlers = [
-  http.get(`${env.apiBaseUrl}/contributors/admin`, () => HttpResponse.json(contributors)),
+  // Как на бэке: каталог по возрастанию `order` (его меняет перетаскивание в админке).
+  http.get(`${env.apiBaseUrl}/contributors/admin`, () =>
+    HttpResponse.json([...contributors].sort((a, b) => a.order - b.order)),
+  ),
   http.post<Record<string, never>, CreateContributor>(
     `${env.apiBaseUrl}/contributors`,
     async ({ request }) => {

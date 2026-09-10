@@ -20,6 +20,14 @@ const contributors: ContributorAdmin[] = [
     link: null,
     order: 0,
   },
+  {
+    id: 'c2',
+    name: { ru: 'Мария Волкова', en: 'Maria Volkova' },
+    image: null,
+    color: null,
+    link: null,
+    order: 1,
+  },
 ];
 
 const FALLBACKS = { title: 'Новый проект', description: 'Краткое описание проекта' };
@@ -31,16 +39,32 @@ function form(overrides: Partial<ProjectFormValues> = {}): ProjectFormValues {
 describe('formToTile', () => {
   it('разрешает id технологий и коллабораторов в названия активной локали', () => {
     const tile = formToTile(
-      form({ technologyIds: ['t2', 't1'], contributorIds: ['c1'] }),
+      form({ technologyIds: ['t1', 't2'], contributorIds: ['c1'] }),
       technologies,
       contributors,
       'ru',
       FALLBACKS,
     );
 
-    expect(tile.technologies).toEqual(['NestJS', 'React']);
+    expect(tile.technologies).toEqual(['React', 'NestJS']);
     expect(tile.contributors).toEqual([
       { name: 'Богдан Сутужко', image: null, color: '#238636', link: null },
+    ]);
+  });
+
+  it('держит порядок каталога, а не порядок выбора — как на публичной плитке', () => {
+    const tile = formToTile(
+      form({ technologyIds: ['t2', 't1'], contributorIds: ['c2', 'c1'] }),
+      technologies,
+      contributors,
+      'ru',
+      FALLBACKS,
+    );
+
+    expect(tile.technologies).toEqual(['React', 'NestJS']);
+    expect(tile.contributors.map((person) => person.name)).toEqual([
+      'Богдан Сутужко',
+      'Мария Волкова',
     ]);
   });
 

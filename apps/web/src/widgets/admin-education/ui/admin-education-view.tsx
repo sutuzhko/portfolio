@@ -5,8 +5,9 @@ import type { EducationType } from '@/entities/education';
 import { SaveBar } from '@/shared/ui';
 import { Icon, Input } from '@sutuzhko/ui-kit';
 
-import { emptyRow, type EducationRow } from '../model/education-form';
+import { emptyRow, hasRowErrors, validateRow, type EducationRow } from '../model/education-form';
 
+import { EducationPeriod } from './education-period';
 import styles from './admin-education.module.css';
 
 // Секции вкладки по типу записи (порядок и подписи — из макета).
@@ -29,8 +30,9 @@ export interface AdminEducationViewProps {
 
 /**
  * Вкладка «Образование»: всегда редактируемые карточки по двум секциям (высшее /
- * курсы) + пакетное «Сохранить». Локализованные поля правятся в активной локали;
- * контейнер по разнице строк шлёт create/update/delete. Презентационная.
+ * курсы) + пакетное «Сохранить». Локализованные поля правятся в активной локали,
+ * период — два поля-месяца; контейнер по разнице строк шлёт create/update/delete.
+ * Презентационная.
  */
 export function AdminEducationView({ rows: initialRows, isBusy, onSave }: AdminEducationViewProps) {
   const { t } = useTranslation();
@@ -72,9 +74,21 @@ export function AdminEducationView({ rows: initialRows, isBusy, onSave }: AdminE
         initial.type !== row.type ||
         initial.degree !== row.degree ||
         initial.place !== row.place ||
-        initial.period !== row.period;
+        initial.startMonth !== row.startMonth ||
+        initial.endMonth !== row.endMonth;
       return changed ? count + 1 : count;
     }, 0);
+  // Сохранять можно, только когда у всех уходящих строк корректный период.
+  const canSave = rows.every((row) => !hasRowErrors(row));
+
+  const renderPeriod = (row: EducationRow) => (
+    <EducationPeriod
+      startMonth={row.startMonth}
+      endMonth={row.endMonth}
+      errors={validateRow(row)}
+      onChange={(patch) => patchRow(row.key, patch)}
+    />
+  );
 
   return (
     <section className={styles.card}>
@@ -136,14 +150,7 @@ export function AdminEducationView({ rows: initialRows, isBusy, onSave }: AdminE
                           className={styles.placeInput}
                         />
                       </div>
-                      <div className={styles.cellPeriod}>
-                        <Input
-                          aria-label={t('admin.education.period')}
-                          placeholder={t('admin.education.periodPlaceholder')}
-                          value={row.period}
-                          onChange={(event) => patchRow(row.key, { period: event.target.value })}
-                        />
-                      </div>
+                      {renderPeriod(row)}
                     </div>
                   </div>
                 ) : (
@@ -157,14 +164,7 @@ export function AdminEducationView({ rows: initialRows, isBusy, onSave }: AdminE
                         font="sans"
                       />
                     </div>
-                    <div className={styles.cellPeriod}>
-                      <Input
-                        aria-label={t('admin.education.period')}
-                        placeholder={t('admin.education.coursePeriodPlaceholder')}
-                        value={row.period}
-                        onChange={(event) => patchRow(row.key, { period: event.target.value })}
-                      />
-                    </div>
+                    {renderPeriod(row)}
                     <button
                       type="button"
                       className={styles.deleteBtn}
@@ -184,6 +184,7 @@ export function AdminEducationView({ rows: initialRows, isBusy, onSave }: AdminE
       <SaveBar
         visible={changeCount > 0}
         isSaving={isBusy}
+        canSave={canSave}
         count={changeCount}
         onSave={() => onSave(rows, deletedIds)}
         onCancel={cancel}

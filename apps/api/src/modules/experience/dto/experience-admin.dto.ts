@@ -4,10 +4,8 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
-  IsInt,
   IsOptional,
   IsString,
-  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -50,9 +48,6 @@ export class ExperienceAdminDto {
 
   @ApiProperty({ type: String, nullable: true })
   dotColor: string | null;
-
-  @ApiProperty()
-  order: number;
 
   @ApiProperty({ type: [String] })
   technologyIds: string[];
@@ -103,12 +98,6 @@ export class CreateExperienceDto {
   @IsOptional()
   @IsString()
   dotColor?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  order?: number;
 
   @ApiPropertyOptional({ type: [String] })
   @IsOptional()
@@ -166,12 +155,6 @@ export class UpdateExperienceDto {
   @IsOptional()
   @IsString()
   dotColor?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  order?: number;
 
   @ApiPropertyOptional({ type: [String] })
   @IsOptional()

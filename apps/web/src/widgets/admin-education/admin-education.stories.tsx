@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 
 import { mockEducationAdmin } from '@/entities/education/mocks';
 
@@ -36,8 +36,29 @@ export const Default: Story = {
     await userEvent.click(canvas.getByRole('button', { name: '+ запись' }));
     const degrees = canvas.getAllByPlaceholderText('Степень / специальность');
     await userEvent.type(degrees[degrees.length - 1], 'Магистратура');
+    // Без даты начала запись не сохранить: поле подсвечено, кнопка неактивна.
+    await expect(canvas.getByText('Укажите дату начала')).toBeInTheDocument();
+    await expect(canvas.getByRole('button', { name: /Сохранить/ })).toBeDisabled();
+    // Секция «Высшее» идёт первой — поле даты новой карточки по индексу её степени.
+    await fireEvent.change(canvas.getAllByLabelText('Дата начала')[degrees.length - 1], {
+      target: { value: '2024-09' },
+    });
     await userEvent.click(canvas.getByRole('button', { name: /Сохранить/ }));
     await expect(args.onSave).toHaveBeenCalled();
+  },
+};
+
+/** Окончание раньше начала — поле подсвечено ошибкой, сохранить такую запись нельзя. */
+export const InvalidPeriod: Story = {
+  name: 'Ошибка периода',
+  args: {
+    rows: buildRows(mockEducationAdmin, 'ru').map((row) =>
+      row.id === 'mslu' ? { ...row, endMonth: '2010-01' } : row,
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Окончание раньше начала')).toBeInTheDocument();
   },
 };
 

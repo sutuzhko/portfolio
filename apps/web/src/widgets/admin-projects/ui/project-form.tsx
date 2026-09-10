@@ -28,6 +28,7 @@ import {
   initStaged,
   stageCreate,
   stageDelete,
+  stageReorder,
   stageUpdate,
   stagedToCatalog,
   visibleStaged,
@@ -322,6 +323,9 @@ export function ProjectForm({
                     setStaged((current) => stageDelete(current, id));
                     field.onChange(field.value.filter((current) => current !== id));
                   }}
+                  onReorder={(activeId, overId) =>
+                    setStaged((current) => stageReorder(current, activeId, overId))
+                  }
                 />
               )}
             />
