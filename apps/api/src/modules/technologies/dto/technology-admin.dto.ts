@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 // Технология в admin-ответах (name — не локализованное поле).
 export class TechnologyAdminDto {
@@ -26,10 +26,11 @@ export class CreateTechnologyDto {
   @IsString()
   category?: string;
 
+  // Дробный и отрицательный order — норма: админка ставит запись между соседями
+  // (или перед первой), не перенумеровывая остальных (колонка — Float).
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsNumber()
   order?: number;
 }
 
@@ -44,9 +45,10 @@ export class UpdateTechnologyDto {
   @IsString()
   category?: string;
 
+  // Дробный и отрицательный order — норма: админка ставит запись между соседями
+  // (или перед первой), не перенумеровывая остальных (колонка — Float).
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsNumber()
   order?: number;
 }

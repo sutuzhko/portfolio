@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min, ValidateNested } from 'class-validator';
+import { IsNumber, IsOptional, ValidateNested } from 'class-validator';
 
 import {
   LocalizedTextDto,
@@ -25,10 +25,11 @@ export class CreateSkillDto {
   @Type(() => LocalizedTextInput)
   name: LocalizedTextInput;
 
+  // Дробный и отрицательный order — норма: админка ставит запись между соседями
+  // (или перед первой), не перенумеровывая остальных (колонка — Float).
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsNumber()
   order?: number;
 }
 
@@ -39,9 +40,10 @@ export class UpdateSkillDto {
   @Type(() => LocalizedTextPatch)
   name?: LocalizedTextPatch;
 
+  // Дробный и отрицательный order — норма: админка ставит запись между соседями
+  // (или перед первой), не перенумеровывая остальных (колонка — Float).
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsNumber()
   order?: number;
 }
