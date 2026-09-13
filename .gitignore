@@ -26,13 +26,11 @@ test-results/
 # editor / tooling
 .idea/
 .vscode/
-.claude/
 
 # project docs & design kept local (not published)
 design/
 ARCHITECTURE.md
 BACKEND.md
-CLAUDE.md
 DEPLOY.md
 DESIGN_BRIEF.md
 ROADMAP.md
